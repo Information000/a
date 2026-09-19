@@ -1,0 +1,1687 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grooming & Hair Care Selector / 理美容家電 最適モデル診断</title>
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --primary-hover: #172554;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #cbd5e1;
+      --accent: #f1f5f9;
+      --box-bg: #eff6ff;
+      --box-border: #bfdbfe;
+      --box-text: #1e40af;
+      --indicator-bg: #e0e7ff;
+    }
+
+    body.theme-haircare {
+      --primary: #db2777;
+      --primary-hover: #be185d;
+      --bg: #fdf2f8;
+      --card-bg: #ffffff;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #fbcfe8;
+      --accent: #fff1f2;
+      --box-bg: #fff1f2;
+      --box-border: #fecdd3;
+      --box-text: #9f1239;
+      --indicator-bg: #fce7f3;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 24px 16px;
+      transition: background-color 0.3s ease;
+    }
+    .container {
+      max-width: 760px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      padding: 32px 24px;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.06), 0 2px 4px -1px rgba(0,0,0,0.04);
+    }
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 16px;
+    }
+    .mode-switcher {
+      display: flex;
+      gap: 8px;
+    }
+    .mode-btn {
+      padding: 6px 14px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      background: #fff;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .mode-btn.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+    .lang-switcher {
+      display: flex;
+      gap: 6px;
+    }
+    .lang-btn {
+      padding: 4px 12px;
+      font-size: 0.8rem;
+      border: 1px solid var(--border);
+      background: #fff;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .lang-btn.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      font-weight: bold;
+    }
+    h1 {
+      font-size: 1.5rem;
+      text-align: center;
+      margin-bottom: 8px;
+      color: var(--primary);
+      transition: color 0.3s;
+    }
+    p.lead {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 24px;
+    }
+    .step-indicator {
+      display: inline-block;
+      font-size: 0.8rem;
+      font-weight: bold;
+      color: var(--primary);
+      background: var(--indicator-bg);
+      padding: 4px 12px;
+      border-radius: 9999px;
+      margin-bottom: 12px;
+    }
+    .question-block {
+      margin-bottom: 24px;
+    }
+    .question-title {
+      font-weight: 600;
+      margin-bottom: 10px;
+      font-size: 1rem;
+    }
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+    .option-label {
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .option-label:hover {
+      background-color: var(--accent);
+    }
+    .option-label input {
+      margin-right: 12px;
+    }
+    button.btn {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      background-color: var(--primary);
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      margin-top: 16px;
+    }
+    button.btn:hover {
+      background-color: var(--primary-hover);
+    }
+    .intermediate-box {
+      background-color: var(--box-bg);
+      border: 1px solid var(--box-border);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+    .intermediate-box h2 {
+      font-size: 1.15rem;
+      color: var(--box-text);
+      margin-bottom: 12px;
+    }
+    .product-card {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 18px;
+      margin-bottom: 18px;
+      background: #fff;
+    }
+    .product-badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: bold;
+      color: #fff;
+      background: var(--primary);
+      padding: 3px 10px;
+      border-radius: 4px;
+      margin-bottom: 8px;
+    }
+    .badge-silver { background: #64748b; }
+    .badge-bronze { background: #b45309; }
+    .product-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .product-meta {
+      font-size: 0.9rem;
+      color: var(--primary);
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+    .product-desc {
+      font-size: 0.85rem;
+      color: #334155;
+      margin-bottom: 12px;
+    }
+    .sales-box {
+      font-size: 0.85rem;
+      background: var(--bg);
+      padding: 12px 16px;
+      border-radius: 6px;
+      border-left: 4px solid var(--primary);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .sales-item strong {
+      color: #0f172a;
+    }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="top-bar">
+    <div class="mode-switcher">
+      <button type="button" class="mode-btn active" id="btn_mode_shaver" onclick="switchCategory('shaver')">メンズシェーバー</button>
+      <button type="button" class="mode-btn" id="btn_mode_haircare" onclick="switchCategory('haircare')">ヘアケア家電</button>
+    </div>
+    <div class="lang-switcher">
+      <button type="button" class="lang-btn active" onclick="setLanguage('ja')">日本語</button>
+      <button type="button" class="lang-btn" onclick="setLanguage('en')">English</button>
+      <button type="button" class="lang-btn" onclick="setLanguage('zh')">中文</button>
+    </div>
+  </div>
+
+  <h1 id="ui_title"></h1>
+  <p class="lead" id="ui_lead"></p>
+
+  <!-- 前半5問フォーム -->
+  <div id="phase1">
+    <span class="step-indicator" id="ui_p1_indicator"></span>
+    <div id="p1_questions_container"></div>
+    <button type="button" class="btn" id="ui_btn_next1" onclick="submitPhase1()"></button>
+  </div>
+
+  <!-- 前半結果 ＋ 後半5問フォーム -->
+  <div id="phase2" class="hidden">
+    <div class="intermediate-box" id="phase1Summary"></div>
+    <span class="step-indicator" id="ui_p2_indicator"></span>
+    <div id="p2_questions_container"></div>
+    <button type="button" class="btn" id="ui_btn_next2" onclick="submitPhase2()"></button>
+  </div>
+
+  <!-- 最終結果 -->
+  <div id="finalResult" class="hidden">
+    <h2 style="font-size: 1.3rem; margin-bottom: 16px; text-align: center; color: var(--primary);" id="ui_result_title"></h2>
+    <div id="productRankings"></div>
+    <button type="button" class="btn" style="background-color: #64748b;" id="ui_btn_restart" onclick="restart()"></button>
+  </div>
+</div>
+
+<script>
+  let currentCategory = 'shaver';
+  let currentLang = 'ja';
+  let p1Answers = {};
+  let p2Answers = {};
+
+  const APP_CONFIG = {
+    shaver: {
+      themeClass: '',
+      i18n: {
+        ja: {
+          navTitle: "メンズシェーバー",
+          title: "メンズシェーバー 最適モデル選定・接客診断",
+          lead: "ヒゲの濃さ・肌質・お手入れスタイルに合わせて、最適な3台の候補と接客ポイントをご提案します。",
+          p1Indicator: "STEP 1 / 2（方向性・基本規格のヒアリング）",
+          p2Indicator: "STEP 2 / 2（詳細条件・実用機能の絞り込み）",
+          btnNext1: "規格・大まかな方向性を確認する",
+          btnNext2: "最終候補の3機種を診断する",
+          btnRestart: "最初からやり直す",
+          resultTitle: "診断結果：おすすめの3モデル",
+          summaryHeading: "📋 前半診断：お客様に最適な基本仕様",
+          recTypeLabel: "推奨規格・タイプ:",
+          recClassLabel: "注力カテゴリー:",
+          recFeaturesLabel: "重視すべき仕様:",
+          summaryNote: "※次の5問で剃り残し部位、肌トラブル、自動洗浄器の要否などの詳細条件を絞り込みます。",
+          salesPitchLabel: "💡 おすすめする理由:",
+          salesDiffLabel: "⚖️ 他の候補との違い:",
+          salesClosingLabel: "🗣️ お客様に確認する一言トーク:",
+          fitPointsLabel: "適合項目:",
+          currency: "¥",
+          taxInc: "（税込）",
+          bladesLabel: "枚刃",
+          rotaryLabel: "回転式",
+          cleanYes: "全自動洗浄充電器 付属",
+          cleanNo: "水洗い対応（手動）",
+          usbYes: "USB Type-C対応",
+          usbNo: "専用充電器",
+          undecided: "まだ検討中"
+        },
+        en: {
+          navTitle: "Men's Shaver",
+          title: "Men's Shaver Selector & Consultation Assistant",
+          lead: "Discover the top 3 electric shaver models matched to beard density, skin sensitivity, and cleaning habits.",
+          p1Indicator: "STEP 1 / 2 (Core Needs & Basic Specifications)",
+          p2Indicator: "STEP 2 / 2 (Detailed Features & Practical Options)",
+          btnNext1: "Review General Direction & Specifications",
+          btnNext2: "Diagnose Final 3 Best Candidates",
+          btnRestart: "Start Over",
+          resultTitle: "Diagnosis Results: Top 3 Recommended Models",
+          summaryHeading: "📋 Initial Assessment: Recommended Direction",
+          recTypeLabel: "Recommended Type:",
+          recClassLabel: "Target Category:",
+          recFeaturesLabel: "Key Specifications:",
+          summaryNote: "*The next 5 questions evaluate tricky contour areas, skin irritation, and automatic cleaning systems.",
+          salesPitchLabel: "💡 Recommendation Reason:",
+          salesDiffLabel: "⚖️ Comparison with Others:",
+          salesClosingLabel: "🗣️ Customer Consultation Tip:",
+          fitPointsLabel: "Matching Criteria:",
+          currency: "¥",
+          taxInc: " (tax incl.)",
+          bladesLabel: "-blade foil",
+          rotaryLabel: "Rotary",
+          cleanYes: "Auto-Clean Station Included",
+          cleanNo: "Manual Water Washable",
+          usbYes: "USB Type-C Charging",
+          usbNo: "Dedicated AC Charger",
+          undecided: "Undecided"
+        },
+        zh: {
+          navTitle: "男士剃须刀",
+          title: "男士剃须刀选购助手 & 销售导购工具",
+          lead: "根据胡须浓密粗硬程度、皮肤敏感度及清洁护理习惯，为您量身精选3款最合适型号与导购建议。",
+          p1Indicator: "STEP 1 / 2（购买目的与基本规格咨询）",
+          p2Indicator: "STEP 2 / 2（详细功能与使用偏好筛选）",
+          btnNext1: "确认大致方向与推荐规格",
+          btnNext2: "诊断并推荐最终3款候选产品",
+          btnRestart: "重新诊断",
+          resultTitle: "诊断结果：为您精选的3款剃须刀",
+          summaryHeading: "📋 前半部分诊断：适合您的基本方案",
+          recTypeLabel: "推荐规格类型:",
+          recClassLabel: "重点定位类别:",
+          recFeaturesLabel: "建议关注规格:",
+          summaryNote: "※接下来的5个问题将进一步细化下颌难剃部位、敏感防刮伤以及全自动清洁中心需求。",
+          salesPitchLabel: "💡 推荐理由:",
+          salesDiffLabel: "⚖️ 与其他候选的区别:",
+          salesClosingLabel: "🗣️ 门店导购确认话术:",
+          fitPointsLabel: "契合要点:",
+          currency: "¥",
+          taxInc: "（含税）",
+          bladesLabel: "刀头往复式",
+          rotaryLabel: "旋转式",
+          cleanYes: "附带全自动清洗充电底座",
+          cleanNo: "全身水洗（手动维护）",
+          usbYes: "支持USB Type-C充电",
+          usbNo: "专有AC充电器",
+          undecided: "还在考虑中"
+        }
+      },
+      questionsPhase1: [
+        {
+          id: "p1_priority",
+          title: {
+            ja: "Q1. シェーバー選びで最も重視するポイントは？",
+            en: "Q1. What is your primary priority when choosing an electric shaver?",
+            zh: "Q1. 挑选剃须刀时您最看重的核心诉求是？"
+          },
+          options: [
+            { value: "cost", label: { ja: "とにかく価格を抑えたい / 初めて買う・予備用", en: "Budget-friendly / First-time buyer or backup unit", zh: "尽量控制预算 / 初次入门或备用机" } },
+            { value: "deep_shave", label: { ja: "濃いヒゲもしっかり剃れる「深剃り・スピード」", en: "Deep, fast shave for thick & stubborn stubble", zh: "浓密粗硬胡须也能快速剃净的“强劲深剃”" } },
+            { value: "gentle", label: { ja: "カミソリ負けを防ぐ「肌へのやさしさ」", en: "Gentle on skin / Prevents razor burn & irritation", zh: "防止刮伤泛红发炎的“温和亲肤舒适感”" } },
+            { value: "maintenance", label: { ja: "洗浄器付きなど「手入れの楽さ」", en: "Easy maintenance with automatic cleaning center", zh: "配备全自动清洁中心，免除手动清洗烦恼" } },
+            { value: "compact", label: { ja: "出張・旅行向けの「コンパクトさ・携帯性」", en: "Compact & portable for travel or business trips", zh: "适合出差旅行随身携带的“小巧便携性”" } },
+            { value: "luxury", label: { ja: "所有感・デザイン・最高峰の性能", en: "Premium design, flagship performance & prestige", zh: "精致设计美感、顶级做工与巅峰剃须性能" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p1_beard",
+          title: {
+            ja: "Q2. ご自身のヒゲの濃さや硬さは？",
+            en: "Q2. How would you describe your beard density and thickness?",
+            zh: "Q2. 您的胡须浓密程度与粗硬状态如何？"
+          },
+          options: [
+            { value: "thick", label: { ja: "濃い・太い（夕方には生えてくる、青ヒゲが気になる）", en: "Heavy / Coarse (5 o'clock shadow shows early, noticeable stubble)", zh: "浓密且粗硬（下午即长出胡茬、青色胡根明显）" } },
+            { value: "normal", label: { ja: "普通（毎朝1回剃れば1日持つ）", en: "Medium / Normal (Shaving once in the morning lasts all day)", zh: "常规普通（每天早晨剃净一次即可维持整天）" } },
+            { value: "thin", label: { ja: "薄い・柔らかい（まばらに生える、部分的に剃る程度）", en: "Light / Soft (Sparse growth, only needs light shaving)", zh: "稀疏柔软（局部生长、仅需简单修整）" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p1_scene",
+          title: {
+            ja: "Q3. 主な使用シーンや本体形状の好みは？",
+            en: "Q3. What is your primary usage scenario and preferred form factor?",
+            zh: "Q3. 主要使用场景及机身造型偏好是？"
+          },
+          options: [
+            { value: "standard", label: { ja: "自宅の洗面所での毎日のシェービング（一般的なハンドル型）", en: "Daily home grooming in bathroom (Standard ergonomic handle)", zh: "在自家洗手间每日早晨剃须（传统人体工学手柄造型）" } },
+            { value: "travel", label: { ja: "出張・旅行・オフィスへの持ち歩き（小型・USB充電）", en: "On-the-go travel, business trips, or office (Compact & USB charging)", zh: "出差、旅行或放办公室备用（迷你便携、支持USB充电）" } },
+            { value: "palmin", label: { ja: "手のひらサイズで高級感のあるデザイン（パームイン等）", en: "Palm-sized minimalist luxury form (e.g. Panasonic Palm In)", zh: "掌心握持极简奢华美学（如松下Palm In系列）" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p1_bath",
+          title: {
+            ja: "Q4. お風呂場での使用やフォーム・ジェル剃りはしますか？",
+            en: "Q4. Do you prefer wet shaving in the shower with foam or gel?",
+            zh: "Q4. 是否习惯在淋浴时搭配剃须泡沫或凝胶使用？"
+          },
+          options: [
+            { value: "yes", label: { ja: "お風呂剃りしたい（完全防水・ウェットシェービング希望）", en: "Yes (100% waterproof for wet shaving in the bath/shower)", zh: "需要（完全防水、可在浴室洗澡时涂泡沫湿剃）" } },
+            { value: "no", label: { ja: "ドライ剃りのみ（洗面所・部屋でそのまま剃る）", en: "Dry shaving only (Used dry at sink or room)", zh: "仅限干剃（在洗手间镜前或房间直接干剃）" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p1_budget",
+          title: {
+            ja: "Q5. ご予算の目安はどれくらいですか？",
+            en: "Q5. What is your general target budget?",
+            zh: "Q5. 您的选购预算大致是多少？"
+          },
+          options: [
+            { value: "under5", label: { ja: "〜5,000円（エントリー・超コスパ）", en: "Under ¥5,000 (Entry-level & ultra-budget)", zh: "5,000日元以下（平价入门超高性价比）" } },
+            { value: "5_15", label: { ja: "5,000〜15,000円（スタンダード普段使い）", en: "¥5,000 - ¥15,000 (Standard daily workhorse)", zh: "5,000〜15,000日元（日常经典主力款）" } },
+            { value: "15_30", label: { ja: "15,000〜30,000円（高機能密着ヘッド・ミドル上位・5枚刃）", en: "¥15,000 - ¥30,000 (Flexible contour head, 5-blade foil, mid-high tier)", zh: "15,000〜30,000日元（多维贴面、5刀头进阶中高端）" } },
+            { value: "over30", label: { ja: "30,000円〜（最上位6枚刃・Series 9・高級プレステージ）", en: "¥30,000+ (Flagship 6-blade, Braun Series 9, Philips Prestige)", zh: "30,000日元以上（松下顶级6刀头、博朗9系、飞利浦Prestige）" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        }
+      ],
+      questionsPhase2: [
+        {
+          id: "p2_area",
+          title: {
+            ja: "Q6. 最も剃り残しが気になる顔の部位は？",
+            en: "Q6. Which facial area is most prone to missed stubble for you?",
+            zh: "Q6. 您面部哪个部位最容易出现顽固剃不干净的情况？"
+          },
+          options: [
+            { value: "jaw", label: { ja: "アゴ下・首回り（凹凸にヘッドが当たりにくい）", en: "Under the jaw & neck (Hard to fit contour ridges)", zh: "下颌下方及颈部喉结周围（起伏处难以紧密贴合）" } },
+            { value: "lie", label: { ja: "寝たヒゲ・くせヒゲ（いろんな方向に生えている）", en: "Flat-lying & multi-directional stray hairs", zh: "紧贴皮肤生长的扁平胡须及乱向杂须" } },
+            { value: "mouth", label: { ja: "鼻下・口周り（細かなコントロールが必要）", en: "Under the nose & mouth (Requires tight precision)", zh: "人中鼻翼下方及嘴角边缘（需要精准小巧操控）" } },
+            { value: "none", label: { ja: "特に特定の部位はない（全体を均等に短時間で剃りたい）", en: "No specific trouble area (Just fast overall shaving)", zh: "没有特定难剃部位（希望能全脸迅速均衡剃净）" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p2_skin",
+          title: {
+            ja: "Q7. 肌質について気になる点は？",
+            en: "Q7. What are your specific skin sensitivity concerns?",
+            zh: "Q7. 您的皮肤在剃须时是否有敏感顾虑？"
+          },
+          options: [
+            { value: "sensitive", label: { ja: "敏感肌でカミソリ負けしやすい / ヒリヒリ・赤みが出やすい", en: "Sensitive skin prone to razor burn, burning, or redness", zh: "敏感肌容易刮伤红肿、剃后有灼热刺痛感" } },
+            { value: "press", label: { ja: "ついつい強く肌に押し当ててしまう癖がある", en: "Tendency to press the shaver head too hard against skin", zh: "剃须时习惯用力将刀头用力按压在脸上" } },
+            { value: "normal", label: { ja: "肌トラブルは少なく、肌は強いほう", en: "Resilient skin with minimal irritation concerns", zh: "皮肤耐受力良好，极少发生剃后泛红发炎" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p2_cleaner",
+          title: {
+            ja: "Q8. 「全自動洗浄充電器」は欲しいですか？",
+            en: "Q8. Do you want an automatic clean & charge station?",
+            zh: "Q8. 是否需要“全自动清洗充电中心（清洁底座）”？"
+          },
+          options: [
+            { value: "yes", label: { ja: "欲しい（置くだけで洗浄・乾燥・充電を自動で済ませたい）", en: "Yes (Fully automate cleaning, drying, lubrication, and charging)", zh: "需要（放上去一键自动完成清洗、烘干、润滑与充电）" } },
+            { value: "no", label: { ja: "不要（本体の水洗いで十分・洗面所を広く使いたい・価格を抑えたい）", en: "No (Rinsing with tap water is fine; save space and cost)", zh: "不需要（水龙头下冲洗即可，节省洗手台空间并降低预算）" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p2_charge",
+          title: {
+            ja: "Q9. 充電方式や端子へのこだわりは？",
+            en: "Q9. What are your preferences for charging and power interface?",
+            zh: "Q9. 对供电及充电接口有何具体要求？"
+          },
+          options: [
+            { value: "usbc", label: { ja: "USB Type-C充電が良い（スマホ充電器と共通化したい）", en: "USB Type-C (Share same cable with smartphone/laptop)", zh: "支持USB Type-C充电（可与手机充电线通用共享）" } },
+            { value: "ac", label: { ja: "専用のAC充電スタンド / 急速充電が良い", en: "Dedicated AC charging cradle / Quick wall charge", zh: "原装专有座充或快速交流电直接插拔" } },
+            { value: "battery", label: { ja: "乾電池式でもOK（非常用・極力安く）", en: "AA/AAA batteries acceptable (Emergency or ultra-budget)", zh: "干电池供电即可（出差应急或极低成本需求）" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p2_brand",
+          title: {
+            ja: "Q10. メーカーや駆動方式に好みのイメージはありますか？",
+            en: "Q10. Do you have a preferred brand or cutting mechanism?",
+            zh: "Q10. 对品牌及刀头驱动方式是否有明确偏好？"
+          },
+          options: [
+            { value: "panasonic", label: { ja: "パナソニック（高速リニアモーター・ラムダッシュの鋭い切れ味）", en: "Panasonic (Linear motor drive, ultra-sharp Japanese blade foils)", zh: "松下 Panasonic（高速磁悬浮马达、朗达超快深剃）" } },
+            { value: "braun", label: { ja: "ブラウン（くせヒゲキャッチ・360°密着・しっかりしたストローク）", en: "Braun (Deep foil capture for flat-lying hairs, robust German build)", zh: "博朗 Braun（针对平躺倒伏胡须、仿生刀网、德系扎实质感）" } },
+            { value: "philips", label: { ja: "フィリップス（回転刃・肌との摩擦低減・静かな動作音）", en: "Philips (Rotary blades, minimal skin friction, quiet operation)", zh: "飞利浦 Philips（三刀头旋转式、极低摩擦静音亲肤）" } },
+            { value: "any", label: { ja: "特にこだわりはない（一番希望に合うものなら何でも）", en: "No preference (Recommend whichever fits best)", zh: "无特定偏好（以最符合我个人条件的型号为准）" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        }
+      ],
+      products: [
+        {
+          id: "es_ks30", brand: "panasonic", price: 2178, type: "travel", blades: 1, wet: false, autoClean: false, usbc: false, deepRank: 1, gentleRank: 2,
+          name: { ja: "Panasonic ES-KS30-K", en: "Panasonic ES-KS30-K", zh: "松下 便携干电池剃须刀 ES-KS30-K" },
+          desc: { ja: "手のひらサイズの乾電池式・回転刃。旅行や予備、とにかく安く抑えたい方に最適。", en: "Palm-sized AA battery-operated rotary shaver. Perfect for minimalist travel or emergency backup.", zh: "掌心大小干电池式旋转单刀头。极简出差便携或应急备用高性价比首选。" },
+          point: { ja: "2,000円強で買える定番コンパクト機。出張カバンに常備可能。", en: "Iconic compact unit available for around ¥2,000. Easy to store in your briefcase.", zh: "约两千日元即可入手的经典便携机，可常备在公文包或行李箱中。" }
+        },
+        {
+          id: "kmc_0821", brand: "koizumi", price: 5860, type: "standard", blades: 3, wet: true, autoClean: false, usbc: true, deepRank: 2, gentleRank: 2,
+          name: { ja: "KOIZUMI KMC-0821/S", en: "KOIZUMI KMC-0821/S", zh: "小泉成器 3刀头水洗剃须刀 KMC-0821/S" },
+          desc: { ja: "USB Type-C充電対応の3枚刃。本体水洗い可能で日常使いできる高コスパ機。", en: "3-blade foil with USB Type-C charging. Fully washable and reliable for daily budget-friendly use.", zh: "支持USB Type-C直充的3刀头往复式。全身水洗设计，实用耐用超高性价比。" },
+          point: { ja: "5,000円台でUSB充電＋水洗いを網羅した実力派。", en: "Outstanding value covering modern USB charging and water-washability in the ¥5,000s.", zh: "在五千多日元价位内同时实现USB通用充电与全身水洗的实用主力款。" }
+        },
+        {
+          id: "es_rt1au", brand: "panasonic", price: 5808, type: "standard", blades: 3, wet: true, autoClean: false, usbc: false, deepRank: 2, gentleRank: 2,
+          name: { ja: "Panasonic ES-RT1AU-A", en: "Panasonic ES-RT1AU-A", zh: "松下 3刀头水洗剃须刀 ES-RT1AU-A" },
+          desc: { ja: "大手パナソニックの安心感。水洗い可能で毎日しっかり使えるエントリー3枚刃。", en: "Reliable Panasonic build. A durable, washable 3-blade entry-level shaver for daily grooming.", zh: "松下原厂可靠品质。支持全身水洗，适合日常清晨理容的基础3刀头型号。" },
+          point: { ja: "基本の深剃り性能と堅牢性を手頃な価格で実現。", en: "Delivers essential shave quality and solid durability at an approachable price.", zh: "以平易近人的价格提供值得信赖的深剃性能与扎实做工。" }
+        },
+        {
+          id: "braun_300s", brand: "braun", price: 6981, type: "standard", blades: 3, wet: false, autoClean: false, usbc: false, deepRank: 2, gentleRank: 2,
+          name: { ja: "BRAUN Series 3 300s", en: "BRAUN Series 3 300s", zh: "博朗 3系往复式剃须刀 300s" },
+          desc: { ja: "ブラウンの3連サスペンションヘッド。安価ながら浮き沈みする刃で凹凸にフィット。", en: "Braun's 3-Flex head with floating elements adapts comfortably to facial contours at an entry price.", zh: "博朗三向浮动刀头系统。亲民价位即可体验独立浮动网膜对脸颊轮廓的自然贴合。" },
+          point: { ja: "ブラウンの深剃り入門モデルとして安定の人気。", en: "A trusted and stable favorite for entering the Braun shaving ecosystem.", zh: "体验德系博朗深剃剃须理念的长青入门畅销款。" }
+        },
+        {
+          id: "kmc_0830", brand: "koizumi", price: 2690, type: "travel", blades: 1, wet: false, autoClean: false, usbc: true, deepRank: 1, gentleRank: 2,
+          name: { ja: "KOIZUMI KMC-0830/H", en: "KOIZUMI KMC-0830/H", zh: "小泉成器 卡片超薄便携剃须刀 KMC-0830/H" },
+          desc: { ja: "名刺入れサイズのポケットシェーバー。オフィスや車内に置く2台目に。", en: "Card-case sized pocket shaver. The ideal secondary unit for office drawers or car consoles.", zh: "名片夹般超薄纤巧造型。常备在办公室抽屉或车内的理想备用第2台剃须刀。" },
+          point: { ja: "薄型カード形状で持ち運びのストレスがゼロ。", en: "Ultra-slim card profile creates absolute zero burden for daily carry.", zh: "极致超薄机身设计，装入口袋毫无收纳负担。" }
+        },
+        {
+          id: "es_l321d", brand: "panasonic", price: 8228, type: "standard", blades: 3, wet: false, autoClean: false, usbc: false, deepRank: 3, gentleRank: 3,
+          name: { ja: "Panasonic ラムダッシュ ES-L321D", en: "Panasonic LAMDASH ES-L321D", zh: "松下 朗达3刀头高速磁悬浮 ES-L321D" },
+          desc: { ja: "毎分約13,000ストロークの高速リニアモーター搭載。1万円未満で本格的なパワーを発揮する大本命。", en: "Driven by a 13,000 cpm linear motor. The definitive favorite delivering authentic cutting power under ¥10,000.", zh: "搭载每分钟约13,000次往复的高速磁悬浮马达。万元日元以内具备充沛动力的大本命推荐款。" },
+          point: { ja: "上位機種譲りのリニアモーターで、太いヒゲもパワーを落とさずカット。", en: "Inherits high-speed linear drive from flagship tiers to slice coarse beards without bogging down.", zh: "承袭高阶旗舰同系磁悬浮驱动，面对粗硬胡须依然动力充沛不拉扯。" }
+        },
+        {
+          id: "es_l322w", brand: "panasonic", price: 10640, type: "standard", blades: 3, wet: true, autoClean: false, usbc: false, deepRank: 3, gentleRank: 3,
+          name: { ja: "Panasonic ラムダッシュ ES-L322W", en: "Panasonic LAMDASH ES-L322W", zh: "松下 朗达干湿两用3刀头 ES-L322W" },
+          desc: { ja: "リニアモーター駆動＋完全お風呂剃り対応。泡メイキングモードやヒゲセンサーを搭載。", en: "High-speed linear drive fully waterproofed for shower use. Features foam-making mode and beard sensor.", zh: "磁悬浮马达驱动结合完全浴室湿剃设计。支持智能胡须感应与洗面奶打泡起泡模式。" },
+          point: { ja: "お風呂場でジェルや泡を使って快適に剃りたい方に最適。", en: "The best choice for users who shave comfortably with foam or gel during warm showers.", zh: "习惯在沐浴时配合剃须泡沫享受温和畅快剃须体验的首选型号。" }
+        },
+        {
+          id: "es_l341d", brand: "panasonic", price: 10780, type: "standard", blades: 3, wet: true, autoClean: false, usbc: false, deepRank: 3, gentleRank: 3,
+          name: { ja: "Panasonic ラムダッシュ ES-L341D/W", en: "Panasonic LAMDASH ES-L341D/W", zh: "松下 朗达侧向可动3刀头 ES-L341D/W" },
+          desc: { ja: "左右に動く密着スイングヘッドを搭載。顔の凹凸やアゴ下の追従性を強化したモデル。", en: "Equipped with a lateral flexible pivot head. Enhances contour tracing along jawline and neck.", zh: "搭载左右轻柔摇摆的贴面刀头。显著提升下颌折角及颈部起伏的跟踪服帖度。" },
+          point: { ja: "アゴ下の剃り残しが気になる方向けのステップアップ機。", en: "A strategic step-up for anyone annoyed by lingering stubble along the jawline.", zh: "下颌轮廓常常剃不干净、希望刀头更灵活服帖的升级选择。" }
+        },
+        {
+          id: "braun_53_b1200s", brand: "braun", price: 8778, type: "standard", blades: 3, wet: true, autoClean: false, usbc: false, deepRank: 3, gentleRank: 3,
+          name: { ja: "BRAUN Series 5 53-B1200s", en: "BRAUN Series 5 53-B1200s", zh: "博朗 5系免拆快洗剃须刀 53-B1200s" },
+          desc: { ja: "3連密着ブレード＋クイック洗浄システム。ヘッドを外さずに水洗いできる手入れの良さが魅力。", en: "3-blade contour system with EasyClean. Rinse clean through the head without removing foils.", zh: "3重贴面刀网搭载免拆快洗系统。无需拆卸刀头即可直接冲水冲净胡茬。" },
+          point: { ja: "毎朝の手入れを時短したい方におすすめの密着3枚刃。", en: "Highly recommended for reducing daily morning cleanup time while securing a deep shave.", zh: "希望大幅精简每天早晨清洁维护时间的高效率贴面3刀头。" }
+        },
+        {
+          id: "philips_s3882", brand: "philips", price: 7018, type: "standard", blades: 3, wet: true, autoClean: false, usbc: true, deepRank: 2, gentleRank: 4,
+          name: { ja: "PHILIPS Series 3000 S3882/00", en: "PHILIPS Series 3000 S3882/00", zh: "飞利浦 3000系旋转式亲肤剃须刀 S3882/00" },
+          desc: { ja: "5方向可動ヘッドとパワーカット刃。回転式ならではの優しい肌当たりとUSB充電対応。", en: "5D pivot heads and PowerCut blades. Delivers gentle rotary glide with USB charging convenience.", zh: "5向微调旋转刀头配合自研磨刀片。带来旋转式特有的温和触感，支持USB充电。" },
+          point: { ja: "肌への負担を抑えながら丸みを帯びたフェイスラインにフィット。", en: "Minimizes skin irritation while gliding smoothly around facial bone structures.", zh: "在大幅减少皮肤摩擦阻力的同时，平滑贴合下巴与面颊弧度。" }
+        },
+        {
+          id: "es_l551d", brand: "panasonic", price: 21780, type: "standard", blades: 5, wet: true, autoClean: false, usbc: true, deepRank: 4, gentleRank: 4,
+          name: { ja: "Panasonic ラムダッシュPRO 5枚刃 ES-L551D/U", en: "Panasonic LAMDASH PRO 5-Blade ES-L551D/U", zh: "松下 朗达PRO 5刀头旗舰级 ES-L551D/U" },
+          desc: { ja: "5枚刃×高速リニアモーター。濃いヒゲでも肌に押し付けずに一度で深剃り。", en: "5-blade system backed by ultra-fast linear drive. Effortlessly cuts thick stubble in single passes.", zh: "5刀头阵列配合超高速磁悬浮驱动。无需用力按压，一次划过即可深层剃净粗硬胡茬。" },
+          point: { ja: "6枚刃ほど高額にせず、圧倒的な深剃りと早剃りを両立したベストバランス。", en: "The best cost-performance balance providing relentless deep shaving without the 6-blade price tag.", zh: "无需投入顶级6刀头的高昂成本，即可兼得压倒性深剃与极速理容的最佳黄金平衡款。" }
+        },
+        {
+          id: "es_l571u", brand: "panasonic", price: 28380, type: "standard", blades: 5, wet: true, autoClean: false, usbc: true, deepRank: 4, gentleRank: 5,
+          name: { ja: "Panasonic ラムダッシュPRO 5枚刃 ES-L571U", en: "Panasonic LAMDASH PRO 5D-Suspension ES-L571U", zh: "松下 朗达PRO 5D悬浮5刀头 ES-L571U" },
+          desc: { ja: "5Dアクティブサスペンション＋スムースローラー搭載。アゴ下の複雑な起伏に徹底追従。", en: "5D Active Suspension with smooth rollers. Glides flawlessly over tricky throat and jaw contours.", zh: "搭载5D多维全曲面悬浮刀头与柔滑滚轴。彻底追随下颌起伏，大幅减少对皮肤的摩擦压迫。" },
+          point: { ja: "アゴ下のくせヒゲも肌をこすらずに滑らかに深剃り可能。", en: "Deep-shaves flat-lying throat stubble cleanly without abrasive friction on delicate skin.", zh: "平滑深剃喉结与下颌处的倒伏杂须，避免反复来回刮蹭造成皮肤泛红。" }
+        },
+        {
+          id: "es_l650u", brand: "panasonic", price: 46530, type: "standard", blades: 6, wet: true, autoClean: false, usbc: true, deepRank: 5, gentleRank: 5,
+          name: { ja: "Panasonic ラムダッシュPRO 6枚刃 ES-L650U", en: "Panasonic LAMDASH PRO 6-Blade ES-L650U", zh: "松下 朗达PRO 殿堂级6刀头 ES-L650U" },
+          desc: { ja: "パナソニック最上位6枚刃。長いくせヒゲから極薄深剃りまで、あらゆるヒゲを瞬時に捉える最高峰。", en: "Panasonic's peak 6-blade flagship. Captures everything from long flat beards to sub-millimeter stubble instantly.", zh: "松下最高阶6刀头旗舰。无论是顽固平躺长须还是极短胡茬，均能在瞬息之间一网打尽。" },
+          point: { ja: "濃いヒゲ・青ヒゲに悩むお客様へ文句なしに提案できる深剃りフラッグシップ。", en: "The unquestionable flagship for customers demanding the ultimate end to thick beard and 5 o'clock shadow.", zh: "为饱受浓密粗硬胡须与顽固青茬困扰的顾客量身打造的顶级终极深剃方案。" }
+        },
+        {
+          id: "braun_73_s85010s", brand: "braun", price: 24800, type: "standard", blades: 3, wet: true, autoClean: false, usbc: false, deepRank: 4, gentleRank: 4,
+          name: { ja: "BRAUN Series 7 73-N85010S", en: "BRAUN Series 7 73-N85010S", zh: "博朗 7系360°全向贴面剃须刀 73-N85010S" },
+          desc: { ja: "前後に動く360°密着システム＋人工知能テクノロジー。アゴ下の剃り残しゼロを目指す設計。", en: "360° Flex head and AutoSense technology adapt cutting power to beard density, leaving zero missed neck hairs.", zh: "360°全向贴面系统搭配智能感应动力调节。专为消除下巴与喉结剃须死角而生。" },
+          point: { ja: "アゴ下・首回りの剃りにくいヒゲを確実に捉える可動ヘッドが強み。", en: "Superb head maneuverability ensures stubborn throat hairs are grabbed cleanly on the first pass.", zh: "强大的全方位活动刀头能够精准捕获下颌与颈部难以触及的杂乱胡须。" }
+        },
+        {
+          id: "braun_9617s", brand: "braun", price: 42680, type: "standard", blades: 4, wet: true, autoClean: false, usbc: false, deepRank: 5, gentleRank: 4,
+          name: { ja: "BRAUN Series 9 Pro+ 9617S", en: "BRAUN Series 9 Pro+ 9617S", zh: "博朗 9系Pro+ 顶级往复式 9617S" },
+          desc: { ja: "寝たヒゲを起こしてカットするプロブレードを搭載。夕方までツルツルが続く極限の深剃り。", en: "ProBlade lifts and cuts flat-lying hairs effortlessly. Achieves extreme closeness that lasts until evening.", zh: "搭载Pro提毛修剪刀头，强力抬起倒伏胡须并整齐切断。实现维持至傍晚的极致丝滑深剃。" },
+          point: { ja: "くせヒゲ・寝たヒゲの処理性能において業界屈指の実力。", en: "Industry benchmark for capturing tricky, flat-lying beards grown in irregular directions.", zh: "在清理乱向生长及平躺杂须的能力上堪称行业技术标杆。" }
+        },
+        {
+          id: "philips_xp9202", brand: "philips", price: 52800, type: "standard", blades: 3, wet: true, autoClean: false, usbc: false, deepRank: 5, gentleRank: 5,
+          name: { ja: "PHILIPS i9000 Prestige XP9202/20", en: "PHILIPS i9000 Prestige XP9202/20", zh: "飞利浦 i9000 Prestige 奢享旋转式旗舰 XP9202/20" },
+          desc: { ja: "ナノプレシジョン刃と超柔軟サスペンション。最高峰の深剃りと信じられない肌への優しさを両立。", en: "NanoTech precision blades with ultra-flexible suspension. Pairs peerless closeness with unmatched skin comfort.", zh: "纳米精钢双轨刀片配合全向悬挂系统。将巅峰深剃洁净度与近乎无感的亲肤柔和体验融为一体。" },
+          point: { ja: "回転式の頂点。上質を求める大人の肌に最適な極上シェーバー。", en: "The pinnacle of rotary shaving. The definitive luxury choice for discerning mature skin.", zh: "旋转式剃须刀的巅峰杰作，追求极致品质与尊贵肤感的成熟男士专属奢华之选。" }
+        },
+        {
+          id: "philips_s7885", brand: "philips", price: 31460, type: "standard", blades: 3, wet: true, autoClean: true, usbc: false, deepRank: 3, gentleRank: 5,
+          name: { ja: "PHILIPS Series 7000 S7885/50", en: "PHILIPS Series 7000 S7885/50", zh: "飞利浦 7000系微珠亲肤智能款 S7885/50" },
+          desc: { ja: "ナノスキンプロテクションコーティングが肌との摩擦を最小化。敏感肌のための最高峰。", en: "Nano SkinGlide protective coating minimizes friction. The definitive champion for sensitive skin.", zh: "微珠亲肤保护涂层将刀头与肌肤间的摩擦阻力降至最低。敏感肌肤专研的高阶之作。" },
+          point: { ja: "カミソリ負け・ヒリヒリに悩むお客様への第一選択肢。", en: "The unquestioned first recommendation for anyone struggling with post-shave razor burn and redness.", zh: "针对剃后易泛红、刺痛及毛囊敏感用户的首选解决方案。" }
+        },
+        {
+          id: "philips_x5006", brand: "philips", price: 16500, type: "standard", blades: 3, wet: true, autoClean: false, usbc: true, deepRank: 3, gentleRank: 4,
+          name: { ja: "PHILIPS S5000X X5006/05", en: "PHILIPS S5000X X5006/05", zh: "飞利浦 S5000X 潮型立式防水款 X5006/05" },
+          desc: { ja: "マイクロビーズコーティング採用。肌に吸い付くような滑らかさと自立するスマートデザイン。", en: "Microbead coating glides smoothly on skin. Features an upright self-standing modern waterproof silhouette.", zh: "配备微珠亲肤涂层顺滑不卡顿。采用可独立直立摆放的时尚极简防水新设计。" },
+          point: { ja: "20代〜30代の敏感肌ユーザーに刺さるモダンな防水モデル。", en: "Modern and ergonomic styling with skin-friendly performance tailored for younger generations.", zh: "兼具出众颜值、直立收纳与温和剃须，备受年轻型男青睐的品质款。" }
+        },
+        {
+          id: "braun_62_s1200s", brand: "braun", price: 16280, type: "standard", blades: 3, wet: true, autoClean: false, usbc: false, deepRank: 3, gentleRank: 4,
+          name: { ja: "BRAUN Series 6 62-S1200S", en: "BRAUN Series 6 62-S1200S", zh: "博朗 6系压力感应减压剃须刀 62-S1200S" },
+          desc: { ja: "スイング密着システム。皮膚科医テスト済みで、肌への過度な圧力を逃がす構造。", en: "SensoFlex swivel head dermatologically tested to minimize pressure on delicate facial skin.", zh: "SensoFlex轻压感应贴面系统。通过皮肤科专业测试，有效缓冲用力过猛对皮肤的按压阻力。" },
+          point: { ja: "つい強く肌に押し当ててしまう癖がある方でも赤くならない。", en: "Prevents redness and irritation even for men who unconsciously press shavers too hard.", zh: "即使习惯用力压紧刀头剃须，也能有效泄力减压防止刮伤泛红。" }
+        },
+        {
+          id: "braun_9657cc", brand: "braun", price: 54780, type: "standard", blades: 4, wet: true, autoClean: true, usbc: false, deepRank: 5, gentleRank: 4,
+          name: { ja: "BRAUN Series 9 Pro+ 9657CC", en: "BRAUN Series 9 Pro+ 9657CC", zh: "博朗 9系Pro+ 顶配清洗座套装 9657CC" },
+          desc: { ja: "全自動5段階アルコール洗浄システム付属。除菌・乾燥・充電をボタン一つで完結。", en: "Includes 5-in-1 SmartCare alcohol cleaning center. Hygienically cleans, lubricates, dries, and charges.", zh: "附带博朗独家5合1全自动酒精清洁中心。一键实现卫生除菌、润滑、风干与充电。" },
+          point: { ja: "最上級の深剃りと完全な手入れ不要を両立したい方向けのフルスペック。", en: "The full flagship bundle for users demanding elite closeness alongside zero daily maintenance.", zh: "既追求极致顺滑深剃，又渴望彻底告别手动清洗保养的顶级全能旗舰套装。" }
+        },
+        {
+          id: "es_l381w", brand: "panasonic", price: 15800, type: "standard", blades: 3, wet: true, autoClean: true, usbc: false, deepRank: 3, gentleRank: 3,
+          name: { ja: "Panasonic ラムダッシュ 3枚刃 ES-L381W", en: "Panasonic LAMDASH 3-Blade Auto-Clean ES-L381W", zh: "松下 朗达3刀头附全自动清洗座 ES-L381W" },
+          desc: { ja: "手頃な価格帯で全自動洗浄充電器が付属するラムダッシュ。毎日清潔な刃で剃れる。", en: "Rare mid-tier LAMDASH bundled with an automatic clean & charge dock for daily sanitary grooming.", zh: "万元中段极具性价比的朗达清洗座套装。每天早晨都能享受到崭新般的无菌清爽剃须。" },
+          point: { ja: "1万円台半ばで自動洗浄器が付くコストパフォーマンスの高さ。", en: "Exceptional cost-performance bringing hands-free dock cleaning to the mid-price tier.", zh: "在一万多日元实惠预算下即可享受全自动清洗底座带来的极致便利。" }
+        },
+        {
+          id: "braun_53_a7200cc", brand: "braun", price: 13800, type: "standard", blades: 3, wet: true, autoClean: true, usbc: false, deepRank: 3, gentleRank: 3,
+          name: { ja: "BRAUN Series 5 53-A7200cc", en: "BRAUN Series 5 53-A7200cc", zh: "博朗 5系附自动清洁中心款 53-A7200cc" },
+          desc: { ja: "Series 5に全自動アルコール洗浄器が付いたモデル。刃の劣化を防ぎ常に衛生的。", en: "Series 5 equipped with Braun's SmartCare alcohol cleaning center. Keeps blades lubricated and clean.", zh: "5系贴面剃须刀搭配全自动智能清洁座。有效维护刀网锋利度并杜绝油脂异味细菌。" },
+          point: { ja: "手頃にブラウンのアルコール洗浄システムを導入できる。", en: "The most cost-effective gateway to Braun's legendary alcohol cleaning station.", zh: "以最亲民的价格体验博朗标志性全自动酒精清洁养护系统。" }
+        },
+        {
+          id: "es_p330u", brand: "panasonic", price: 19800, type: "palmin", blades: 3, wet: true, autoClean: false, usbc: true, deepRank: 3, gentleRank: 3,
+          name: { ja: "Panasonic パームイン ES-P330U", en: "Panasonic Palm In ES-P330U", zh: "松下 掌上便携剃须刀 Palm In ES-P330U" },
+          desc: { ja: "手のひらサイズのラムダッシュ3枚刃。USB-C充電で空間に溶け込む上質デザイン。", en: "Palm-sized LAMDASH 3-blade shaver. USB-C charging encased in an interior-decor grade profile.", zh: "掌心握持朗达3刀头极简设计。支持Type-C直充，犹如艺术摆件般完美融入洗漱台空间。" },
+          point: { ja: "パームインの世界観を手頃な2万円以下で体感できるモデル。", en: "Accessible entry below ¥20,000 to experience Panasonic's groundbreaking Palm In aesthetic.", zh: "在两万日元以内轻松领略松下掌上剃须刀先锋美学与质感的入门典范。" }
+        },
+        {
+          id: "es_pv3a", brand: "panasonic", price: 28710, type: "palmin", blades: 5, wet: true, autoClean: false, usbc: true, deepRank: 4, gentleRank: 4,
+          name: { ja: "Panasonic パームイン 5枚刃 ES-PV3A", en: "Panasonic Palm In 5-Blade ES-PV3A", zh: "松下 掌上朗达PRO 5刀头 ES-PV3A" },
+          desc: { ja: "手のひらサイズに5枚刃リニアモーターを凝縮。石目調の洗練された美しさと圧倒的剃り味。", en: "Condenses 5-blade linear drive into a palm-sized stone-matte silhouette with formidable cutting prowess.", zh: "将朗达PRO 5刀头高速动力浓缩于掌心之间。原石质感磨砂工艺与强劲深剃完美共存。" },
+          point: { ja: "指先で肌をなでるような直感的な操作感と本格的な深剃り。", en: "Delivers intuitive fingertip shaving precision without sacrificing powerhouse 5-blade performance.", zh: "体验如同用指尖抚摸面颊般的直觉剃须触感，同时坐拥5刀头的纯正强劲深剃。" }
+        },
+        {
+          id: "es_pv6a", brand: "panasonic", price: 34650, type: "palmin", blades: 5, wet: true, autoClean: false, usbc: true, deepRank: 4, gentleRank: 4,
+          name: { ja: "Panasonic パームイン 陶器調高級材 ES-PV6A", en: "Panasonic Palm In NAGORI Mineral ES-PV6A", zh: "松下 掌上朗达PRO 海洋矿物高端材 ES-PV6A" },
+          desc: { ja: "海洋ミネラル由来の複合材NAGORIを採用。陶器のような高級感と最先端の5枚刃技術。", en: "Crafted from marine mineral NAGORI composite. Delivers ceramic-like artisanal warmth with 5-blade tech.", zh: "采用源自海洋矿物的高端复合材料NAGORI。温润如陶瓷般尊贵触感与前沿5刀头黑科技的交融。" },
+          point: { ja: "洗面所のインテリアとしても映える最高級のデザインガジェット。", en: "A premier design statement that elevates bathroom decor while conquering heavy stubble.", zh: "既是顶级理容科技利器，更是提升洗手间与居家环境品味的奢华工业艺术品。" }
+        },
+        {
+          id: "braun_m1012c", brand: "braun", price: 6300, type: "travel", blades: 2, wet: true, autoClean: false, usbc: true, deepRank: 2, gentleRank: 3,
+          name: { ja: "BRAUN mini M-1012C", en: "BRAUN mini M-1012C", zh: "博朗 便携迷你口袋剃须刀 M-1012C" },
+          desc: { ja: "ポケットサイズのブラウン2枚刃。USB-C急速充電に対応し、出張や外出先での剃り直しに最適。", en: "Pocket-sized 2-blade Braun with USB-C quick charge. The definitive companion for midday touch-ups.", zh: "口袋级迷你便携博朗双刀头。支持Type-C随充快充，商务出差及午后应急修整的最佳伴侣。" },
+          point: { ja: "携帯用ながらメイン機に迫るブラウン特有のしっかりした剃り感。", en: "Delivers surprisingly robust Braun cutting sensation despite its miniature travel profile.", zh: "虽然机身体积精巧便携，却保留了博朗标志性的扎实深剃触感。" }
+        }
+      ]
+    },
+    haircare: {
+      themeClass: 'theme-haircare',
+      i18n: {
+        ja: {
+          navTitle: "ヘアケア家電",
+          title: "ヘアケア家電 最適モデル選定・接客診断",
+          lead: "髪のお悩み・用途・ご予算に合わせて、最適な3台の候補をご提案します。",
+          p1Indicator: "STEP 1 / 2（カテゴリー・大まかな方向性の確認）",
+          p2Indicator: "STEP 2 / 2（髪質・詳細スペックの絞り込み）",
+          btnNext1: "方向性と推奨スペックを確認する",
+          btnNext2: "最終候補の3モデルを診断する",
+          btnRestart: "最初からやり直す",
+          resultTitle: "診断結果：おすすめの3モデル",
+          summaryHeading: "📋 前半診断：あなたに最適な製品の基本方針",
+          recTypeLabel: "推奨カテゴリー:",
+          recClassLabel: "注力ターゲット:",
+          recFeaturesLabel: "注目ポイント:",
+          summaryNote: "※次の5問で髪質、バレル径、温度制御、持ち運び構造などの詳細条件を絞り込みます。",
+          salesPitchLabel: "💡 おすすめする理由:",
+          salesDiffLabel: "⚖️ 他の候補との違い:",
+          salesClosingLabel: "🗣️ お客様に確認する一言トーク:",
+          fitPointsLabel: "適合ポイント:",
+          currency: "¥",
+          taxInc: "（税込）",
+          weightLabel: "重量: 約",
+          overseasYes: "海外利用可",
+          overseasNo: "国内専用",
+          undecided: "まだ検討中"
+        },
+        en: {
+          navTitle: "Hair Care",
+          title: "Hair Care Appliance Selector & Sales Consultant",
+          lead: "Find the top 3 hair dryer & styling iron candidates tailored to your hair concerns, lifestyle, and budget.",
+          p1Indicator: "STEP 1 / 2 (Category & Overall Direction)",
+          p2Indicator: "STEP 2 / 2 (Hair Texture & Detailed Specifications)",
+          btnNext1: "Confirm Direction & Basic Specs",
+          btnNext2: "Diagnose Final 3 Recommended Models",
+          btnRestart: "Start Over",
+          resultTitle: "Diagnosis Results: Top 3 Recommended Models",
+          summaryHeading: "📋 Initial Assessment: Recommended Direction",
+          recTypeLabel: "Recommended Category:",
+          recClassLabel: "Target Group:",
+          recFeaturesLabel: "Key Features:",
+          summaryNote: "*The next 5 questions will refine hair texture, barrel size, thermal control, and portability.",
+          salesPitchLabel: "💡 Recommendation Reason:",
+          salesDiffLabel: "⚖️ Comparison with Others:",
+          salesClosingLabel: "🗣️ Customer Consultation Tip:",
+          fitPointsLabel: "Matching Strengths:",
+          currency: "¥",
+          taxInc: " (tax incl.)",
+          weightLabel: "Weight: approx. ",
+          overseasYes: "Dual Voltage (Overseas OK)",
+          overseasNo: "Japan Domestic Only",
+          undecided: "Undecided"
+        },
+        zh: {
+          navTitle: "美发电器",
+          title: "美发美发造型电器选购助手 & 销售导购工具",
+          lead: "根据您的发质困扰、使用场景与预算，为您量身精选最适合的3款电吹风或美发棒。",
+          p1Indicator: "STEP 1 / 2（产品类别与大致方向确认）",
+          p2Indicator: "STEP 2 / 2（发质细节与规格偏好筛选）",
+          btnNext1: "确认大致方向与推荐规格",
+          btnNext2: "诊断并推荐最终3款候选产品",
+          btnRestart: "重新诊断",
+          resultTitle: "诊断结果：为您精选的3款产品",
+          summaryHeading: "📋 前半部分诊断：适合您的基本方案",
+          recTypeLabel: "推荐品类:",
+          recClassLabel: "重点定位:",
+          recFeaturesLabel: "建议关注特性:",
+          summaryNote: "※接下来的5个问题将进一步细化发质粗细受损程度、卷棒直径、温控技术及携带便携性。",
+          salesPitchLabel: "💡 推荐理由:",
+          salesDiffLabel: "⚖️ 与其他候选的区别:",
+          salesClosingLabel: "🗣️ 门店导购确认话术:",
+          fitPointsLabel: "契合要点:",
+          currency: "¥",
+          taxInc: "（含税）",
+          weightLabel: "重量: 约",
+          overseasYes: "全球通用电压",
+          overseasNo: "仅限日本国内电压",
+          undecided: "还在考虑中"
+        }
+      },
+      questionsPhase1: [
+        {
+          id: "p1_category",
+          title: {
+            ja: "Q1. 探しているアイテムの種類はどれですか？",
+            en: "Q1. Which category of hair appliance are you looking for?",
+            zh: "Q1. 您正在寻找哪类美发电器？"
+          },
+          options: [
+            { value: "dryer", label: { ja: "ヘアドライヤー（髪を乾かす・速乾・美髪ケア）", en: "Hair Dryer (Quick dry & hair hydration)", zh: "电吹风（吹干头发、快速干发、护发水润）" } },
+            { value: "iron_straight", label: { ja: "ストレートヘアアイロン（クセ伸ばし・ストレート）", en: "Straightening Iron (Tame frizz & smooth straight)", zh: "直发夹板（拉直头发、抚平毛躁发丝）" } },
+            { value: "iron_curl", label: { ja: "カールヘアアイロン（巻き髪・コテ）", en: "Curling Iron (Curls & waves)", zh: "卷发棒（打造波浪与立体卷发）" } },
+            { value: "iron_2way", label: { ja: "2WAYアイロン / カールドライヤー（ブロー・1台多役）", en: "2WAY Iron / Hot Air Brush (Blow-dry & styling combo)", zh: "两用美发棒 / 卷发吹风机（吹梳造型、一机多用）" } },
+            { value: "iron_portable", label: { ja: "前髪・おくれ毛・携帯用ミニアイロン", en: "Bangs & Portable Mini Iron (Compact touch-ups)", zh: "刘海碎发专用 / 便携迷你美发棒（随身打理）" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p1_priority",
+          title: {
+            ja: "Q2. 今回の買い替えで最も重視するポイントは？",
+            en: "Q2. What is your top priority for this purchase?",
+            zh: "Q2. 此次选购您最看重的核心诉求是？"
+          },
+          options: [
+            { value: "speed", label: { ja: "とにかく速く乾かしたい / 強力な風量・熱効率", en: "Fastest drying time / Powerful airflow & heat", zh: "极速干发 / 强劲大风量与高热效率" } },
+            { value: "care", label: { ja: "髪のダメージ低減・うるおい・ツヤ・美髪ケア", en: "Damage reduction, hydration, shine & salon care", zh: "降低热损伤、补水保湿、水润光泽" } },
+            { value: "light", label: { ja: "本体の軽さ・取り回しの良さ（腕が疲れない）", en: "Lightweight & easy handling (No arm fatigue)", zh: "机身轻盈小巧（长时间握持手腕不累）" } },
+            { value: "cost", label: { ja: "とにかく価格の安さ・手頃なコスパ重視", en: "Affordable price & budget-friendly value", zh: "平价实惠、超高性价比入门" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p1_length",
+          title: {
+            ja: "Q3. 現在の髪の長さはどれくらいですか？",
+            en: "Q3. What is your current hair length?",
+            zh: "Q3. 您目前的头发长度大约是？"
+          },
+          options: [
+            { value: "short", label: { ja: "ショート・ボブ・メンズ（乾きやすい・細かな操作性重視）", en: "Short / Bob / Men's (Fast dry, precision styling)", zh: "短发 / 波波头 / 男士发型（易干、侧重精细打理）" } },
+            { value: "medium", label: { ja: "セミロング・ミディアム（標準的な長さ）", en: "Medium / Shoulder length (Standard length)", zh: "中长发 / 齐肩发（标准常规长度）" } },
+            { value: "long", label: { ja: "ロング・スーパーロング（乾燥やスタイリングに時間がかかる）", en: "Long / Extra Long (Takes longer to dry and style)", zh: "长发 / 超长发（吹干与造型耗时较长）" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p1_scene",
+          title: {
+            ja: "Q4. 主な使用シーンや持ち運びの予定は？",
+            en: "Q4. Where do you primarily plan to use this appliance?",
+            zh: "Q4. 主要使用场景及随身携带需求是？"
+          },
+          options: [
+            { value: "home", label: { ja: "自宅の洗面所での普段使い中心", en: "Mainly daily use at home in the bathroom", zh: "主要在自家洗手间日常使用" } },
+            { value: "travel_domestic", label: { ja: "国内旅行・出張・ジム・職場へ持ち歩きたい", en: "Domestic travel, business trips, gym or office", zh: "经常带去出差、旅行、健身房或办公室" } },
+            { value: "overseas", label: { ja: "海外旅行・留学・出張先でもそのまま使いたい（海外電圧対応）", en: "Overseas travel or study abroad (Dual voltage required)", zh: "经常出国旅行出差（必须支持全球宽电压）" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p1_budget",
+          title: {
+            ja: "Q5. ご予算の目安はどれくらいですか？",
+            en: "Q5. What is your approximate budget range?",
+            zh: "Q5. 您的预算范围大约是多少？"
+          },
+          options: [
+            { value: "under5", label: { ja: "〜5,000円（手頃なエントリー・予備用）", en: "Under ¥5,000 (Affordable entry & backup)", zh: "5,000日元以下（平价实用入门备用）" } },
+            { value: "5_15", label: { ja: "5,000〜15,000円（実力派・大風量・コスパ高機能）", en: "¥5,000 - ¥15,000 (Strong airflow & solid value)", zh: "5,000〜15,000日元（大风量高性价比实力款）" } },
+            { value: "15_30", label: { ja: "15,000〜30,000円（上位ナノケア・サロン級アイロン）", en: "¥15,000 - ¥30,000 (Premium Nanoe & salon-grade irons)", zh: "15,000〜30,000日元（高阶纳米水离子、沙龙级夹板）" } },
+            { value: "over30", label: { ja: "30,000円〜（最上位フラッグシップ・ReFa・高級ケア）", en: "¥30,000+ (Flagship luxury: ReFa, premium Nanoe)", zh: "30,000日元以上（顶级旗舰、ReFa奢华美发科技）" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        }
+      ],
+      questionsPhase2: [
+        {
+          id: "p2_hair_type",
+          title: {
+            ja: "Q6. 髪質や毛量について当てはまるものは？",
+            en: "Q6. Which best describes your hair texture and volume?",
+            zh: "Q6. 您的发质粗细与发量特点是？"
+          },
+          options: [
+            { value: "thick_heavy", label: { ja: "毛量が多く太い / クセが強い（強力な風量や幅広プレートが必要）", en: "Thick, high volume or coarse curl (Needs strong flow / wide plates)", zh: "发量多且粗硬 / 自然卷严重（需要超大风量或宽夹板）" } },
+            { value: "damaged", label: { ja: "カラー・ブリーチ歴あり / パサつき・枝毛が気になる", en: "Color-treated or bleached / Dryness & split ends concern", zh: "经常染烫漂发 / 发丝干枯毛躁分叉" } },
+            { value: "fine_soft", label: { ja: "軟毛・細毛 / 猫っ毛で熱ダメージを受けやすい", en: "Fine, soft or thinning hair (Vulnerable to high heat)", zh: "细软塌发质 / 易受热损伤" } },
+            { value: "normal", label: { ja: "普通の毛量・標準的な髪質", en: "Normal volume and standard hair texture", zh: "正常发量、常规标准发质" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p2_barrel",
+          title: {
+            ja: "Q7. アイロン希望時のバレル太さ・仕上がりイメージは？（ドライヤー検討時は「該当なし」）",
+            en: "Q7. If choosing an iron, what barrel size / finish do you prefer? (Choose 'Not Applicable' for dryers)",
+            zh: "Q7. 若选购美发棒，您偏好的夹板/卷筒直径是？（若选购电吹风请选“不适用”）"
+          },
+          options: [
+            { value: "straight", label: { ja: "ストレート（クセ伸ばし・サラサラ仕上げ）", en: "Straight (Frizz control & sleek straight)", zh: "直发夹板（抚平毛躁拉直发丝）" } },
+            { value: "curl_26", label: { ja: "26mm（短めヘア〜しっかり強めの巻き髪）", en: "26mm (Shorter hair to tight, defined curls)", zh: "26mm（短发〜清晰紧致立体卷度）" } },
+            { value: "curl_32", label: { ja: "32mm（最も万能・定番のきれいめカール）", en: "32mm (Most versatile & classic natural curls)", zh: "32mm（最经典百搭、日常自然优雅卷发）" } },
+            { value: "curl_38", label: { ja: "38mm（ロング向けのゆるふわ・大きめカール）", en: "38mm (Loose, voluminous airy curls for long hair)", zh: "38mm（长发专用的蓬松空气感大波浪）" } },
+            { value: "none", label: { ja: "該当なし（ドライヤーを探している）", en: "Not Applicable (Looking for a hair dryer)", zh: "不适用（正在选购电吹风）" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p2_weight_pref",
+          title: {
+            ja: "Q8. 重さへのこだわりはどれくらいですか？",
+            en: "Q8. How important is the weight of the appliance to you?",
+            zh: "Q8. 您对机身重量的轻巧程度有多大要求？"
+          },
+          options: [
+            { value: "super_light", label: { ja: "腕が疲れるので超軽量（400g前後以下）を強く希望", en: "Strongly prefer ultra-lightweight (Around 400g or under to avoid fatigue)", zh: "极力追求超轻（约400g左右以下，防止手酸）" } },
+            { value: "normal", label: { ja: "性能・風量やプレート性能が十分なら標準的な重さでOK", en: "Standard weight is totally fine if airflow & plates are great", zh: "只要性能风量出众，常规适度重量完全可以接受" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p2_care_tech",
+          title: {
+            ja: "Q9. 美容ケア機能で惹かれるものはありますか？",
+            en: "Q9. Which hair care technology attracts you most?",
+            zh: "Q9. 您最看重哪类美发黑科技护发技术？"
+          },
+          options: [
+            { value: "nanoe_plasma", label: { ja: "高浸透ナノイー / プラズマクラスター（うるおい補給・静電気抑制）", en: "Nanoe / Plasmacluster (Deep moisture & anti-static)", zh: "高渗透纳米水离子 / 净离子群（深层补水防静电）" } },
+            { value: "plate_tech", label: { ja: "シルクプレート / カーボンレイヤー（水蒸気爆発を防ぎ水分蒸発防止）", en: "Silk Plate / Carbon Layer (Prevents steam damage & locks moisture)", zh: "丝绸涂层 / 碳素防护夹板（防止水气暴裂锁住水分）" } },
+            { value: "sensor", label: { ja: "自動温度制御センサー（髪の表面温度を感知して過熱防止）", en: "Smart Thermal Sensing (Controls surface temp to prevent heat damage)", zh: "智能温控传感器（实时感应发丝表面温度防过热）" } },
+            { value: "basic", label: { ja: "基本的なマイナスイオン程度で十分", en: "Standard negative ions are sufficient", zh: "常规基础负离子即可" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p2_power_pref",
+          title: {
+            ja: "Q10. 電源・携帯性・使い勝手への特別な希望は？",
+            en: "Q10. Any specific preferences for power, portability, or storage?",
+            zh: "Q10. 对供电方式、便携与收纳有何特殊要求？"
+          },
+          options: [
+            { value: "cordless_usb", label: { ja: "コードレス または USB充電・モバイルバッテリー対応が良い", en: "Cordless or USB / power bank compatible", zh: "无线充电式或支持USB/移动电源供电" } },
+            { value: "compact_fold", label: { ja: "折りたたみ可能でコンパクトに収納・携帯したい", en: "Foldable body for compact storage & travel", zh: "手柄可折叠，方便紧凑收纳与携带" } },
+            { value: "standard", label: { ja: "通常の家庭用ACコンセント給電で問題ない", en: "Standard household AC wall outlet is fine", zh: "常规家用交流电源插头即可" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        }
+      ],
+      products: [
+        {
+          id: "td570a", category: "dryer", price: 6028, weight: 455, overseas: false, subType: "speed", careRank: 1,
+          name: { ja: "テスコム TD570A", en: "TESCOM TD570A", zh: "TESCOM 泰斯康 TD570A" },
+          desc: { ja: "大風量＋ブーストノズル搭載。手頃な価格で乾燥時間を大幅短縮できる高コスパ速乾ドライヤー。", en: "High airflow equipped with a boost nozzle. Excellent value for significantly reducing drying time under ¥7,000.", zh: "搭载大风量与风力增压风嘴。价格亲民，能显著缩短吹发时间的超高性价比速干电吹风。" },
+          point: { ja: "予算を抑えながら、とにかく毎日のドライヤー時間を短縮したい方に。", en: "Ideal for anyone on a budget wanting to cut down on daily hair drying time.", zh: "控制预算的同时，纯粹希望大幅缩减每日吹头时间的用户首选。" }
+        },
+        {
+          id: "td620a", category: "dryer", price: 10430, weight: 400, overseas: false, subType: "speed", careRank: 2,
+          name: { ja: "テスコム TD620A", en: "TESCOM TD620A", zh: "TESCOM 泰斯康 TD620A" },
+          desc: { ja: "高速ブラシレスDCモーター搭載。軽快な取り回しと圧倒的な風圧で素早くヘアドライ。", en: "Equipped with a high-speed brushless DC motor. Fast drying with agile handling and strong air pressure.", zh: "搭载高速无刷DC数码马达。机身轻盈操控灵活，凭借强劲风压迅速吹干秀发。" },
+          point: { ja: "軽さとプロ仕様の高速モーターによるパワフルな風圧を両立したい方に。", en: "Great for balancing light handling with professional high-velocity airflow.", zh: "兼顾轻量握感与高速数码风压，追求利落高效吹发体验的用户。" }
+        },
+        {
+          id: "khd_m800", category: "dryer", price: 14080, weight: 680, overseas: false, subType: "speed", careRank: 1,
+          name: { ja: "コイズミ MONSTER KHD-M800/R", en: "KOIZUMI MONSTER KHD-M800/R", zh: "KOIZUMI 小泉成器 MONSTER 飓风电吹风 KHD-M800/R" },
+          desc: { ja: "ダブルファンによる圧倒的な爆風設計。毛量が多い方やロングヘアを一気に乾かしたい方に最適。", en: "Overwhelming dual-fan cyclone airflow. Best for high hair volume or extra long hair needing rapid drying.", zh: "独创双涡轮风扇带来压倒性暴风级风量。发量厚重、长发及腰需快速吹干的最佳利器。" },
+          point: { ja: "美容機能よりも、とにかく圧倒的な風速と風量で最速乾燥を目指す方に。", en: "Perfect for customers prioritizing maximum wind power over gentle skincare features.", zh: "比起娇气护肤功能，纯粹追求极致大风量狂风速干体验的用户。" }
+        },
+        {
+          id: "eh_ne8n", category: "dryer", price: 15840, weight: 455, overseas: false, subType: "speed", careRank: 2,
+          name: { ja: "パナソニック イオニティ EH-NE8N", en: "Panasonic ionity EH-NE8N", zh: "Panasonic 松下 ionity 负离子大风量吹风机 EH-NE8N" },
+          desc: { ja: "大風量＋低温風＋ダブル外付けミネラルマイナスイオン。速乾と熱ダメージ低減を両立。", en: "Strong airflow + low heat temperature + dual external mineral negative ions. Balances speed with heat protection.", zh: "大风量配合温和低温风，外置双矿物质负离子发射孔。兼顾超快干发与防止高温伤发。" },
+          point: { ja: "早く乾かしたいけれど、髪への熱負担やパサつきも抑えたい方に。", en: "Ideal for those wanting fast drying while keeping thermal damage and hair dryness to a minimum.", zh: "既想节省吹发时间，又担心发丝被高温烘烤受损干枯的稳健之选。" }
+        },
+        {
+          id: "ib_wx902", category: "dryer", price: 39600, weight: 510, overseas: false, subType: "speed", careRank: 4,
+          name: { ja: "シャープ プラズマクラスタードレープフロードライヤー IB-WX902", en: "SHARP Plasmacluster Drape Flow Dryer IB-WX902", zh: "SHARP 夏普 净离子群幕帘式双出风吹风机 IB-WX902" },
+          desc: { ja: "2つの吹出口から出るドレープフローで髪を広げながら速乾。センシング機能とプラズマクラスターを両立。", en: "Dual drape-flow nozzles separate hair for fast drying. Integrates distance-sensing temperature control and Plasmacluster.", zh: "双吹风口幕帘式气流深层撩动发丝极速干发。搭载智能距离测温感应与高浓度净离子群护发。" },
+          point: { ja: "速乾性と最高レベルのうるおい・熱制御を妥協なく追求したい方に。", en: "The pinnacle choice for demanding the fastest drying time paired with cutting-edge scalp/hair wellness.", zh: "毫不妥协，同时追求极致速干效率与最高等级水润恒温护发的高端用户。" }
+        },
+        {
+          id: "ib_p300", category: "dryer", price: 6420, weight: 485, overseas: false, subType: "care", careRank: 2,
+          name: { ja: "シャープ プラズマクラスタードライヤー IB-P300", en: "SHARP Plasmacluster Dryer IB-P300", zh: "SHARP 夏普 净离子群电吹风 IB-P300" },
+          desc: { ja: "手頃な価格でプラズマクラスターを搭載。軽さと静電気抑制ケアを両立した日常機。", en: "Affordable dryer equipped with Plasmacluster technology. Combines lightweight body with static reduction.", zh: "亲民价格配备正负净离子群技术。兼具机身轻盈与抚平静电毛躁的日常实用款。" },
+          point: { ja: "手頃な価格で静電気を防ぎ、サラサラのまとまり髪を手に入れたい方に。", en: "Great for taming static electricity and achieving sleek hair on a modest budget.", zh: "用几千日元亲民预算抚平静电、追求柔顺顺滑发质的用户。" }
+        },
+        {
+          id: "ib_p602", category: "dryer", price: 14871, weight: 535, overseas: false, subType: "care", careRank: 3,
+          name: { ja: "シャープ プラズマクラスタードライヤー IB-P602", en: "SHARP Plasmacluster Dryer IB-P602", zh: "SHARP 夏普 净离子群大风量电吹风 IB-P602" },
+          desc: { ja: "シンプルな操作性と大風量。プラズマクラスターでパサつきを抑え、しなやかな髪へ導く。", en: "Straightforward operation with strong airflow. Plasmacluster seals moisture for supple, shiny locks.", zh: "操作简洁实用的大风量吹风机。净离子群深层滋润发芯，让秀发柔顺富有弹性。" },
+          point: { ja: "1万円台で本格的な美髪ケア機能と大風量を両立したい方に。", en: "Perfect match for combining genuine hair wellness with strong airflow under ¥20,000.", zh: "希望在1万多日元预算内，同时获得扎实大风量与美发离子养护的用户。" }
+        },
+        {
+          id: "ib_p802", category: "dryer", price: 27551, weight: 545, overseas: false, subType: "care", careRank: 3,
+          name: { ja: "シャープ プラズマクラスタードライヤー IB-P802", en: "SHARP Plasmacluster Dryer IB-P802", zh: "SHARP 夏普 智能温控净离子群吹风机 IB-P802" },
+          desc: { ja: "BEAUTYモードや温冷リズム、スカルプモードを搭載。地肌から毛先までトータルケア。", en: "Features Beauty mode, alternating hot/cold rhythm, and scalp mode for total hair & scalp wellness.", zh: "搭载BEAUTY冷热交替循环模式与头皮养护模式。从头皮发根到发梢全方位呵护。" },
+          point: { ja: "髪だけでなく、地肌のベタつきや乾燥も一緒にケアしたい方に。", en: "Excellent for those seeking comprehensive care for both scalp health and hair luster.", zh: "不仅护发，还希望改善头皮油腻紧绷与干燥发痒问题的健康护发派。" }
+        },
+        {
+          id: "eh_na7m", category: "dryer", price: 19800, weight: 450, overseas: false, subType: "care", careRank: 3,
+          name: { ja: "パナソニック ナノケア EH-NA7M", en: "Panasonic nanoe EH-NA7M", zh: "Panasonic 松下 纳米水离子轻巧吹风机 EH-NA7M" },
+          desc: { ja: "ナノイー搭載の入門ナノケア。軽量・スリムなボディで初めてナノケアを導入する方に最適。", en: "The entry model to the famous nanoe series. Slim, lightweight body perfect for your first Nano Care dryer.", zh: "松下著名纳米水离子系列入门款。纤细轻盈机身设计，初次体验nanoe养护的绝佳入口。" },
+          point: { ja: "ナノケアを初めて使ってみたい方、軽さとスリムさを重視する方に。", en: "Ideal for anyone wanting to step into the nanoe ecosystem with a lightweight, compact build.", zh: "初次入手松下纳诺怡、看重轻量化与纤巧易握设计的顾客。" }
+        },
+        {
+          id: "eh_na9m", category: "dryer", price: 25740, weight: 575, overseas: false, subType: "care", careRank: 3,
+          name: { ja: "パナソニック ナノケア EH-NA9M", en: "Panasonic nanoe EH-NA9M", zh: "Panasonic 松下 纳米水离子与矿物质吹风机 EH-NA9M" },
+          desc: { ja: "ナノイー＆ミネラルでキューティクルを引き締め。温冷リズムモードやスカルプモードを完備。", en: "Nanoe & mineral ions tighten hair cuticles. Equipped with alternating hot/cold rhythm and scalp modes.", zh: "纳米水离子结合双倍矿物质负离子收紧毛鳞片。配备冷热交替循环与头皮模式。" },
+          point: { ja: "紫外線ダメージや摩擦を抑え、指通りの良いサラサラ髪を求める定番人気機。", en: "A long-time customer favorite for defending against UV damage and friction for silky smooth strands.", zh: "有效抵御紫外线与梳头摩擦损伤，松下纳诺怡经久不衰的王牌畅销款。" }
+        },
+        {
+          id: "eh_na0k", category: "dryer", price: 34650, weight: 450, overseas: false, subType: "care", careRank: 4,
+          name: { ja: "パナソニック ナノケア EH-NA0K", en: "Panasonic nanoe MOISTURE+ EH-NA0K", zh: "Panasonic 松下 高渗透纳米水离子吹风机 EH-NA0K" },
+          desc: { ja: "高浸透ナノイー搭載。速乾・うるおい・コンパクトな扱いやすさを最高バランスで備えた大人気モデル。", en: "Features High-Penetration nanoe. The best-selling balance of deep moisture, rapid drying, and compact design.", zh: "搭载新一代高渗透纳诺怡。集超强水润渗透力、大风量速干与小巧轻巧机身于一身的超人气款。" },
+          point: { ja: "速乾・うるおい・軽さのすべてが高水準。迷ったら選んで間違いのない本命モデル。", en: "Unbeatable harmony of moisture, speed, and lightness. The safest, most celebrated premium choice.", zh: "速干效率、水润度与轻盈便携达到完美平衡。不知如何选择时绝对不会出错的本命旗舰。" }
+        },
+        {
+          id: "eh_nc50", category: "dryer", price: 59400, weight: 590, overseas: false, subType: "care", careRank: 5,
+          name: { ja: "パナソニック ナノケア EH-NC50", en: "Panasonic nanoe ULTIMATE EH-NC50", zh: "Panasonic 松下 纳诺怡顶级终极旗舰吹风机 EH-NC50" },
+          desc: { ja: "パナソニック最上位フラッグシップ。妥協のない最高峰の潤いとツヤを求めるプロフェッショナル志向へ。", en: "Panasonic's ultimate flagship dryer. Designed for uncompromising professionals seeking pinnacle moisture and gloss.", zh: "松下电吹风最高峰终极旗舰。针对追求无与伦比水润柔亮光泽与沙龙级造型质感的尊贵用户。" },
+          point: { ja: "価格よりも髪質改善と圧倒的な美髪性能を最優先したい方に。", en: "For customers who prioritize ultimate hair transformation and luxury care above price.", zh: "预算不设限，将顶级改善发质与极致护发黑科技放在第一位的高端美发追求者。" }
+        },
+        {
+          id: "kh301", category: "dryer", price: 31680, weight: 363, overseas: false, subType: "light", careRank: 4,
+          name: { ja: "KINUJO Hair Dryer KH301/KH302", en: "KINUJO Hair Dryer KH301/KH302", zh: "KINUJO 绢女 超轻折叠远红外吹风机 KH301/KH302" },
+          desc: { ja: "本体約363gという圧倒的超軽量設計。大風量遠赤外線で、美容性能と軽さを最高レベルで融合。", en: "Ultra-featherlight design at just ~363g. Blends super airflow with far-infrared technology and salon care.", zh: "机身仅约363g压倒性轻盈折叠设计。大风量搭载超远红外线，将沙龙级水润与超轻握持完美结合。" },
+          point: { ja: "重いドライヤーで腕が疲れるロングヘアの方、軽さと美髪ケアを両立したい方に。", en: "The dream match for long-hair users tired of arm fatigue who still demand luxury hair care.", zh: "头发长、每次吹头手酸手疼，同时对护发滋润度有极高要求用户的最佳解法。" }
+        },
+        {
+          id: "refa_smart_w", category: "dryer", price: 40000, weight: 520, overseas: true, subType: "care", careRank: 4,
+          name: { ja: "ReFa BEAUTECH DRYER SMART W", en: "ReFa BEAUTECH DRYER SMART W", zh: "ReFa 黎珐 智能双电压轻巧吹风机 SMART W" },
+          desc: { ja: "センシング自動温度調整＋ハイドロイオン。海外対応（マルチボルテージ）も備えたラグジュアリーモデル。", en: "Auto-sensing thermal regulation + Hydro Ions. Dual voltage compatible worldwide in a luxury compact frame.", zh: "搭载环境感知自动控温黑科技与水润负离子。支持全球宽电压的轻巧折叠轻奢吹风机。" },
+          point: { ja: "ReFaのサロン級レア髪仕上げを、自宅でも海外旅行先でもそのまま味わいたい方に。", en: "Experience ReFa's signature silky 'rare hair' finish both at home and across the globe.", zh: "无论在自家洗手间还是出国旅行出差，都想享受ReFa沙龙级水光柔润发质的时尚达人。" }
+        },
+        {
+          id: "td105b", category: "dryer", price: 1298, weight: 380, overseas: false, subType: "cost", careRank: 0,
+          name: { ja: "テスコム TD105B", en: "TESCOM TD105B", zh: "TESCOM 泰斯康 基础电吹风 TD105B" },
+          desc: { ja: "必要最低限の乾燥機能を備えた超低価格モデル。単身・予備機・臨時用に。", en: "Ultra-affordable basic model with essential drying features. Perfect for dorms, spares, or temporary use.", zh: "具备基础吹干功能的超低价实用款。适合独居租房、学生宿舍或备用应急。" },
+          point: { ja: "ドライヤーに余計なお金をかけず、ただ乾けば十分という方に。", en: "For anyone who just wants dry hair with minimal expenditure.", zh: "对复杂功能无需求，只求以最低预算把头发吹干的极简主义者。" }
+        },
+        {
+          id: "khd_9802", category: "dryer", price: 2178, weight: 430, overseas: false, subType: "cost", careRank: 1,
+          name: { ja: "コイズミ KHD-9802/W", en: "KOIZUMI KHD-9802/W", zh: "KOIZUMI 小泉成器 负离子电吹风 KHD-9802/W" },
+          desc: { ja: "2,000円台でマイナスイオン搭載。低予算で基本機能を抑えたい方向け。", en: "Features negative ions at just around ¥2,000. Covers all essentials for tight budgets.", zh: "2,000多日元亲民价位配备负离子功能。超低预算下满足日常基础吹头护发需求。" },
+          point: { ja: "低予算でもマイナスイオンで髪の広がりを最低限抑えたい方に。", en: "Great for keeping hair manageable with basic negative ions on a tight budget.", zh: "预算极度有限，但仍希望有基础负离子抚平乱翘发丝的实用之选。" }
+        },
+        {
+          id: "kdd_0020", category: "dryer", price: 3278, weight: 360, overseas: true, subType: "cost", careRank: 1,
+          name: { ja: "コイズミ KDD-0020/N", en: "KOIZUMI KDD-0020/N", zh: "KOIZUMI 小泉成器 便携式全球电压吹风机 KDD-0020/N" },
+          desc: { ja: "電圧切替スイッチ付きで海外対応。コンパクトに折りたためる旅行特化型ドライヤー。", en: "Manual voltage switch for international travel. Compact foldable travel specialist dryer.", zh: "带手动电压切换开关，支持海外旅行。可折叠紧凑收纳的差旅专用吹风机。" },
+          point: { ja: "海外旅行や出張専用に、安くてコンパクトな変圧対応機を持っておきたい方に。", en: "The best low-cost, compact companion to pack into your suitcase for international trips.", zh: "专门为出国旅行准备，物美价廉、轻巧不占行李箱空间的宽电压便携机。" }
+        },
+        {
+          id: "eh_na9f", category: "dryer", price: 25740, weight: 575, overseas: true, subType: "care", careRank: 3,
+          name: { ja: "パナソニック ナノケア EH-NA9F", en: "Panasonic nanoe Travel EH-NA9F", zh: "Panasonic 松下 全球通用电压纳米水离子吹风机 EH-NA9F" },
+          desc: { ja: "国内でも海外でもナノイー美髪ケアがそのまま使える電圧切替式プレミアムドライヤー。", en: "Dual-voltage premium dryer delivering authentic nanoe hair care both in Japan and overseas.", zh: "无论在日本国内还是海外出差旅行，都能原汁原味享受松下纳米水离子养护的高级宽电压款。" },
+          point: { ja: "留学や海外出張が多く、渡航先でもナノケアの仕上がりを妥協したくない方に。", en: "Uncompromising choice for frequent international travelers who demand salon-level nanoe abroad.", zh: "经常跨国出差、留学或热爱环球旅行，在异国他乡也绝不妥协发质养护的精英派。" }
+        },
+        {
+          id: "khs_8430", category: "iron_straight", price: 2630, weight: 160, overseas: true, subType: "cost", barrel: "straight", careRank: 1,
+          name: { ja: "コイズミ KHS-8430", en: "KOIZUMI KHS-8430", zh: "KOIZUMI 小泉成器 便携迷你直发夹板 KHS-8430" },
+          desc: { ja: "コンパクトで軽量。前髪やショートヘア、旅行時の持ち運びに便利な手頃なアイロン。", en: "Ultra-compact and lightweight. Affordable iron convenient for bangs, short hair, and travel.", zh: "小巧轻盈。适合打理刘海、短发造型，外出旅行随身携带毫无负担的平价夹板。" },
+          point: { ja: "前髪の手直しや旅行用に、安くて小さなストレートアイロンが欲しい方に。", en: "Perfect for quick bangs touch-ups or packing a tiny straightener on a weekend trip.", zh: "专用于晨间整理刘海碎发或出门随身携带的小巧高性价比夹板。" }
+        },
+        {
+          id: "vsi_1027", category: "iron_straight", price: 2980, weight: 240, overseas: true, subType: "cost", barrel: "straight", careRank: 1,
+          name: { ja: "ヴィダルサスーン VSI-1027", en: "Vidal Sassoon VSI-1027", zh: "Vidal Sassoon 沙宣 便携直发夹板 VSI-1027" },
+          desc: { ja: "手頃な価格で最高200℃の本格ストレート。コスパ重視でしっかり伸ばしたい方向け。", en: "High temperature up to 200°C at an entry price. For those wanting strong straightening on a budget.", zh: "亲民价位即可达到最高200℃专业造型温度。注重性价比、想彻底拉直顽固卷曲的发友必备。" },
+          point: { ja: "3,000円前後でしっかり高温でクセを伸ばせるアイロンをお探しの方に。", en: "Great for locking in sleek straight hair with high heat for under ¥3,000.", zh: "预算在3,000日元左右，期望利用高温快速拉直睡醒乱翘头发的用户。" }
+        },
+        {
+          id: "nis500b", category: "iron_straight", price: 10430, weight: 350, overseas: false, subType: "speed", barrel: "straight", careRank: 2,
+          name: { ja: "テスコム プロテクトイオン NIS500B", en: "TESCOM Protect Ion NIS500B", zh: "TESCOM 泰斯康 沙龙级防静电直发夹板 NIS500B" },
+          desc: { ja: "密着プレートが髪の根元からしっかりキャッチ。サロン感覚のしっかりクセ伸ばし。", en: "Close-contact floating plates grip hair firmly from the roots. Salon-grade straight styling.", zh: "高贴合浮动夹板从发根紧紧贴合发丝。呈现沙龙美发师手法的利落拉直效果。" },
+          point: { ja: "頑固なクセ毛を根元からしっかり挟んでストレートに整えたい方に。", en: "Ideal for tackling stubborn frizz and unruly hair firmly from root to tip.", zh: "自然卷发质严重，希望从靠近发根处紧密夹住发束彻底拉顺的用户。" }
+        },
+        {
+          id: "eh_hs0j", category: "iron_straight", price: 14850, weight: 380, overseas: true, subType: "care", barrel: "straight", careRank: 4,
+          name: { ja: "パナソニック ナノケア EH-HS0J", en: "Panasonic nanoe Straightener EH-HS0J", zh: "Panasonic 松下 纳米水离子3D贴合直发器 EH-HS0J" },
+          desc: { ja: "ナノイー＋3D密着プレート。滑りやすさと水分補給でしっとりツヤのあるストレートに。", en: "Nanoe + 3D floating plates. Delivers sleek glide and moisture replenishment for glossy straight locks.", zh: "纳米水离子结合3D贴合浮动夹板。顺滑不扯发并持续补水，打造水润垂顺直发。" },
+          point: { ja: "アイロンの熱によるパサつきを防ぎ、毛先までツヤとしっとり感を保ちたい方に。", en: "The best choice for preventing heat dryness while achieving hydrated, glossy straight hair.", zh: "防止反复夹直导致发梢干枯焦脆，长效保持垂坠水感光泽的品质之选。" }
+        },
+        {
+          id: "refa_straight", category: "iron_straight", price: 22000, weight: 295, overseas: true, subType: "care", barrel: "straight", careRank: 4,
+          name: { ja: "ReFa BEAUTECH STRAIGHT IRON", en: "ReFa BEAUTECH STRAIGHT IRON", zh: "ReFa 黎珐 碳素柔光直发夹板 BEAUTECH STRAIGHT" },
+          desc: { ja: "カーボンレイヤープレートが水・熱・圧をコントロール。髪をつぶさず柔らかいレア髪ストレートへ。", en: "Carbon Layer Plates control moisture, heat, and pressure. Straightens without crushing hair fibers.", zh: "独创碳素防护夹板智能调节水、热、压。不压扁发丝纤维，打造柔韧灵动的丝滑水光直发。" },
+          point: { ja: "硬くパリッとしたストレートではなく、サロン帰りのような柔らかいレア髪質感を目指す方に。", en: "For those who want supple, soft, hydrated straight hair rather than stiff, brittle results.", zh: "拒绝僵硬板结的死板直发，向往日系沙龙柔韧自然、水润灵动秀发质感的人群。" }
+        },
+        {
+          id: "kinujo_lm225", category: "iron_straight", price: 24200, weight: 390, overseas: false, subType: "care", barrel: "straight", careRank: 5,
+          name: { ja: "KINUJO ストレートヘアアイロン LM-225", en: "KINUJO Straightening Iron LM-225", zh: "KINUJO 绢女 丝绸特氟龙涂层直发夹板 LM-225" },
+          desc: { ja: "特殊シルクプレートで水蒸気爆発を防ぎ水分を蒸発させない。超高速立ち上がりも魅力。", en: "Special Silk Plate prevents steam explosion to lock in moisture. Incredible lightning-fast heat-up time.", zh: "特制丝绸涂层即使直接滴水也不会发生高温水气暴裂，牢牢锁住发丝水分。20秒极速升温。" },
+          point: { ja: "髪の水分を徹底的にキープしたい方、朝の立ち上がりスピードを極めたい方に。", en: "Pinnacle choice for protecting hair hydration and cutting morning wait time with ultra-fast heating.", zh: "把发丝内部水分蒸发降到最低极限，同时看重晨间几十秒极速升温无需等待的高效派。" }
+        },
+        {
+          id: "refa_power_straight", category: "iron_straight", price: 33000, weight: 380, overseas: true, subType: "speed", barrel: "straight", careRank: 4,
+          name: { ja: "ReFa POWER STRAIGHT IRON", en: "ReFa POWER STRAIGHT IRON", zh: "ReFa 黎珐 宽板强效抚平直发器 POWER STRAIGHT" },
+          desc: { ja: "38mmの幅広プレート搭載。強いクセ毛や毛量の多いロングヘアも一度にしっかり挟んで伸ばす。", en: "Equipped with wide 38mm plates. Tames stubborn frizz and heavy volumes in sweeping single passes.", zh: "搭载38mm超宽夹板。发量浓密、长发及腰或严重自然卷发质也能大束夹取快速拉直。" },
+          point: { ja: "毛量が多く普通の細いアイロンでは時間がかかりすぎるロングヘアの方に。", en: "Designed specifically for thick or long hair that takes too long with standard narrow irons.", zh: "发量巨多、用普通窄夹板需要一层层夹半小时以上的长发厚发人群专属神器。" }
+        },
+        {
+          id: "khr_1140", category: "iron_curl", price: 7090, weight: 330, overseas: true, subType: "cost", barrel: "curl_26", careRank: 2,
+          name: { ja: "コイズミ KHR-1140/C (26mm)", en: "KOIZUMI KHR-1140/C (26mm)", zh: "KOIZUMI 小泉成器 纳米陶瓷卷发棒 26mm KHR-1140/C" },
+          desc: { ja: "ナノセラミックコーティングの26mm。細かい毛束やしっかりとしたカール作りに。", en: "26mm barrel with nano-ceramic coating. Creates defined, tight curls and textured accents.", zh: "26mm纳米陶瓷涂层发热卷筒。适合卷出紧致富有弹性的立体卷度或打理短发碎发。" },
+          point: { ja: "ボブ〜ミディアムヘアで、しっかり持続する弾力カールを作りたい方に。", en: "Great for bob to medium hair lengths wanting long-lasting, defined curls.", zh: "齐肩中短发、希望卷度明显且持久一整天不塌陷的用户。" }
+        },
+        {
+          id: "refa_curl_26", category: "iron_curl", price: 24000, weight: 350, overseas: false, subType: "care", barrel: "curl_26", careRank: 4,
+          name: { ja: "ReFa BEAUTECH CURL IRON 26", en: "ReFa BEAUTECH CURL IRON 26", zh: "ReFa 黎珐 碳素柔光卷发棒 26mm BEAUTECH CURL 26" },
+          desc: { ja: "カーボンレイヤープレートでカールの持ちとうるおいを両立する26mm径。", en: "26mm barrel utilizing Carbon Layer Plates to balance moisture retention with firm curl memory.", zh: "26mm经典细卷筒采用碳素防护涂层。兼顾卷度持久记忆与水润轻盈不焦枯。" },
+          point: { ja: "しっかりしたカールを作りながら、髪のパサつきや傷みを最小限に抑えたい方に。", en: "For those demanding resilient curls while keeping hair fibers hydrated and glossy.", zh: "想要打造富有弹性的清晰卷发，同时严格控制毛鳞片受损与发丝毛躁的品质派。" }
+        },
+        {
+          id: "mhi_3249", category: "iron_curl", price: 3700, weight: 340, overseas: true, subType: "cost", barrel: "curl_32", careRank: 1,
+          name: { ja: "モッズ・ヘア MHI-3249 (32mm)", en: "mod's hair MHI-3249 (32mm)", zh: "mod's hair 基础卷发棒 32mm MHI-3249" },
+          desc: { ja: "手頃な価格で万能に使える32mmカールアイロン。普段使いの巻き髪に。", en: "Versatile 32mm curling iron at an affordable price. An essential classic for daily curling.", zh: "平价实用、最经典的32mm通用粗细卷发棒。满足日常各种自然大波浪造型需求。" },
+          point: { ja: "一番定番の32mmアイロンを手頃な予算で気軽に試してみたい方に。", en: "The best gateway model to enjoy standard 32mm curls without big investment.", zh: "初次学习卷发，希望以超低预算体验最经典32mm波浪卷度的新手。" }
+        },
+        {
+          id: "refa_curl_32", category: "iron_curl", price: 24000, weight: 365, overseas: false, subType: "care", barrel: "curl_32", careRank: 4,
+          name: { ja: "ReFa BEAUTECH CURL IRON 32", en: "ReFa BEAUTECH CURL IRON 32", zh: "ReFa 黎珐 碳素柔光卷发棒 32mm BEAUTECH CURL 32" },
+          desc: { ja: "一番人気の32mm万能サイズ。パサつかず弾力のある立体カールが持続。", en: "Most popular universal 32mm size. Holds bouncy, vibrant curls all day without brittleness.", zh: "全系列最受瞩目的32mm万能黄金规格。卷出柔韧不干枯、全天充满弹性的水润大卷。" },
+          point: { ja: "巻き髪の定番32mmで、傷ませずサロンのような美しい立体カールを作りたい方に。", en: "The gold standard for achieving soft, salon-grade 32mm bouncy curls safely.", zh: "日常卷发最推荐的万能尺寸，想要拥有沙龙级水光弹性自然大卷的爱美人士。" }
+        },
+        {
+          id: "kinujo_kc38n", category: "iron_curl", price: 24200, weight: 430, overseas: true, subType: "care", barrel: "curl_38", careRank: 5,
+          name: { ja: "KINUJO カールヘアアイロン KC38N (38mm)", en: "KINUJO Curling Iron KC38N (38mm)", zh: "KINUJO 绢女 丝绸涂层大波浪卷发棒 38mm KC38N" },
+          desc: { ja: "シルクプレート採用の38mm。ロングヘアを傷めず、ゆるふわの抜け感カールを演出。", en: "Features special Silk Plate in a wide 38mm barrel. Effortless airy waves for long hair without thermal stress.", zh: "丝绸防护涂层搭配38mm超大直径卷筒。长发专属，打造轻盈慵懒、韩系法式自然大波浪。" },
+          point: { ja: "ロングヘアで、韓国風のゆるふわウェーブや抜け感のある大きなカールを作りたい方に。", en: "Perfect for long hair enthusiasts seeking effortless, trendy loose waves and airy bounce.", zh: "及腰长发用户打造慵懒韩系大波浪、高阶空气感大卷的终极利器。" }
+        },
+        {
+          id: "tw552b", category: "iron_2way", price: 4378, weight: 410, overseas: false, subType: "cost", barrel: "none", careRank: 2,
+          name: { ja: "テスコム マイナスイオン2WAYスチームヘアアイロン TW552B", en: "TESCOM Negative Ion 2WAY Steam Iron TW552B", zh: "TESCOM 泰斯康 负离子蒸汽两用美发棒 TW552B" },
+          desc: { ja: "ストレートとカールが1本でOK。スチーム機能付きでしっかりクセづけ。", en: "Straight and curl capabilities in a single unit. Steam infusion helps lock in resilient styles.", zh: "直卷合一。一键切换直发与卷发，搭载蒸汽抚平功能，造型更加服帖持久。" },
+          point: { ja: "何本もアイロンを持ちたくない方、スチームでしっかりクセをつけたい方に。", en: "Great for anyone wanting one versatile tool for both straight and curl days with steam styling.", zh: "不想在洗手间收纳多根夹板卷棒，希望一机兼顾直发卷发且有蒸汽辅助定型的朋友。" }
+        },
+        {
+          id: "tc105b", category: "iron_2way", price: 1690, weight: 290, overseas: false, subType: "cost", barrel: "none", careRank: 0,
+          name: { ja: "テスコム カールドライヤー TC105B", en: "TESCOM Hot Air Brush TC105B", zh: "TESCOM 泰斯康 基础梳子吹风机 TC105B" },
+          desc: { ja: "片手で手軽に毎朝のブローができる超軽量エントリーカールドライヤー。", en: "Ultra-lightweight hot air styling brush for easy one-handed morning blowouts on a budget.", zh: "单手即可轻松搞定早晨顺发吹整造型的超轻量入门款卷发梳吹风机。" },
+          point: { ja: "アイロンの熱が苦手で、ブラシ付きドライヤーで手軽に内巻きブローしたい方に。", en: "Ideal for users who prefer hot air brushes over hot iron plates for gentle inner-curl styling.", zh: "不习惯使用发热金属夹板，更偏好用温风梳子吹出蓬松发根与发梢内扣的长辈或新手。" }
+        },
+        {
+          id: "eh_ke4n", category: "iron_2way", price: 6160, weight: 335, overseas: false, subType: "care", barrel: "none", careRank: 2,
+          name: { ja: "パナソニック くるくるドライヤー イオニティ EH-KE4N", en: "Panasonic kurukuru ionity EH-KE4N", zh: "Panasonic 松下 多功能负离子吹梳机 EH-KE4N" },
+          desc: { ja: "4つのアタッチメントブラシ付き。ボリュームアップから毛先の内巻きまで自在。", en: "Includes 4 interchangeable styling attachments. Versatile for root volumizing, curls, and straightening.", zh: "配备4款多功能造型梳头配件。从发根蓬松垫高到发梢自然C字内扣随心掌控。" },
+          point: { ja: "アタッチメントを使い分け、トップのふんわり感や前髪を自在にブローしたい方に。", en: "Perfect for those who want multiple brush heads to style top volume, bangs, and smooth sides.", zh: "注重发顶蓬松度与发尾弧度，希望通过多样化风嘴刷头吹整出自然弧度的用户。" }
+        },
+        {
+          id: "eh_kn0k", category: "iron_2way", price: 32670, weight: 385, overseas: false, subType: "care", barrel: "none", careRank: 4,
+          name: { ja: "パナソニック くるくるドライヤー ナノケア EH-KN0K", en: "Panasonic kurukuru nanoe MOISTURE+ EH-KN0K", zh: "Panasonic 松下 高渗透纳米水离子奢华吹梳机 EH-KN0K" },
+          desc: { ja: "高浸透ナノイー搭載の最高級くるくるドライヤー。サロン帰りのようなツヤ感ブローを実現。", en: "Top-tier hot air styling brush featuring High-Penetration nanoe for salon-level glossy blowouts.", zh: "搭载高渗透纳诺怡水离子的最高阶吹梳机。边吹整边注入丰沛水分，呈现美发沙龙般的润泽顺滑。" },
+          point: { ja: "ブローしながら髪に水分をたっぷり与え、髪をいたわりながらツヤを出したい方に。", en: "The ultimate solution to nourish hair with intense moisture while achieving effortless blowouts.", zh: "希望在晨间吹理发型的同时为发丝深度补水，给头发最温柔无损伤呵护的精致人群。" }
+        },
+        {
+          id: "khr_6420", category: "iron_portable", price: 2840, weight: 170, overseas: true, subType: "cost", barrel: "straight", careRank: 1,
+          name: { ja: "コイズミ コードレスアイロン KHR-6420", en: "KOIZUMI Cordless Mini Iron KHR-6420", zh: "KOIZUMI 小泉成器 充电式无线便携夹板 KHR-6420" },
+          desc: { ja: "充電式コードレス。外出先での前髪や毛先の手直しに抜群の携帯性。", en: "Rechargeable and cordless. Outstanding portability for touch-ups on bangs and tips anytime, anywhere.", zh: "内置锂电池充电式无线设计。放在包包里，随时随地在洗手间补救雨天扁塌刘海与发尾。" },
+          point: { ja: "コードを気にせず、学校や職場で手軽に前髪を整えたい方に。", en: "Best for styling bangs on the go at school, work, or before evening outings without cords.", zh: "无需寻找墙壁插座，在学校更衣室、办公室或外出约会前随时打理刘海的便携神器。" }
+        },
+        {
+          id: "mhs_1343", category: "iron_portable", price: 3760, weight: 80, overseas: true, subType: "cost", barrel: "straight", careRank: 1,
+          name: { ja: "モッズ・ヘア モバイルヘアアイロン MHS-1343", en: "mod's hair Mobile Hair Iron MHS-1343", zh: "mod's hair USB供电超轻羽量美发夹板 MHS-1343" },
+          desc: { ja: "本体わずか約80g。USB給電式でモバイルバッテリーから使える超小型モデル。", en: "Weighs only ~80g. Ultra-compact design powered directly via USB power banks.", zh: "机身仅重约80g如同一支口红般小巧。支持USB供电，连接充电宝即可随插随热使用。" },
+          point: { ja: "とにかく荷物を軽く小さくしたい方、モバイルバッテリーで動かしたい方に。", en: "The dream choice for minimizing bag weight and running your straightener off a portable battery.", zh: "极致精简出行行囊重量，习惯用充电宝随时随地应急造型的时髦青年。" }
+        },
+        {
+          id: "refa_finger_st", category: "iron_portable", price: 14500, weight: 160, overseas: true, subType: "care", barrel: "straight", careRank: 4,
+          name: { ja: "ReFa FINGER IRON ST", en: "ReFa FINGER IRON ST", zh: "ReFa 黎珐 指尖柔光无线便携美发棒 FINGER IRON ST" },
+          desc: { ja: "指先感覚で毛束1cmをつかむ。前髪・おくれ毛・ニュアンス作りに特化したコードレスアイロン。", en: "Grips delicate 1cm hair strands just like fingertips. Cordless iron specialized for nuanced bangs and edges.", zh: "仿造专业发型师指尖触感精细夹取1cm微细发束。专攻刘海、鬓角碎发与微翘弧度的无线便携夹。" },
+          point: { ja: "プロの指先のような繊細なニュアンスセットを、外出先でも妥協せず再現したい方に。", en: "Pinnacle choice for recreating professional salon-like nuanced styling on the go.", zh: "对刘海弧度、耳后碎发、发尾微翘等精致微细节有极致执念，外出也绝不马虎的精致人士。" }
+        }
+      ]
+    }
+  };
+
+  function switchCategory(cat) {
+    currentCategory = cat;
+    p1Answers = {};
+    p2Answers = {};
+
+    document.body.className = APP_CONFIG[cat].themeClass;
+    document.getElementById('btn_mode_shaver').classList.toggle('active', cat === 'shaver');
+    document.getElementById('btn_mode_haircare').classList.toggle('active', cat === 'haircare');
+
+    restart();
+  }
+
+  function setLanguage(lang) {
+    currentLang = lang;
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.textContent.toLowerCase().includes(lang === 'ja' ? '日本' : lang === 'en' ? 'eng' : '中'));
+    });
+
+    const cfg = APP_CONFIG[currentCategory];
+    const t = cfg.i18n[lang];
+
+    document.getElementById('btn_mode_shaver').textContent = APP_CONFIG.shaver.i18n[lang].navTitle;
+    document.getElementById('btn_mode_haircare').textContent = APP_CONFIG.haircare.i18n[lang].navTitle;
+
+    document.getElementById('ui_title').textContent = t.title;
+    document.getElementById('ui_lead').textContent = t.lead;
+    document.getElementById('ui_p1_indicator').textContent = t.p1Indicator;
+    document.getElementById('ui_p2_indicator').textContent = t.p2Indicator;
+    document.getElementById('ui_btn_next1').textContent = t.btnNext1;
+    document.getElementById('ui_btn_next2').textContent = t.btnNext2;
+    document.getElementById('ui_btn_restart').textContent = t.btnRestart;
+    document.getElementById('ui_result_title').textContent = t.resultTitle;
+
+    renderQuestionsPhase1();
+    renderQuestionsPhase2();
+
+    if (!document.getElementById('phase2').classList.contains('hidden') && document.getElementById('finalResult').classList.contains('hidden')) {
+      renderPhase1Summary();
+    }
+    if (!document.getElementById('finalResult').classList.contains('hidden')) {
+      renderFinalResults();
+    }
+  }
+
+  function renderQuestionsPhase1() {
+    const qList = APP_CONFIG[currentCategory].questionsPhase1;
+    const container = document.getElementById('p1_questions_container');
+    container.innerHTML = qList.map(q => {
+      const selectedVal = p1Answers[q.id] || q.options[0].value;
+      return `
+        <div class="question-block">
+          <div class="question-title">${q.title[currentLang]}</div>
+          <div class="options-grid">
+            ${q.options.map(opt => `
+              <label class="option-label">
+                <input type="radio" name="${q.id}" value="${opt.value}" ${selectedVal === opt.value ? 'checked' : ''} onchange="p1Answers['${q.id}'] = this.value">
+                <span>${opt.label[currentLang]}</span>
+              </label>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function renderQuestionsPhase2() {
+    const qList = APP_CONFIG[currentCategory].questionsPhase2;
+    const container = document.getElementById('p2_questions_container');
+    container.innerHTML = qList.map(q => {
+      const selectedVal = p2Answers[q.id] || q.options[0].value;
+      return `
+        <div class="question-block">
+          <div class="question-title">${q.title[currentLang]}</div>
+          <div class="options-grid">
+            ${q.options.map(opt => `
+              <label class="option-label">
+                <input type="radio" name="${q.id}" value="${opt.value}" ${selectedVal === opt.value ? 'checked' : ''} onchange="p2Answers['${q.id}'] = this.value">
+                <span>${opt.label[currentLang]}</span>
+              </label>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function submitPhase1() {
+    const qList = APP_CONFIG[currentCategory].questionsPhase1;
+    qList.forEach(q => {
+      const checked = document.querySelector(`input[name="${q.id}"]:checked`);
+      p1Answers[q.id] = checked ? checked.value : 'undecided';
+    });
+
+    renderPhase1Summary();
+    document.getElementById('phase1').classList.add('hidden');
+    document.getElementById('phase2').classList.remove('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function renderPhase1Summary() {
+    const t = APP_CONFIG[currentCategory].i18n[currentLang];
+    let recType = {}, recClass = {}, features = [];
+
+    if (currentCategory === 'shaver') {
+      recType = { ja: "往復式 3枚刃 スタンダード", en: "Foil 3-Blade Standard Shaver", zh: "往复式 3刀头主力常规款" };
+      recClass = { ja: "普段使い・コスパ重視グループ", en: "Daily Reliability & Value Group", zh: "日常经典主力与高性价比组" };
+
+      if (p1Answers.p1_scene === "palmin") {
+        recType = { ja: "Panasonic パームイン（手のひらサイズ）", en: "Panasonic Palm In (Fingertip Design)", zh: "松下 Palm In 掌心极简设计系列" };
+        recClass = { ja: "デザイン・高級感・新世代シェーバー", en: "Modern Aesthetics & Luxury Compact Tier", zh: "前沿设计美学与轻奢便携新风尚" };
+        features.push({ ja: "USB-C充電・コンパクト・上質マテリアル", en: "USB-C charging, compact stone-touch materials", zh: "USB-C快充、极简小巧与原石温润质感" });
+      } else if (p1Answers.p1_scene === "travel") {
+        recType = { ja: "ポータブル・モバイルシェーバー", en: "Ultra-Portable Travel Shaver", zh: "超轻便携口袋差旅剃须刀" };
+        recClass = { ja: "旅行・出張・持ち運び特化グループ", en: "Business Trip & Mobility Specialist", zh: "差旅出行与随身便携专属系列" };
+        features.push({ ja: "軽量・USB給電/乾電池・ポケットサイズ", en: "Lightweight, USB-C/battery, pocketable profile", zh: "超轻机身、通用充电/干电池、口袋级收纳" });
+      } else if (p1Answers.p1_priority === "deep_shave" || p1Answers.p1_beard === "thick") {
+        recType = p1Answers.p1_budget === "over30" 
+          ? { ja: "最上位 6枚刃 / Series 9 Pro+", en: "Flagship 6-Blade / Braun Series 9 Pro+", zh: "顶级旗舰6刀头 / 博朗9系Pro+" }
+          : { ja: "実力派 5枚刃 / 密着可動ヘッド", en: "High-Performance 5-Blade / Flexible Contour Head", zh: "实力进阶5刀头 / 多维贴面曲面刀头" };
+        recClass = { ja: "濃いヒゲ・深剃り重視グループ", en: "Heavy Beard & Extreme Closeness Group", zh: "浓密硬须与极致深剃组" };
+        features.push({ ja: "高速リニアモーター・くせヒゲトリマー・大面積刃", en: "Linear motor drive, active lift trimmer, wide foils", zh: "磁悬浮高速马达、倒伏杂须修剪器、宽幅刀网" });
+      } else if (p1Answers.p1_priority === "gentle") {
+        recType = { ja: "フィリップス回転式 / Series 6スイング密着", en: "Philips Rotary / Braun Series 6 SensoFlex", zh: "飞利浦三头旋转式 / 博朗6系轻压减压头" };
+        recClass = { ja: "肌へのやさしさ・敏感肌重視グループ", en: "Gentle Glide & Sensitive Skin Group", zh: "温和亲肤与敏感防刮伤舒适组" };
+        features.push({ ja: "スキンプロテクション・摩擦低減コーティング", en: "SkinGlide friction-reduction coating, pressure buffer", zh: "微珠减摩亲肤涂层、智能压力缓冲" });
+      } else if (p1Answers.p1_priority === "cost") {
+        recType = { ja: "エントリー 3枚刃", en: "Entry 3-Blade Foil Shaver", zh: "亲民高性价比 3刀头往复式" };
+        recClass = { ja: "とにかく安く・初めてグループ", en: "Budget & First-Time Shaver Group", zh: "实惠入门与初次购机推荐组" };
+        features.push({ ja: "基本性能重視・本体水洗い対応", en: "Solid essentials & fully water washable", zh: "扎实耐用基础深剃、支持全身水洗" });
+      }
+
+      if (p1Answers.p1_bath === "yes") {
+        features.push({ ja: "IPX7完全防水・お風呂剃り対応", en: "IPX7 waterproof for shower/foam shave", zh: "IPX7完全防水设计、支持浴室泡泡湿剃" });
+      }
+    } else {
+      recType = { ja: "ヘアドライヤー", en: "Hair Dryer", zh: "电吹风" };
+      recClass = { ja: "速乾＆ダメージケアモデル", en: "Quick Dry & Damage Care Model", zh: "速干与受损修护款" };
+
+      if (p1Answers.p1_category === "iron_straight") {
+        recType = { ja: "ストレートヘアアイロン", en: "Hair Straightener", zh: "直发夹板" };
+        recClass = p1Answers.p1_priority === "care" 
+          ? { ja: "シルクプレート/ナノケア系ストレート", en: "Silk Plate / Nanoe Hair Care Straightener", zh: "丝绸涂层 / 纳诺怡柔光直发器" }
+          : { ja: "高熱効率ストレートアイロン", en: "High Thermal Efficiency Straightener", zh: "高热效率直发夹板" };
+        features.push({ ja: "密着プレート・温度均一性", en: "Close-contact floating plates & thermal stability", zh: "高贴合浮动夹板与温度均匀性" });
+      } else if (p1Answers.p1_category === "iron_curl") {
+        recType = { ja: "カールヘアアイロン（コテ）", en: "Curling Iron", zh: "卷发棒（卷发器）" };
+        const bSize = p1Answers.p1_length === "short" ? "26mm" : (p1Answers.p1_length === "long" ? "38mm" : "32mm");
+        recClass = {
+          ja: `${bSize}バレル カールアイロン`,
+          en: `${bSize} Barrel Curling Iron`,
+          zh: `${bSize}卷筒直径卷发棒`
+        };
+        features.push({
+          ja: `髪の長さに最適な${bSize}設計`,
+          en: `Optimized ${bSize} barrel tailored to your hair length`,
+          zh: `适合您发长的${bSize}专业卷筒设计`
+        });
+      } else if (p1Answers.p1_category === "iron_2way") {
+        recType = { ja: "2WAYアイロン / カールドライヤー", en: "2WAY Iron / Hot Air Styling Brush", zh: "两用美发棒 / 梳子吹风机" };
+        recClass = { ja: "ブロー＆多機能スタイリング機", en: "Blowout & Multi-styling Tool", zh: "吹梳造型一体多功能机" };
+        features.push({ ja: "1台多役・簡単スタイリング", en: "All-in-one versatility & intuitive styling", zh: "一机多用、新手轻松上手吹整" });
+      } else if (p1Answers.p1_category === "iron_portable") {
+        recType = { ja: "携帯・前髪特化型ミニアイロン", en: "Portable Bangs & Mini Iron", zh: "便携刘海专用迷你夹板" };
+        recClass = { ja: "コードレス/USB給電 モバイル機", en: "Cordless / USB Powered Mobile Device", zh: "无线充电 / USB供电便携机" };
+        features.push({ ja: "超軽量・指先感覚スタイリング", en: "Ultra-lightweight & fingertip-precision styling", zh: "超轻巧羽量设计、指尖般精细打理" });
+      } else {
+        if (p1Answers.p1_priority === "speed") {
+          recClass = { ja: "大風量・速乾ドライヤー", en: "High Airflow Fast Drying Dryer", zh: "大风量极速干发电吹风" };
+          features.push({ ja: "BLDCモーター・大風量ノズル", en: "BLDC motor & high-velocity air nozzle", zh: "高速数码马达与大风量增压风嘴" });
+        } else if (p1Answers.p1_priority === "care") {
+          recClass = { ja: "高浸透ナノイー / プラズマクラスター美容ドライヤー", en: "High-Penetration Nanoe / Plasmacluster Dryer", zh: "高渗透纳米水离子 / 净离子群护发吹风机" };
+          features.push({ ja: "うるおい保持・温冷リズムモード", en: "Deep hydration & alternating hot/cold rhythm", zh: "深层锁水保湿与冷热交替循环温控" });
+        } else if (p1Answers.p1_priority === "light") {
+          recClass = { ja: "400g前後 超軽量ドライヤー", en: "Ultra-Lightweight (~400g) Dryer", zh: "约400g轻量化吹风机" };
+          features.push({ ja: "手首が疲れない軽量スリム設計", en: "Lightweight, slim body to reduce wrist fatigue", zh: "纤巧轻薄手柄设计防止手腕酸痛" });
+        }
+      }
+
+      if (p1Answers.p1_scene === "overseas") {
+        features.push({ ja: "海外電圧対応（マルチボルテージ）", en: "Dual voltage compatibility (Worldwide)", zh: "全球通用宽电压设计" });
+      }
+    }
+
+    if (features.length === 0 || (p1Answers.p1_priority === "undecided" && !p1Answers.p1_category)) {
+      features.push({ ja: "お客様のお悩みに合わせた柔軟な機能提案", en: "Flexible customization based on your habits", zh: "根据您的具体痛点灵活匹配最佳方案" });
+    }
+
+    const featureText = features.map(f => f[currentLang]).join("、");
+
+    document.getElementById('phase1Summary').innerHTML = `
+      <h2>${t.summaryHeading}</h2>
+      <p><strong>${t.recTypeLabel}</strong> ${recType[currentLang]}</p>
+      <p><strong>${t.recClassLabel}</strong> ${recClass[currentLang]}</p>
+      <p><strong>${t.recFeaturesLabel}</strong> ${featureText}</p>
+      <p style="margin-top: 8px; font-size: 0.85rem; color: var(--box-text);">${t.summaryNote}</p>
+    `;
+  }
+
+  function submitPhase2() {
+    const qList = APP_CONFIG[currentCategory].questionsPhase2;
+    qList.forEach(q => {
+      const checked = document.querySelector(`input[name="${q.id}"]:checked`);
+      p2Answers[q.id] = checked ? checked.value : 'undecided';
+    });
+
+    renderFinalResults();
+    document.getElementById('phase2').classList.add('hidden');
+    document.getElementById('finalResult').classList.remove('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function renderFinalResults() {
+    const t = APP_CONFIG[currentCategory].i18n[currentLang];
+    const products = APP_CONFIG[currentCategory].products;
+
+    let scoredProducts = [];
+
+    if (currentCategory === 'shaver') {
+      scoredProducts = products.map(product => {
+        let score = 50;
+        let reasons = [];
+
+        if (p1Answers.p1_scene === "palmin") {
+          if (product.type === "palmin") {
+            score += 45;
+            reasons.push({ ja: "手のひらサイズで洗練された高級デザイン（パームイン規格）", en: "Palm-sized minimalist luxury form factor", zh: "掌心小巧机身与极简轻奢工业美学设计" });
+          } else {
+            score -= 30;
+          }
+        } else if (p1Answers.p1_scene === "travel") {
+          if (product.type === "travel" || product.usbc) {
+            score += 35;
+            reasons.push({ ja: "出張や外出先へ気軽に携帯できるスリム設計", en: "Slim, travel-ready build ideal for mobility", zh: "随行出差无负担的轻巧便携与通用充电设计" });
+          }
+        } else {
+          if (product.type === "standard") score += 15;
+        }
+
+        if (p1Answers.p1_beard === "thick" || p1Answers.p1_priority === "deep_shave") {
+          if (product.deepRank >= 4) {
+            score += 35;
+            reasons.push({ ja: "太いヒゲや青ヒゲを夕方までツルツルに剃り切る最高峰の深剃り力", en: "Elite closeness taming thick stubble with zero 5 o'clock shadow", zh: "强力切断粗硬胡茬、保持全天清爽光滑的顶级深剃力" });
+          } else if (product.deepRank <= 2) {
+            score -= 25;
+          }
+        }
+
+        if (p1Answers.p1_priority === "gentle" || p2Answers.p2_skin === "sensitive") {
+          if (product.gentleRank >= 4) {
+            score += 35;
+            reasons.push({ ja: "摩擦を大幅に低減しカミソリ負けを防ぐスキンケアヘッド構造", en: "Friction-reducing design preventing razor burn and irritation", zh: "大幅降低与皮肤摩擦阻力、预防刮伤红肿的亲肤构造" });
+          }
+          if (product.brand === "philips") score += 15;
+        }
+
+        if (p2Answers.p2_area === "jaw") {
+          if (product.id.includes("571") || product.id.includes("braun_73") || product.id.includes("650") || product.id.includes("341")) {
+            score += 25;
+            reasons.push({ ja: "アゴ下の複雑な骨格にもぴったり沿う立体多次元可動ヘッド", en: "Multi-pivot 3D contour head adhering snugly to difficult jawlines", zh: "严密贴合下颌拐角及喉结骨骼的多维活动浮动刀头" });
+          }
+        } else if (p2Answers.p2_area === "lie") {
+          if (product.brand === "braun" || product.blades >= 5) {
+            score += 25;
+            reasons.push({ ja: "寝ているヒゲやくせ毛を持ち上げて根元から捉える特殊トリマー", en: "Specialized trimmer lifting and capturing flat-lying stray beards", zh: "主动提起平躺贴面胡须并从根部整齐剪断的精密切剃结构" });
+          }
+        }
+
+        if (p1Answers.p1_bath === "yes") {
+          if (product.wet) {
+            score += 20;
+            reasons.push({ ja: "お風呂場でのジェル・泡剃りに完全対応した防水仕様", en: "Fully waterproof for wet shaving with gel or foam in shower", zh: "完全防水构造，支持在淋浴时搭配啫喱或泡沫舒适湿剃" });
+          } else {
+            score -= 30;
+          }
+        }
+
+        if (p2Answers.p2_cleaner === "yes") {
+          if (product.autoClean) {
+            score += 35;
+            reasons.push({ ja: "ボタン一つで洗浄・除菌・乾燥・充電まで全自動で行う洗浄器付属", en: "Includes smart dock handling cleaning, drying, and charging automatically", zh: "附带全自动清洗中心，一键搞定杀菌去脂、风干与充电" });
+          } else {
+            score -= 20;
+          }
+        } else if (p2Answers.p2_cleaner === "no") {
+          if (!product.autoClean) score += 10;
+        }
+
+        if (p2Answers.p2_charge === "usbc") {
+          if (product.usbc) {
+            score += 20;
+            reasons.push({ ja: "スマホと同じUSB Type-Cケーブルで充電可能", en: "Conveniently rechargeable with universal USB Type-C cables", zh: "支持Type-C直充，出门无需额外多带专有充电器" });
+          }
+        }
+
+        if (p2Answers.p2_brand !== "any" && p2Answers.p2_brand !== "undecided" && product.brand === p2Answers.p2_brand) {
+          score += 25;
+          reasons.push({ ja: `ご指名のブランド（${product.brand === 'panasonic' ? 'パナソニック' : product.brand === 'braun' ? 'ブラウン' : 'フィリップス'}）モデル`, en: `Matches preferred brand (${product.brand.toUpperCase()}) engineering`, zh: `符合您所偏好的（${product.brand === 'panasonic' ? '松下' : product.brand === 'braun' ? '博朗' : '飞利浦'}）经典驱动体系` });
+        }
+
+        let minB = 0, maxB = 100000;
+        if (p1Answers.p1_budget === "under5") { maxB = 6000; }
+        else if (p1Answers.p1_budget === "5_15") { minB = 5000; maxB = 16000; }
+        else if (p1Answers.p1_budget === "15_30") { minB = 14000; maxB = 32000; }
+        else if (p1Answers.p1_budget === "over30") { minB = 30000; }
+
+        if (product.price >= minB && product.price <= maxB) {
+          score += 25;
+          reasons.push({ ja: "ご希望の予算範囲内にジャストフィット", en: "Fits perfectly within your target budget range", zh: "精准契合您预期的购买预算区间" });
+        } else if (product.price > maxB) {
+          score -= 30;
+        }
+
+        return { ...product, finalScore: score, reasons: reasons };
+      });
+    } else {
+      let pool = products;
+      if (p1Answers.p1_category && p1Answers.p1_category !== "undecided") {
+        pool = products.filter(p => p.category === p1Answers.p1_category);
+      }
+
+      scoredProducts = pool.map(product => {
+        let score = 50;
+        let reasons = [];
+
+        if (p1Answers.p1_priority === "speed") {
+          if (product.subType === "speed") {
+            score += 35;
+            reasons.push({ ja: "乾燥時間や施術時間を劇的に短縮する強力パワー", en: "Drastically cuts drying and styling time with strong output", zh: "以充沛动力显著缩短吹发及造型等待时间" });
+          }
+        } else if (p1Answers.p1_priority === "care") {
+          if (product.careRank >= 3) {
+            score += 35;
+            reasons.push({ ja: "髪の水分バランスを整えキューティクルを守る高度な美容技術", en: "Advanced hair care technology protecting cuticles & locking moisture", zh: "先进美发黑科技收紧毛鳞片并长效锁水" });
+          }
+        } else if (p1Answers.p1_priority === "light") {
+          if (product.weight <= 400 || product.subType === "light") {
+            score += 35;
+            reasons.push({ ja: `わずか約${product.weight}gで手首への負担を大幅軽減`, en: `Lightweight at only ~${product.weight}g prevents hand fatigue`, zh: `机身仅约${product.weight}g大幅减轻手腕手臂负担` });
+          } else if (product.weight > 550) {
+            score -= 25;
+          }
+        } else if (p1Answers.p1_priority === "cost") {
+          if (product.subType === "cost" || product.price <= 5000) {
+            score += 35;
+            reasons.push({ ja: "お求めやすい価格設定で抜群のコストパフォーマンス", en: "Accessible pricing delivering outstanding cost-performance", zh: "亲民价格展现出无可挑剔的高性价比" });
+          }
+        }
+
+        if (p1Answers.p1_scene === "overseas") {
+          if (product.overseas) {
+            score += 40;
+            reasons.push({ ja: "海外旅行・留学先でも変圧器なしで使えるマルチボルテージ仕様", en: "Dual voltage ready for global travel and study abroad without transformers", zh: "出国旅行或留学无需繁琐变压器即可插电即用" });
+          } else {
+            score -= 50;
+          }
+        }
+
+        let minB = 0, maxB = 100000;
+        if (p1Answers.p1_budget === "under5") { maxB = 5500; }
+        else if (p1Answers.p1_budget === "5_15") { minB = 4500; maxB = 16000; }
+        else if (p1Answers.p1_budget === "15_30") { minB = 14000; maxB = 32000; }
+        else if (p1Answers.p1_budget === "over30") { minB = 30000; }
+
+        if (product.price >= minB && product.price <= maxB) {
+          score += 25;
+          reasons.push({ ja: "ご希望の予算帯にベストマッチ", en: "Fits comfortably within your target budget range", zh: "精准契合您预期的购买预算区间" });
+        } else if (product.price > maxB) {
+          score -= 25;
+        }
+
+        if (p2Answers.p2_hair_type === "thick_heavy") {
+          if (product.subType === "speed" || product.id === "refa_power_straight" || product.id === "khd_m800") {
+            score += 30;
+            reasons.push({ ja: "毛量が多い・クセが強い髪でもしっかりまとまる大風量・広幅プレート", en: "Wide plates & strong wind capable of taming dense volumes and thick curls", zh: "大风量与宽夹板能轻松驯服发量浓密及粗硬卷曲" });
+          }
+        } else if (p2Answers.p2_hair_type === "damaged" || p2Answers.p2_hair_type === "fine_soft") {
+          if (product.careRank >= 4) {
+            score += 30;
+            reasons.push({ ja: "熱ダメージを受けやすいデリケートな髪を守るシルクプレート/高浸透ナノイー", en: "Protects delicate, heat-sensitive hair via Silk Plates / High-Penetration nanoe", zh: "通过丝绸涂层或高渗透纳诺怡细心呵护娇嫩脆弱受损发丝" });
+          }
+        }
+
+        if (p1Answers.p1_category === "iron_curl" && p2Answers.p2_barrel !== "none" && p2Answers.p2_barrel !== "undecided") {
+          if (product.barrel === p2Answers.p2_barrel) {
+            score += 35;
+            reasons.push({ ja: "ご希望のカール感にジャストなバレル太さ", en: "Exact barrel diameter for your desired curl definition", zh: "符合您期望卷度造型的专属卷筒尺寸" });
+          } else {
+            score -= 20;
+          }
+        }
+
+        if (p2Answers.p2_weight_pref === "super_light") {
+          if (product.weight <= 400) {
+            score += 20;
+            reasons.push({ ja: "毎日の使用でも腕が疲れない超軽量設計", en: "Ultra-light design that prevents fatigue during daily styling", zh: "长时间每日吹发造型也不会造成手臂酸胀的轻盈体量" });
+          } else {
+            score -= 15;
+          }
+        }
+
+        if (p2Answers.p2_power_pref === "cordless_usb") {
+          if (product.id === "khr_6420" || product.id === "mhs_1343" || product.id === "refa_finger_st") {
+            score += 30;
+            reasons.push({ ja: "外出先や電源のない場所でも使えるコードレス・USB仕様", en: "Cordless and USB powered for versatile on-the-go styling", zh: "支持无线充电或移动电源供电，随时随地优雅理发" });
+          }
+        }
+
+        return { ...product, finalScore: score, reasons: reasons };
+      });
+    }
+
+    scoredProducts.sort((a, b) => b.finalScore - a.finalScore);
+
+    const firstChoice = scoredProducts[0];
+    let secondChoice, thirdChoice;
+
+    if (currentCategory === 'shaver') {
+      const altBrand = scoredProducts.filter(p => p.brand !== firstChoice.brand && p.id !== firstChoice.id);
+      secondChoice = altBrand.length > 0 ? altBrand[0] : (scoredProducts[1] || scoredProducts[0]);
+      const priceDiff = scoredProducts.filter(p => p.id !== firstChoice.id && p.id !== secondChoice.id && Math.abs(p.price - firstChoice.price) > 4000);
+      thirdChoice = priceDiff.length > 0 ? priceDiff[0] : (scoredProducts[2] || scoredProducts[1]);
+    } else {
+      const altBrand = scoredProducts.filter(p => p.id !== firstChoice.id && (p.name.ja.split(' ')[0] !== firstChoice.name.ja.split(' ')[0]));
+      secondChoice = altBrand.length > 0 ? altBrand[0] : (scoredProducts[1] || scoredProducts[0]);
+      const priceDiff = scoredProducts.filter(p => p.id !== firstChoice.id && p.id !== secondChoice.id && Math.abs(p.price - firstChoice.price) > 3000);
+      thirdChoice = priceDiff.length > 0 ? priceDiff[0] : (scoredProducts[2] || scoredProducts[1]);
+    }
+
+    const displayProducts = [
+      {
+        item: firstChoice,
+        role: { ja: "🥇 第一候補（本命・お客様の条件に最も適合）", en: "🥇 1st Choice (Best Match for Your Needs)", zh: "🥇 第一候选（最佳契合您的核心诉求）" },
+        badgeClass: "", rankType: "first"
+      },
+      {
+        item: secondChoice,
+        role: { ja: "🥈 第二候補（別アプローチ・有力対抗案）", en: "🥈 2nd Choice (Alternative Brand & Philosophy)", zh: "🥈 第二候选（不同品牌的有力对标）" },
+        badgeClass: "badge-silver", rankType: "second"
+      },
+      {
+        item: thirdChoice,
+        role: { ja: "🥉 第三候補（価格・機能グレード違いの比較案）", en: "🥉 3rd Choice (Budget or Tier Comparison)", zh: "🥉 第三候选（价格档次与功能对比参考）" },
+        badgeClass: "badge-bronze", rankType: "third"
+      }
+    ];
+
+    const uniqueDisplay = [];
+    const usedIds = new Set();
+    for (const d of displayProducts) {
+      if (d.item && !usedIds.has(d.item.id)) {
+        uniqueDisplay.push(d);
+        usedIds.add(d.item.id);
+      }
+    }
+
+    function generatePitch(p, rankType, firstItem) {
+      if (currentCategory === 'shaver') {
+        if (currentLang === 'en') {
+          if (rankType === "first") return { pitch: `${p.point.en} Best match for your primary shaving requirements.`, diff: `Offers the best harmony of sharp blade performance and contour tracking in this tier.`, closing: `Ask: "Where do you feel the most friction or missed stubble right now—jawline, throat, or density?"` };
+          if (rankType === "second") return { pitch: `A strong alternative adopting a distinct driving philosophy.`, diff: `Compared to ${firstItem.name.en}, it offers unique strengths in cutting feel and contour touch.`, closing: `Ask: "Have you ever experienced this brand's mechanism before?" to compare tactile feedback.` };
+          const isHigher = p.price > firstItem.price;
+          return { pitch: isHigher ? `A premium comparison choice if you wish to invest in higher tiers.` : `A high-value alternative that secures all essentials while keeping costs reasonable.`, diff: `Price difference is ¥${Math.abs(p.price - firstItem.price).toLocaleString()}.`, closing: isHigher ? `Ask: "Would you like to automate cleaning and maintenance completely?"` : `Ask: "Would you prefer to save budget for replacement foils?"` };
+        } else if (currentLang === 'zh') {
+          if (rankType === "first") return { pitch: `${p.point.zh} 与您的剃须习惯及核心诉求最为吻合的本命之选。`, diff: `在当前价位区间内，刀刃锋利深剃度与面部贴合度达到了极其出色的平衡。`, closing: `导购询问：“您平时剃须最感困扰的是刮不干净、下巴死角残留还是剃后皮肤刺痛？”` };
+          if (rankType === "second") return { pitch: `采用截然不同驱动理念的有力竞品。`, diff: `相比第一候选 ${firstItem.name.zh}，在特定剃须触感与死角处理上展现专属特长。`, closing: `导购询问：“您之前体验过该品牌的驱动体系吗？”` };
+          const isHigher = p.price > firstItem.price;
+          return { pitch: isHigher ? `适当提高预算、获取更高级别享受的进阶参考。` : `精简次要功能、在亲民实惠预算内扎实满足每日剃须的高性价比备选。`, diff: `与第一候选差价为 ¥${Math.abs(p.price - firstItem.price).toLocaleString()}。`, closing: isHigher ? `导购询问：“是否希望彻底省去手动拆洗保养麻烦？”` : `导购询问：“是否希望将节省下来的预算用于替换刀头或日常护理？”` };
+        } else {
+          if (rankType === "first") return { pitch: `${p.point.ja} お客様のご要望に最も合致する本命モデルです。`, diff: `この価格帯において、刃の切れ味とヘッドの追従バランスが最も優れています。`, closing: `「普段のシェービングで一番ストレスを感じる点はどこですか？」とお伺いし、この商品の強みをお伝えください。` };
+          if (rankType === "second") return { pitch: `第一候補とは異なる駆動方式を採用した対抗候補です。`, diff: `第一候補の${firstItem.name.ja}に比べ、肌当たりや剃り味の質感に異なる特徴があります。`, closing: `「これまでにこちらのメーカーをお使いになった経験はありますか？」と使用感を比較案内してください。` };
+          const isHigher = p.price > firstItem.price;
+          return { pitch: isHigher ? `予算を一段上げて、さらに上位の機能を手に入れたい場合の選択肢です。` : `基本性能をしっかり抑えつつ、ご予算をリーズナブルに抑えたい場合のコスパ候補です。`, diff: `第一候補との価格差は¥${Math.abs(p.price - firstItem.price).toLocaleString()}です。`, closing: isHigher ? `「毎朝の洗浄や刃の手入れの手間をゼロにしたいですか？」と確認してください。` : `「ご予算を優先して、浮いた分を替刃や日用品に充てますか？」と選択肢を広げてください。` };
+        }
+      } else {
+        if (currentLang === 'en') {
+          if (rankType === "first") return { pitch: `${p.point.en} Perfectly fulfills your primary styling and care requirement.`, diff: `Achieves the highest balance of thermal control, handling, and finish in this class.`, closing: `Ask: "What frustrates you most about your current routine—styling time, dryness, or weight?"` };
+          if (rankType === "second") return { pitch: `A strong alternative offering a different philosophy from the 1st choice.`, diff: `Compared to ${firstItem.name.en}, it offers distinctive advantages in finish and handling.`, closing: `Ask: "Would you prefer to invest more in advanced salon-level hair protection?"` };
+          const isHigher = p.price > firstItem.price;
+          return { pitch: isHigher ? `A premium comparison choice if you wish to step up to top-tier care features.` : `A high-value alternative to minimize upfront cost while securing essential performance.`, diff: `Price difference with 1st choice is ¥${Math.abs(p.price - firstItem.price).toLocaleString()}.`, closing: isHigher ? `Ask: "Would you like to step up to the flagship tier for long-term hair gloss and health?"` : `Ask: "Would you prefer keeping the budget modest to invest in hair care products?"` };
+        } else if (currentLang === 'zh') {
+          if (rankType === "first") return { pitch: `${p.point.zh} 与您的美发护发核心诉求高度契合的最佳之选。`, diff: `在当前同级产品中，温控调校、手持舒适感与成型柔顺度达到了最为卓越的平衡。`, closing: `导购询问：“您目前吹风造型时最困扰的是费时间、发丝干枯毛躁还是机身太重？”` };
+          if (rankType === "second") return { pitch: `不同于第一候选品牌理念的有力对标方案。`, diff: `相比第一候选 ${firstItem.name.zh}，在机身特性与造型质感上展现出独特优势。`, closing: `导购询问：“您更倾向于选购带有高阶护发黑科技的沙龙级机型，还是优先追求轻便易用？”` };
+          const isHigher = p.price > firstItem.price;
+          return { pitch: isHigher ? `适当提升预算、体验顶尖奢华美发黑科技的高阶方案。` : `精简次要功能、用更亲民的成本享受舒适美发的性价比方案。`, diff: `与第一候选差价为 ¥${Math.abs(p.price - firstItem.price).toLocaleString()}。`, closing: isHigher ? `导购询问：“既然每天都要使用，是否考虑一步到位选用高阶旗舰款？”` : `导购询问：“是否希望把省下来的预算用在购买高品质护发用品上？”` };
+        } else {
+          if (rankType === "first") return { pitch: `${p.point.ja} お客様のご要望に最も合致する本命モデルです。`, diff: `この価格帯において、温度制御・扱いやすさ・仕上がりのツヤ感のバランスが最も優れています。`, closing: `「普段乾かしたりセットしていて、一番ストレスを感じる点はどこですか？」とお伺いしてください。` };
+          if (rankType === "second") return { pitch: `第一候補とは異なる強みを持つ有力な対抗モデルです。`, diff: `第一候補の${firstItem.name.ja}に比べ、${p.price > firstItem.price ? 'より高度なヘアケア美容機能' : '本体の軽さやコスパ'}に違いがあります。`, closing: `「ヘアケア家電は髪へのダメージケアを最優先しますか、それとも手軽さを重視しますか？」と確認してください。` };
+          const isHigher = p.price > firstItem.price;
+          return { pitch: isHigher ? `ご予算を少し上げて、より上質な機能を手に入れたい場合の比較選択肢です。` : `機能をシンプルに絞り込み、手頃なご予算で手軽にスタートできる高コスパ候補です。`, diff: `第一候補との差額は¥${Math.abs(p.price - firstItem.price).toLocaleString()}です。`, closing: isHigher ? `「せっかく毎日使うものなので、美髪やツヤ感にこだわって上位機にしますか？」とお伺いしてください。` : `「浮いたご予算で、ヘアオイルやトリートメントを揃えてみませんか？」と提案してください。` };
+        }
+      }
+    }
+
+    const container = document.getElementById('productRankings');
+    container.innerHTML = uniqueDisplay.map(({ item, role, badgeClass, rankType }) => {
+      const talk = generatePitch(item, rankType, firstChoice);
+      const uniqueReasons = item.reasons.length > 0 
+        ? [...new Set(item.reasons.map(r => r[currentLang]))].slice(0, 3) 
+        : [t.fitPointsLabel];
+
+      let metaDetails = "";
+      if (currentCategory === 'shaver') {
+        const cleanText = item.autoClean ? t.cleanYes : t.cleanNo;
+        const usbText = item.usbc ? t.usbYes : t.usbNo;
+        const bladeText = item.type === "travel" && item.blades === 1 ? t.rotaryLabel : `${item.blades}${t.bladesLabel}`;
+        metaDetails = `${bladeText} ｜ ${cleanText} ｜ ${usbText}`;
+      } else {
+        const overseasText = item.overseas ? t.overseasYes : t.overseasNo;
+        metaDetails = `${t.weightLabel}${item.weight}g ｜ ${overseasText}`;
+      }
+
+      return `
+        <div class="product-card">
+          <span class="product-badge ${badgeClass}">${role[currentLang]}</span>
+          <div class="product-title">${item.name[currentLang]}</div>
+          <div class="product-meta">${t.currency}${item.price.toLocaleString()}${t.taxInc} ｜ ${metaDetails}</div>
+          <div class="product-desc">${item.desc[currentLang]}</div>
+          <div class="sales-box">
+            <div class="sales-item"><strong>${t.salesPitchLabel}</strong> ${talk.pitch}</div>
+            <div class="sales-item"><strong>${t.salesDiffLabel}</strong> ${talk.diff}</div>
+            <div class="sales-item"><strong>${t.salesClosingLabel}</strong> ${talk.closing}</div>
+            <div style="font-size: 0.75rem; color: #64748b; margin-top: 4px;">
+              <strong>${t.fitPointsLabel}</strong> ${uniqueReasons.join(" ／ ")}
+            </div>
+          </div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  function restart() {
+    p1Answers = {};
+    p2Answers = {};
+    document.getElementById('finalResult').classList.add('hidden');
+    document.getElementById('phase2').classList.add('hidden');
+    document.getElementById('phase1').classList.remove('hidden');
+    setLanguage(currentLang);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    switchCategory('shaver');
+  });
+</script>
+
+</body>
+</html>
+

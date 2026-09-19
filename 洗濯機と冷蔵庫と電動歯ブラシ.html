@@ -1,0 +1,2209 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home Appliance Selector / 家電選定・接客診断 / 家电选购助手</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #cbd5e1;
+      --accent: #eff6ff;
+      --badge-bg: #dbeafe;
+    }
+    body.app-washer {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --accent: #eff6ff;
+      --badge-bg: #dbeafe;
+      --meta-color: #b91c1c;
+    }
+    body.app-refrigerator {
+      --primary: #0284c7;
+      --primary-hover: #0369a1;
+      --accent: #f0f9ff;
+      --badge-bg: #e0f2fe;
+      --meta-color: #b91c1c;
+    }
+    body.app-oralcare {
+      --primary: #0284c7;
+      --primary-hover: #0369a1;
+      --accent: #e0f2fe;
+      --badge-bg: #bae6fd;
+      --meta-color: #0284c7;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 24px 16px;
+      transition: background-color 0.2s;
+    }
+    .container {
+      max-width: 780px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      padding: 32px 24px;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.06), 0 2px 4px -1px rgba(0,0,0,0.04);
+    }
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .appliance-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .app-tab-btn {
+      padding: 6px 14px;
+      font-size: 0.85rem;
+      border: 1px solid var(--border);
+      background: #f1f5f9;
+      color: var(--text-muted);
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .app-tab-btn.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+    .lang-switcher {
+      display: flex;
+      gap: 6px;
+    }
+    .lang-btn {
+      padding: 4px 10px;
+      font-size: 0.8rem;
+      border: 1px solid var(--border);
+      background: #fff;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .lang-btn.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      font-weight: bold;
+    }
+    h1 {
+      font-size: 1.5rem;
+      text-align: center;
+      margin-bottom: 8px;
+      color: var(--primary);
+      transition: color 0.2s;
+    }
+    p.lead {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 24px;
+    }
+    .step-indicator {
+      display: inline-block;
+      font-size: 0.8rem;
+      font-weight: bold;
+      color: var(--primary);
+      background: var(--badge-bg);
+      padding: 4px 12px;
+      border-radius: 9999px;
+      margin-bottom: 12px;
+    }
+    .question-block {
+      margin-bottom: 24px;
+    }
+    .question-title {
+      font-weight: 600;
+      margin-bottom: 10px;
+      font-size: 1rem;
+    }
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+    .option-label {
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .option-label:hover {
+      background-color: var(--accent);
+    }
+    .option-label input {
+      margin-right: 12px;
+    }
+    button.btn {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      background-color: var(--primary);
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      margin-top: 16px;
+    }
+    button.btn:hover {
+      background-color: var(--primary-hover);
+    }
+    .intermediate-box {
+      background-color: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+    .intermediate-box h2 {
+      font-size: 1.15rem;
+      color: #166534;
+      margin-bottom: 12px;
+    }
+    .product-card {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 18px;
+      margin-bottom: 18px;
+      background: #fff;
+    }
+    .product-badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: bold;
+      color: #fff;
+      background: var(--primary);
+      padding: 3px 10px;
+      border-radius: 4px;
+      margin-bottom: 8px;
+    }
+    .badge-silver { background: #475569; }
+    .badge-bronze { background: #b45309; }
+    .product-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .product-meta {
+      font-size: 0.9rem;
+      color: var(--meta-color, #b91c1c);
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+    .product-desc {
+      font-size: 0.85rem;
+      color: #334155;
+      margin-bottom: 12px;
+    }
+    .sales-box {
+      font-size: 0.85rem;
+      background: #f8fafc;
+      padding: 12px 16px;
+      border-radius: 6px;
+      border-left: 4px solid var(--primary);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .sales-item strong {
+      color: #0f172a;
+    }
+    .hidden { display: none; }
+  </style>
+</head>
+<body class="app-washer">
+
+<div class="container">
+  <div class="top-bar">
+    <div class="appliance-tabs">
+      <button type="button" class="app-tab-btn active" id="tab_washer" onclick="switchAppliance('washer')">洗濯機</button>
+      <button type="button" class="app-tab-btn" id="tab_refrigerator" onclick="switchAppliance('refrigerator')">冷蔵庫</button>
+      <button type="button" class="app-tab-btn" id="tab_oralcare" onclick="switchAppliance('oralcare')">オーラルケア</button>
+    </div>
+    <div class="lang-switcher">
+      <button type="button" class="lang-btn active" onclick="setLanguage('ja')">日本語</button>
+      <button type="button" class="lang-btn" onclick="setLanguage('en')">English</button>
+      <button type="button" class="lang-btn" onclick="setLanguage('zh')">中文</button>
+    </div>
+  </div>
+
+  <h1 id="ui_title">洗濯機 最適モデル選定・接客診断</h1>
+  <p class="lead" id="ui_lead">世帯人数・乾燥の利用方針・設置環境に合わせて、最適な3台の候補をご提案します。</p>
+
+  <!-- 前半5問 -->
+  <div id="phase1">
+    <span class="step-indicator" id="ui_p1_indicator">STEP 1 / 2（規格・大まかな方向性の確認）</span>
+    <div id="p1_questions_container"></div>
+    <button type="button" class="btn" id="ui_btn_next1" onclick="submitPhase1()">方向性と推奨スペックを確認する</button>
+  </div>
+
+  <!-- 前半結果 ＋ 後半5問 -->
+  <div id="phase2" class="hidden">
+    <div class="intermediate-box" id="phase1Summary"></div>
+    <span class="step-indicator" id="ui_p2_indicator">STEP 2 / 2（詳細機能・こだわりの絞り込み）</span>
+    <div id="p2_questions_container"></div>
+    <button type="button" class="btn" id="ui_btn_next2" onclick="submitPhase2()">最終候補の3モデルを診断する</button>
+  </div>
+
+  <!-- 最終結果 -->
+  <div id="finalResult" class="hidden">
+    <h2 style="font-size: 1.3rem; margin-bottom: 16px; text-align: center; color: var(--primary);" id="ui_result_title">診断結果：おすすめの3モデル</h2>
+    <div id="productRankings"></div>
+    <button type="button" class="btn" style="background-color: #64748b;" id="ui_btn_restart" onclick="restart()">最初からやり直す</button>
+  </div>
+</div>
+
+<script>
+  let currentAppliance = 'washer'; // 'washer' | 'refrigerator' | 'oralcare'
+  let currentLang = 'ja';
+  let p1Answers = {};
+  let p2Answers = {};
+
+  const APP_CONFIG = {
+    washer: {
+      i18n: {
+        ja: {
+          tabName: "洗濯機",
+          title: "洗濯機 最適モデル選定・接客診断",
+          lead: "世帯人数・乾燥の利用方針・設置環境に合わせて、最適な3台の候補をご提案します。",
+          p1Indicator: "STEP 1 / 2（規格・大まかな方向性の確認）",
+          p2Indicator: "STEP 2 / 2（詳細機能・こだわりの絞り込み）",
+          btnNext1: "方向性と推奨スペックを確認する",
+          btnNext2: "最終候補の3モデルを診断する",
+          btnRestart: "最初からやり直す",
+          resultTitle: "診断結果：おすすめの3モデル",
+          summaryHeading: "📋 前半診断：お客様に最適な基本仕様",
+          recTypeLabel: "推奨タイプ:",
+          recCapacityLabel: "目安の容量:",
+          recClassLabel: "注力グループ:",
+          summaryNote: "※次の5問で設置寸法、洗剤自動投入、静音性、清潔機能などの詳細条件を絞り込みます。",
+          salesPitchLabel: "💡 おすすめする理由:",
+          salesDiffLabel: "⚖️ 他の候補との違い:",
+          salesClosingLabel: "🗣️ お客様に確認する一言トーク:",
+          fitPointsLabel: "適合ポイント:",
+          currency: "¥",
+          taxInc: "（税込）",
+          capLabel: "洗濯容量: ",
+          widthLabel: "本体幅: 約",
+          typeVertical: "縦型全自動",
+          typeVerticalDryer: "縦型洗濯乾燥機",
+          typeDrum: "ドラム式洗濯乾燥機",
+          autoDoseYes: "自動投入あり",
+          autoDoseNo: "自動投入なし",
+          undecided: "まだ検討中"
+        },
+        en: {
+          tabName: "Washer",
+          title: "Washing Machine Selector & Consultation Assistant",
+          lead: "Find the top 3 washing machine candidates matched to your household size, drying frequency, and space.",
+          p1Indicator: "STEP 1 / 2 (Primary Specs & Direction)",
+          p2Indicator: "STEP 2 / 2 (Detailed Features & Preferences)",
+          btnNext1: "Confirm Direction & Basic Specs",
+          btnNext2: "Diagnose Final 3 Recommended Models",
+          btnRestart: "Start Over",
+          resultTitle: "Diagnosis Results: Top 3 Recommended Models",
+          summaryHeading: "📋 Initial Assessment: Recommended Direction",
+          recTypeLabel: "Recommended Type:",
+          recCapacityLabel: "Target Capacity:",
+          recClassLabel: "Focus Group:",
+          summaryNote: "*The next 5 questions evaluate dimensions, auto detergent dosing, noise level, and hygienic features.",
+          salesPitchLabel: "💡 Recommendation Reason:",
+          salesDiffLabel: "⚖️ Comparison with Others:",
+          salesClosingLabel: "🗣️ Customer Consultation Tip:",
+          fitPointsLabel: "Matching Criteria:",
+          currency: "¥",
+          taxInc: " (tax incl.)",
+          capLabel: "Capacity: ",
+          widthLabel: "Width: approx. ",
+          typeVertical: "Top-load Washer",
+          typeVerticalDryer: "Top-load Washer/Dryer",
+          typeDrum: "Front-load Washer/Dryer",
+          autoDoseYes: "Auto Detergent Dosing",
+          autoDoseNo: "Manual Dosing",
+          undecided: "Undecided"
+        },
+        zh: {
+          tabName: "洗衣机",
+          title: "洗衣机选购助手 & 销售导购工具",
+          lead: "根据家庭人数、烘干使用习惯及安装空间，为您量身精选最适合的3款洗衣机与导购话术。",
+          p1Indicator: "STEP 1 / 2（规格基准与大致方向确认）",
+          p2Indicator: "STEP 2 / 2（详细功能与使用偏好筛选）",
+          btnNext1: "确认大致方向与推荐规格",
+          btnNext2: "诊断并推荐最终3款候选产品",
+          btnRestart: "重新诊断",
+          resultTitle: "诊断结果：为您精选的3款洗衣机",
+          summaryHeading: "📋 前半部分诊断：适合您的基本方案",
+          recTypeLabel: "推荐机型类型:",
+          recCapacityLabel: "建议洗涤容量:",
+          recClassLabel: "重点定位类别:",
+          summaryNote: "※接下来的5个问题将进一步细化安装尺寸、洗涤剂自动投放、静音变频及筒自洁等实用功能。",
+          salesPitchLabel: "💡 推荐理由:",
+          salesDiffLabel: "⚖️ 与其他候选的区别:",
+          salesClosingLabel: "🗣️ 门店导购确认话术:",
+          fitPointsLabel: "契合要点:",
+          currency: "¥",
+          taxInc: "（含税）",
+          capLabel: "洗涤容量: ",
+          widthLabel: "机身宽度: 约",
+          typeVertical: "波轮全自动洗衣机",
+          typeVerticalDryer: "波轮洗烘一体机",
+          typeDrum: "滚筒洗烘一体机",
+          autoDoseYes: "支持自动投放洗涤剂",
+          autoDoseNo: "手动添加洗涤剂",
+          undecided: "还在考虑中"
+        }
+      },
+      questionsP1: [
+        {
+          id: "p1_members",
+          title: { ja: "Q1. 使用する人数は何人ですか？", en: "Q1. How many people will use this washing machine?", zh: "Q1. 使用该洗衣机的家庭常住人数是？" },
+          options: [
+            { value: "1", label: { ja: "1人（単身・一人暮らし）", en: "1 Person (Solo / Single)", zh: "1人（单身独居）" } },
+            { value: "2-3", label: { ja: "2～3人（夫婦・少人数家族）", en: "2-3 People (Couple / Small family)", zh: "2～3人（二人世界或三口小家庭）" } },
+            { value: "4-5", label: { ja: "4～5人（標準ファミリー）", en: "4-5 People (Standard family)", zh: "4～5人（多口标准家庭）" } },
+            { value: "6+", label: { ja: "6人以上（大家族・洗濯量極大）", en: "6+ People (Large family / High laundry volume)", zh: "6人以上（大家庭、洗涤衣物极多）" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p1_volume",
+          title: { ja: "Q2. 普段の洗濯頻度や1回の洗濯量は？", en: "Q2. How often do you wash, and what is your typical laundry volume?", zh: "Q2. 您平时的洗衣频率与单次洗衣量如何？" },
+          options: [
+            { value: "daily_small", label: { ja: "毎日こまめに洗濯し、1回の量は少なめ", en: "Daily small loads (Frequent light washing)", zh: "每天洗涤，单次衣物量偏少" } },
+            { value: "standard", label: { ja: "1〜2日に1回、標準的な洗濯量", en: "Every 1-2 days, average laundry volume", zh: "1〜2天洗一次，洗涤量适中" } },
+            { value: "heavy", label: { ja: "まとめ洗い派 / 週末に毛布やシーツ等も洗う / 1日複数回", en: "Batch wash / Blankets & sheets on weekends / Multiple loads daily", zh: "集中周末洗 / 经常洗毛毯床单被套 / 每天洗多次" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p1_dry",
+          title: { ja: "Q3. 乾燥機能はどの程度利用しますか？", en: "Q3. How often do you plan to use the drying function?", zh: "Q3. 您对衣物烘干功能的使用需求是？" },
+          options: [
+            { value: "none", label: { ja: "使わない（天日干し・部屋干しメイン / 縦型希望）", en: "Never (Sun/air drying only / Prefer top-load washer)", zh: "不用烘干（习惯自然晾晒或室内晾干，偏好波轮）" } },
+            { value: "occasional", label: { ja: "雨の日や急ぎの時だけ使いたい（縦型乾燥機も視野）", en: "Occasionally (Rainy days / emergencies / Top-load dryer viable)", zh: "偶尔使用（雨天梅雨季或应急烘干，考虑波轮洗烘）" } },
+            { value: "daily", label: { ja: "毎日洗濯から乾燥まで全自動で終わらせたい（ドラム推奨）", en: "Daily full auto wash-to-dry (Front-load drum recommended)", zh: "每天洗烘全托（晚上放入早晨直接穿，首选滚筒洗烘）" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p1_priority",
+          title: { ja: "Q4. 洗濯機選びで一番重視するポイントは？", en: "Q4. What is your primary priority when choosing a washing machine?", zh: "Q4. 选购洗衣机时您最看重的核心要点是？" },
+          options: [
+            { value: "cost", label: { ja: "とにかく購入価格を安く抑えたい（コスパ重視）", en: "Keep upfront purchase cost as low as possible", zh: "尽量压低购机成本（注重极致性价比）" } },
+            { value: "wash", label: { ja: "泥汚れ・皮脂汚れを落とす「強力な洗浄力」", en: "Maximum wash performance for mud, collar grime & sports wear", zh: "强效洗净泥渍汗渍的“强劲去污力”" } },
+            { value: "convenience", label: { ja: "洗剤自動投入など「毎日の家事時短・ラクさ」", en: "Daily convenience & time-saving (Auto detergent dosing, etc.)", zh: "洗涤剂自动投放等“省心家务减负”功能" } },
+            { value: "dry_quality", label: { ja: "ヒートポンプや風アイロンによる「乾燥の仕上がり・シワ取り」", en: "Wrinkle-free, gentle drying (Heat pump / Wind iron)", zh: "热泵或风熨斗带来的“蓬松免熨烫烘干品质”" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p1_budget",
+          title: { ja: "Q5. ご予算の目安はどれくらいですか？", en: "Q5. What is your general target budget?", zh: "Q5. 您的选购预算大致是多少？" },
+          options: [
+            { value: "under50", label: { ja: "〜5万円（超コスパ・単身向け）", en: "Under ¥50,000 (Ultra-budget / Single)", zh: "5万日元以下（超高性价比独居机型）" } },
+            { value: "50-100", label: { ja: "5〜10万円（標準縦型・エントリードラム）", en: "¥50,000 - ¥100,000 (Standard top-load / entry drum)", zh: "5〜10万日元（常规品质波轮或入门滚筒）" } },
+            { value: "100-200", label: { ja: "10〜20万円（高機能自動投入縦型・中型ドラム）", en: "¥100,000 - ¥200,000 (Advanced top-load / mid-tier drum)", zh: "10〜20万日元（高阶自动投放波轮或中端滚筒）" } },
+            { value: "200-300", label: { ja: "20〜30万円（主力ヒートポンプドラム・高機能）", en: "¥200,000 - ¥300,000 (Mainstream heat-pump drum)", zh: "20〜30万日元（主流热泵洗烘一体机）" } },
+            { value: "over300", label: { ja: "30万円〜（最上位フラッグシップドラム）", en: "¥300,000+ (Flagship luxury washer/dryer)", zh: "30万日元以上（各品牌顶级旗舰洗烘机）" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        }
+      ],
+      questionsP2: [
+        {
+          id: "p2_space",
+          title: { ja: "Q6. 設置場所の広さや搬入経路の制限は？", en: "Q6. What are the space and doorway constraints in your home?", zh: "Q6. 洗衣机放置处与搬运通道的尺寸限制是？" },
+          options: [
+            { value: "narrow", label: { ja: "狭い（単身用防水パン・幅560mm以下やスリム型ドラム必須）", en: "Tight space (Narrow waterproof pan / width <= 560mm or slim drum)", zh: "狭窄紧凑（单身公寓防水盘、宽度560mm以下或超薄款）" } },
+            { value: "normal", label: { ja: "標準的（一般的なマンション・一戸建ての洗面所・幅600〜640mm前後）", en: "Standard (Standard apartment / house laundry room, width ~600-640mm)", zh: "常规适中（普通公寓住宅、机身宽度约600〜640mm均可）" } },
+            { value: "wide", label: { ja: "広い（大型ドラムでも余裕で搬入・設置可能）", en: "Spacious (Ample room for extra-large flagship drums)", zh: "宽敞充裕（大容量旗舰滚筒也能轻松搬入安装）" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p2_autodose",
+          title: { ja: "Q7. 液体洗剤・柔軟剤の「自動投入機能」は必要ですか？", en: "Q7. Do you need automatic liquid detergent and softener dispensing?", zh: "Q7. 是否需要洗衣液和柔顺剂“智能自动投放”功能？" },
+          options: [
+            { value: "essential", label: { ja: "ぜひ欲しい（毎回の計量の手間をなくしたい）", en: "Essential (Eliminate the hassle of measuring every time)", zh: "非常需要（告别每次洗衣手动量取称量的繁琐）" } },
+            { value: "optional", label: { ja: "あれば嬉しいが、価格次第ではなくても構わない", en: "Optional (Nice to have, but flexible depending on price)", zh: "有就更好，但视整体价格而定，非硬性指标" } },
+            { value: "unneeded", label: { ja: "不要（手動投入で十分・価格を抑えたい）", en: "Unneeded (Manual dosing is fine; prefer lower price)", zh: "不需要（习惯手动添加，更看重经济实惠）" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p2_quiet",
+          title: { ja: "Q8. 夜間の洗濯や運転音の静かさ（インバーター静音性）は重視しますか？", en: "Q8. Is quiet operation (inverter motor / night washing) a high priority?", zh: "Q8. 是否非常看重夜间洗衣及变频超静音性能？" },
+          options: [
+            { value: "yes", label: { ja: "強く重視する（夜間や早朝に回すことが多い・低騒音DDモーター希望）", en: "High priority (Often wash at night or early morning / Inverter required)", zh: "非常看重（常在夜间或清晨洗衣，需低噪音直驱变频电机）" } },
+            { value: "no", label: { ja: "日中回すので標準的な運転音で問題ない", en: "Normal priority (Wash during daytime; standard noise is fine)", zh: "一般（通常白天洗涤，常规运转声音完全可以接受）" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p2_clean",
+          title: { ja: "Q9. 洗濯槽の黒カビ対策や節水性能は重視しますか？", en: "Q9. How important are tub mold prevention and water conservation?", zh: "Q9. 对内筒防霉防黑斑及节水性能的重视程度是？" },
+          options: [
+            { value: "high", label: { ja: "強く重視する（シャープ穴なし槽やAg+抗菌、自動槽洗浄が欲しい）", en: "High priority (Sharp hole-less tub, Ag+ antibacterial, auto tub wash)", zh: "非常看重（偏好夏普无孔内筒防霉节水或银离子除菌）" } },
+            { value: "normal", label: { ja: "通常の槽洗浄コースや定期的なお手入れで十分", en: "Standard priority (Regular tub cleaning cycles are adequate)", zh: "一般（定期运行常规筒清洗程序即可）" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p2_fabric",
+          title: { ja: "Q10. 洗濯物の汚れの種類やケアへの特別な要望は？", en: "Q10. What specific stain cleaning or garment care features do you need?", zh: "Q10. 衣物的主要污渍类型或特殊的衣物护理要求是？" },
+          options: [
+            { value: "dirt", label: { ja: "泥汚れ・子供服・作業着の頑固な汚れをしっかり落としたい（日立ビートウォッシュ等）", en: "Heavy mud, children's clothes, workwear (e.g. Hitachi Beat Wash)", zh: "需强力清洗泥渍、儿童脏衣与厚重工作服（如日立强水流）" } },
+            { value: "delicate", label: { ja: "温水洗浄・泡洗浄・衣類ケア・シワなし乾燥を重視したい（Panasonic/東芝/日立ドラム）", en: "Warm water wash, foam wash, garment care, wrinkle-free drying", zh: "注重温水泡洗、精致衣物护理及免熨烫蓬松烘干" } },
+            { value: "standard", label: { ja: "普段着やタオルが中心で標準的なコースで十分", en: "Everyday shirts, pants, and towels; standard cycles suffice", zh: "以普通日常衣物与毛巾为主，标准程序即可" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        }
+      ],
+      products: [
+        {
+          id: "ywm_t45a1", brand: "yamada", capacity: 4.5, price: 25080, type: "vertical", dry: "none",
+          inverter: false, autodose: false, width: 540, quiet: false, cleanSlotless: false, strongWash: false,
+          name: { ja: "ヤマダ SELECT YWM-T45A1 / TNI45A1", en: "YAMADA SELECT YWM-T45A1 / TNI45A1", zh: "山田电机 SELECT YWM-T45A1 / TNI45A1" },
+          desc: { ja: "4.5kg最安クラス。一人暮らしで毎日少量洗濯する方に最適な省スペース機。", en: "Ultra-affordable 4.5kg class. Compact and perfectly sized for singles washing small daily loads.", zh: "4.5kg超低价入门款。占地小，非常适合每日少量洗涤的单身人士。" },
+          point: { ja: "機能は最低限でいいから、とにかく導入費用を抑えたい単身者に一押し。", en: "Top pick for singles needing only basic washing at the lowest possible cost.", zh: "只要基础洗涤功能、追求以最低预算购机的独居青年首选。" }
+        },
+        {
+          id: "hw_g55nj1", brand: "hisense", capacity: 5.5, price: 26180, type: "vertical", dry: "none",
+          inverter: false, autodose: false, width: 540, quiet: false, cleanSlotless: false, strongWash: false,
+          name: { ja: "Hisense HW-G55NJ1", en: "Hisense HW-G55NJ1", zh: "海信 Hisense HW-G55NJ1" },
+          desc: { ja: "2万円台半ばで5.5kgの余裕容量。最短約14分のスピード洗濯コースを搭載。", en: "5.5kg capacity at ~¥26,000. Features a convenient 14-minute quick-wash cycle.", zh: "约2.6万日元亲民价格提供5.5kg实用容量，配备约14分钟极速快洗。" },
+          point: { ja: "4.5kgでは少し不安な一人暮らしに、容量と安さのベストバランスを提供。", en: "Great balance of capacity and affordability for singles wanting more room than 4.5kg.", zh: "觉得4.5kg太小的单身顾客，兼顾实惠价格与宽松洗涤容量的平衡之选。" }
+        },
+        {
+          id: "hw_g70j", brand: "hisense", capacity: 7.0, price: 32780, type: "vertical", dry: "none",
+          inverter: false, autodose: false, width: 540, quiet: false, cleanSlotless: false, strongWash: false,
+          name: { ja: "Hisense HW-G70J", en: "Hisense HW-G70J", zh: "海信 Hisense HW-G70J" },
+          desc: { ja: "幅540mmのスリムボディに7kgを凝縮。立体シャワー水流とAg+抗菌パルセーターを搭載。", en: "Packs 7kg capacity into a narrow 540mm width. Features 3D shower flow and Ag+ antibacterial wash.", zh: "仅540mm纤细机身容纳7kg大容量。搭载3D立体水流与Ag+抗菌波轮。" },
+          point: { ja: "狭い防水パンでも7kgを置きたい方、まとめ洗いしたい一人暮らし〜2人世帯に最適。", en: "Ideal for tight spaces needing a full 7kg capacity on a modest budget.", zh: "安装位置狭窄但需要7kg大容量、预算有限的单身多衣物或二人家庭首选。" }
+        },
+        {
+          id: "aw_5ga4", brand: "toshiba", capacity: 5.0, price: 37180, type: "vertical", dry: "none",
+          inverter: false, autodose: false, width: 563, quiet: false, cleanSlotless: false, strongWash: true,
+          name: { ja: "東芝 AW-5GA4-W", en: "TOSHIBA AW-5GA4-W", zh: "东芝 TOSHIBA AW-5GA4-W" },
+          desc: { ja: "浸透力×洗浄力でしっかり洗うエントリー5kg。国内大手ブランドの安心感。", en: "Entry 5kg model delivering strong soaking and washing power with proven Japanese brand reliability.", zh: "高渗透强去污5kg经典波轮。东芝日本知名品牌保障，品质结实可靠。" },
+          point: { ja: "5万円以下でも国内有名メーカーのしっかりした基本性能を選びたい方に。", en: "For budget-conscious buyers seeking the peace of mind of a major domestic manufacturer.", zh: "预算在5万日元以下，同时注重知名家电品牌洗净力与耐用度的独居用户。" }
+        },
+        {
+          id: "aqw_v7a", brand: "aqua", capacity: 7.0, price: 65780, type: "vertical", dry: "none",
+          inverter: true, autodose: false, width: 560, quiet: true, cleanSlotless: false, strongWash: true,
+          name: { ja: "AQUA AQW-V7A", en: "AQUA AQW-V7A", zh: "AQUA 安诺 AQW-V7A" },
+          desc: { ja: "インバーター搭載で洗濯35dBの静音性。3Dパワフル洗浄＋高濃度クリーン浸透。", en: "Inverter motor provides quiet 35dB wash cycle. Features 3D powerful wash and deep soaking.", zh: "搭载变频电机，洗涤仅35dB超静音。配备3D强力水流与高浓度渗透净洗。" },
+          point: { ja: "安物ではなく、夜間でも回せる静音インバーターと高い洗浄力を求める方に。", en: "Step up to an inverter-driven quiet washer with solid cleaning performance under ¥70,000.", zh: "拒绝廉价噪音机，追求夜间安静洗涤、变频省电与扎实去污力的家庭推荐款。" }
+        },
+        {
+          id: "aqw_vp8b", brand: "aqua", capacity: 8.0, price: 86680, type: "vertical", dry: "none",
+          inverter: true, autodose: false, width: 580, quiet: true, cleanSlotless: false, strongWash: true,
+          name: { ja: "AQUA AQW-VP8B", en: "AQUA AQW-VP8B", zh: "AQUA 安诺 AQW-VP8B" },
+          desc: { ja: "8kg大容量＋風呂水給水ポンプ標準搭載。インバーター低騒音設計で水道代も節約。", en: "8kg capacity equipped with bath water recycling pump. Inverter-driven quiet operation saving water.", zh: "8kg充裕容量且标配抽水泵。变频静音设计，大幅节省家庭水费开支。" },
+          point: { ja: "家族3〜4人分の洗濯物を10万円以下の予算でしっかり洗いたいファミリー向け。", en: "Cost-effective 8kg family workhorse keeping total budget well within ¥100,000.", zh: "希望将预算控制在10万日元以内、满足3〜4口之家每日大容量洗涤的高性价比波轮。" }
+        },
+        {
+          id: "bw_v80p", brand: "hitachi", capacity: 8.0, price: 110000, type: "vertical", dry: "none",
+          inverter: true, autodose: false, width: 608, quiet: true, cleanSlotless: false, strongWash: true,
+          name: { ja: "日立 ビートウォッシュ BW-V80P", en: "Hitachi Beat Wash BW-V80P", zh: "日立 HITACHI 旋流洗净波轮 BW-V80P" },
+          desc: { ja: "ナイアガラ ビート洗浄で泥汚れや皮脂汚れを圧倒的パワーで落とす本格洗浄定番モデル。", en: "Hitachi's signature Niagara Beat Wash powers out stubborn mud stains and collar grime.", zh: "日立招牌瀑布大水流旋流洗净，强力冲刷顽固泥渍、皮脂黄斑的洗净王牌。" },
+          point: { ja: "子供の泥汚れ、部活着、作業着を予洗いなしで真っ白に洗い上げたい方に最適。", en: "Unbeatable washing power for families with active kids, sports kits, and workwear.", zh: "家有运动儿童或户外工作者，想要省去手搓预洗、彻底洗净泥泞汗渍的首选。" }
+        },
+        {
+          id: "bw_x100p", brand: "hitachi", capacity: 10.0, price: 145000, type: "vertical", dry: "none",
+          inverter: true, autodose: true, width: 610, quiet: true, cleanSlotless: false, strongWash: true,
+          name: { ja: "日立 ビートウォッシュ 自動投入 BW-X100P", en: "Hitachi Beat Wash Auto-Dose BW-X100P", zh: "日立 自动投放波轮洗衣机 BW-X100P" },
+          desc: { ja: "10kg大容量に「液体洗剤・柔軟剤 自動投入」を合体。泥汚れ洗浄力と毎日の家事時短を両立。", en: "Combines 10kg capacity with automatic detergent dosing and Niagara Beat Wash power.", zh: "10kg大容量融合洗衣液柔顺剂智能自动投放，强劲去污与家务减负兼备。" },
+          point: { ja: "圧倒的な洗浄力は譲れないけれど、毎回の洗剤計量の手間も無くしたい方に。", en: "Perfect harmony of peak stain-removal power and automatic daily detergent convenience.", zh: "既决不妥协强大去污力，又希望彻底告别每次手动倒洗衣液麻烦的家庭。" }
+        },
+        {
+          id: "aw_8dpb6", brand: "toshiba", capacity: 8.0, price: 134200, type: "vertical", dry: "none",
+          inverter: true, autodose: true, width: 600, quiet: true, cleanSlotless: false, strongWash: true,
+          name: { ja: "東芝 ZABOON 自動投入 AW-8DPB6", en: "TOSHIBA ZABOON Auto-Dose AW-8DPB6", zh: "东芝 ZABOON 纳米微泡自动投放 AW-8DPB6" },
+          desc: { ja: "抗菌ウルトラファインバブル洗浄＋洗剤自動投入。ナノサイズの泡で繊維の奥から白く。", en: "Antibacterial Ultra Fine Bubble wash paired with automatic detergent dosing. Deep nano-bubble cleaning.", zh: "抗菌超微细纳米气泡深层渗透纤维，结合洗衣液自动投放与低噪音DD电机。" },
+          point: { ja: "夜間でも回せる圧倒的静音性と、皮脂汚れ・黄ばみを防ぐナノバブル洗浄を求める方に。", en: "Super-quiet DD motor for night cycles combined with nano-bubble fiber cleaning.", zh: "看重深夜洗衣的极静音表现，以及利用纳米微气泡长效防止衣物发黄变黑的用户。" }
+        },
+        {
+          id: "es_gv8l", brand: "sharp", capacity: 8.0, price: 98000, type: "vertical", dry: "none",
+          inverter: true, autodose: false, width: 600, quiet: true, cleanSlotless: true, strongWash: false,
+          name: { ja: "SHARP 穴なし槽 インバーター ES-GV8L", en: "SHARP Hole-less Tub Inverter ES-GV8L", zh: "夏普 SHARP 无孔内筒变频波轮 ES-GV8L" },
+          desc: { ja: "SHARP独自の「穴なし槽」。外槽のカビや汚れの侵入をブロックし、徹底的な節水を実現。", en: "Sharp's exclusive hole-less tub blocks outer mold and saves significant water on every cycle.", zh: "夏普专利无孔内筒设计，彻底杜绝外筒黑霉反渗污染，同时实现卓越节水。" },
+          point: { ja: "洗濯槽の黒カビが絶対に許せない方、水道代を大幅に抑えたい清潔志向の方に。", en: "Unbeatable hygiene for buyers who despise tub mold and demand top water conservation.", zh: "对洗衣机内筒藏污纳垢黑霉零容忍、且希望大幅节省每次洗衣水量的家庭。" }
+        },
+        {
+          id: "na_fa8k6", brand: "panasonic", capacity: 8.0, price: 125000, type: "vertical", dry: "none",
+          inverter: true, autodose: true, width: 599, quiet: true, cleanSlotless: false, strongWash: true,
+          name: { ja: "Panasonic スゴ落ち泡洗浄 自動投入 NA-FA8K6", en: "Panasonic Auto-Dose Foam Wash NA-FA8K6", zh: "松下 浓密泡沫自动投放波轮 NA-FA8K6" },
+          desc: { ja: "スゴ落ち泡洗浄＋パワフル立体水流＋自動投入。「すっきりフロント」で衣類投入が極めてスムーズ。", en: "Sugoochi Foam Wash with powerful 3D stream and auto-dose. Low front edge makes loading effortless.", zh: "高泡浓密渗透洗涤搭配自动投放。低机身前端设计，拿取清洗大件被服轻松省力。" },
+          point: { ja: "毛布や洗濯物の出し入れのしやすさと、洗剤投入の手間ゼロを両立した優等生モデル。", en: "Combines effortless laundry access with zero-measurement detergent ease.", zh: "既想要腰部不费力的大开口轻松取放衣物，又想享受自动投放便利的实用好机。" }
+        },
+        {
+          id: "na_fa12v6", brand: "panasonic", capacity: 12.0, price: 190000, type: "vertical", dry: "none",
+          inverter: true, autodose: true, width: 643, quiet: true, cleanSlotless: false, strongWash: true,
+          name: { ja: "Panasonic 温水泡洗浄 12kg NA-FA12V6", en: "Panasonic Warm Water 12kg NA-FA12V6", zh: "松下 12kg大容量温水泡沫波轮 NA-FA12V6" },
+          desc: { ja: "12kg超大容量に「温水専用ヒーター」「洗剤自動投入」を完備した縦型全自動の最高峰。", en: "Top-of-the-line 12kg top-load washer featuring dedicated warm water heater and auto-dose.", zh: "12kg超大洗涤容量配备内置温水加热器与自动投放，顶级波轮巅峰之作。" },
+          point: { ja: "大家族でドラムを置けない環境でも、温水洗浄と自動投入でしっかりキレイにしたい方に。", en: "Best solution for large families unable to fit drum dryers who still demand warm-water cleaning.", zh: "家庭人口多但卫生间无法容纳滚筒机型，依然渴望温水去黄除菌与全自动投放的用户。" }
+        },
+        {
+          id: "bw_dx100m", brand: "hitachi", capacity: 10.0, price: 180000, type: "vertical_dryer", dry: "heater",
+          inverter: true, autodose: true, width: 610, quiet: true, cleanSlotless: false, strongWash: true,
+          name: { ja: "日立 ビートウォッシュ 洗濯乾燥機 BW-DX100M", en: "Hitachi Beat Wash Washer/Dryer BW-DX100M", zh: "日立 洗烘一体波轮洗衣机 BW-DX100M" },
+          desc: { ja: "洗濯10kg/乾燥5.5kg。縦型の強力な洗浄力に温風乾燥機能と洗剤自動投入をプラス。", en: "Wash 10kg / Dry 5.5kg. Top-load powerful wash combined with hot-air drying and auto dosing.", zh: "洗涤10kg/烘干5.5kg。保留波轮强悍去污力，增加热风烘干与洗衣液自动投放。" },
+          point: { ja: "「ドラムは嫌だけど乾燥もたまに使いたい」という方の理想的なハイエンド縦型乾燥機。", en: "The dream choice for buyers preferring top-loaders but wanting built-in drying for bad weather.", zh: "钟爱波轮洗衣方式、但希望在阴雨天能随时烘干被单衣物的顶配洗烘一体机。" }
+        },
+        {
+          id: "jw_fp80a", brand: "haier", capacity: 8.0, price: 96800, type: "drum", dry: "heater",
+          inverter: true, autodose: true, width: 595, quiet: true, cleanSlotless: false, strongWash: false,
+          name: { ja: "Haier 洗剤自動投入ドラム JW-FP80A", en: "Haier Compact Auto-Dose Drum JW-FP80A", zh: "海尔 Haier 紧凑型自动投放滚筒 JW-FP80A" },
+          desc: { ja: "10万円以下で買える洗剤自動投入付きドラム式。洗濯8kg/乾燥4kg、奥行593mmのコンパクト設計。", en: "Sub-¥100,000 drum washer with auto-dosing. Wash 8kg / Dry 4kg, compact 593mm depth.", zh: "10万日元以内罕见的带自动投放滚筒洗烘机。洗8kg烘4kg，纵深仅593mm节省空间。" },
+          point: { ja: "予算10万円前後で、憧れのドラム式と自動投入を手に入れたい一人暮らし〜2人暮らし向け。", en: "Ideal for singles or couples wanting their first drum washer and auto-dosing without a hefty price.", zh: "预算在10万日元左右，想以极高性价比体验滚筒洗烘与自动投放的年轻家庭。" }
+        },
+        {
+          id: "es_s7s1", brand: "sharp", capacity: 7.0, price: 135000, type: "drum", dry: "heater",
+          inverter: true, autodose: false, width: 598, quiet: true, cleanSlotless: false, strongWash: false,
+          name: { ja: "SHARP コンパクトドラム ES-S7S1", en: "SHARP Compact Drum ES-S7S1", zh: "夏普 SHARP 超窄紧凑型滚筒 ES-S7S1" },
+          desc: { ja: "単身用防水パンにすっぽり収まる真のスリムドラム。プラズマクラスターで衣類消臭・除菌。", en: "True compact drum fitting standard apartment waterproof pans. Plasmacluster deodorizes dry clothes.", zh: "真真正正适配日本小户型防水盘的紧凑型滚筒。净离子群除菌消臭无水护理。" },
+          point: { ja: "「洗面所が狭くてドラムを諦めていた」方にジャストフィットする超人気モデル。", en: "Hits the sweet spot for urban apartments where standard large drums simply cannot fit.", zh: "因为卫生间面积狭窄而一直无法安装大型滚筒机型的公寓住户福音。" }
+        },
+        {
+          id: "aqw_dxs12a", brand: "aqua", capacity: 12.0, price: 182600, type: "drum", dry: "heatpump",
+          inverter: true, autodose: true, width: 595, quiet: true, cleanSlotless: false, strongWash: true,
+          name: { ja: "AQUA まっ直ぐドラム AQW-DXS12A", en: "AQUA Straight Drum AQW-DXS12A", zh: "AQUA 安诺 纯平水平滚筒 AQW-DXS12A" },
+          desc: { ja: "20万円を切る価格で12kg大容量・ヒートポンプ乾燥・自動投入を実現した驚異のコスパ機。", en: "Tremendous value: 12kg capacity, energy-efficient heat pump drying, and auto-dosing under ¥200,000.", zh: "20万日元以内不可思议的高配：12kg超大容量、节能热泵低温烘干与自动投放全齐。" },
+          point: { ja: "毎日乾燥までフル活用したいファミリーで、導入費用と電気代を賢く抑えたい方に最適。", en: "Top recommendation for families wanting daily heat-pump drying with minimal upfront cost.", zh: "每天需要彻底烘干衣物，既想享受大容量与省电热泵，又想严格控制购机预算的家庭。" }
+        },
+        {
+          id: "tw_127xm5", brand: "toshiba", capacity: 12.0, price: 179300, type: "drum", dry: "heatpump",
+          inverter: true, autodose: false, width: 645, quiet: true, cleanSlotless: false, strongWash: true,
+          name: { ja: "東芝 ZABOON ヒートポンプドラム TW-127XM5", en: "TOSHIBA ZABOON Heat Pump Drum TW-127XM5", zh: "东芝 ZABOON 热泵洗烘一体滚筒 TW-127XM5" },
+          desc: { ja: "抗菌ウルトラファインバブル洗浄W＋ヒートポンプ除湿乾燥。手頃な価格で買える本格大容量ドラム。", en: "Antibacterial Ultra Fine Bubble wash W with energy-saving heat pump drying at an accessible price.", zh: "抗菌超微细双重气泡深层净洗，配合省电省心低温热泵除湿烘干。" },
+          point: { ja: "洗剤の自動投入は不要で、12kgの洗浄力とふんわりヒートポンプ乾燥をお得に手に入れたい方に。", en: "Great for buyers not needing auto-dosing who want 12kg capacity and heat-pump drying under ¥180,000.", zh: "不需要洗衣液自动投放，但在18万日元以内追求12kg大容量与东芝蓬松热泵烘干的务实派。" }
+        },
+        {
+          id: "bd_sv120m", brand: "hitachi", capacity: 12.0, price: 230000, type: "drum", dry: "wind_iron",
+          inverter: true, autodose: true, width: 630, quiet: true, cleanSlotless: false, strongWash: true,
+          name: { ja: "日立 ビッグドラム 風アイロン BD-SV120M", en: "Hitachi Big Drum Wind Iron BD-SV120M", zh: "日立 大滚筒风熨斗洗烘一体机 BD-SV120M" },
+          desc: { ja: "高速風でシワを伸ばす「風アイロン」搭載。ナイアガラ洗浄と自動投入でアイロンがけの手間を激減。", en: "High-speed Wind Iron smooths out wrinkles. Niagara wash and auto-dosing minimize ironing chores.", zh: "时速约300km高速强风“风熨斗”抚平衣物褶皱。配合瀑布洗净与自动投放，大幅减轻熨烫家务。" },
+          point: { ja: "シャツや日常着のシワ取り乾燥を最重視し、毎日のアイロンがけから解放されたい方に。", en: "Unbeatable for buyers who hate ironing and demand smooth, wearable clothes straight from the dryer.", zh: "极度厌倦每天熨烫衬衫日常衣物，渴望烘干后直接穿上出门的品质首选。" }
+        },
+        {
+          id: "na_lx127fl", brand: "panasonic", capacity: 12.0, price: 290000, type: "drum", dry: "heatpump",
+          inverter: true, autodose: true, width: 639, quiet: true, cleanSlotless: false, strongWash: true,
+          name: { ja: "Panasonic はやふわ乾燥 ヒートポンプ NA-LX127FL", en: "Panasonic Hayafuwa Heat Pump Drum NA-LX127FL", zh: "松下 速享蓬松热泵旗舰滚筒 NA-LX127FL" },
+          desc: { ja: "スゴ落ち泡洗浄×はやふわ乾燥ヒートポンプ×トリプル自動投入。全方位で隙のない完成度を誇る本命ドラム。", en: "Sugoochi Foam Wash, Hayafuwa heat pump drying, and Triple Auto-Dose. Flawless all-around performance.", zh: "浓密泡沫洗净×低温速效蓬松热泵烘干×三合一自动投放。各维度无可挑剔的终极全能本命款。" },
+          point: { ja: "毎日の洗濯〜乾燥まで全自動で完全に任せきりにしたい、乾燥仕上がりと信頼性を最優先する方に。", en: "The definitive flagship standard for completely hands-off daily laundry with exceptional fabric care.", zh: "追求每天洗烘全流程绝对省心省力，极为重视衣物蓬松触感与松下顶级做工的高端家庭。" }
+        },
+        {
+          id: "tw_137xp6", brand: "toshiba", capacity: 13.0, price: 404800, type: "drum", dry: "heatpump",
+          inverter: true, autodose: true, width: 645, quiet: true, cleanSlotless: false, strongWash: true,
+          name: { ja: "東芝 ZABOON フラッグシップ 13kg TW-137XP6", en: "TOSHIBA ZABOON Flagship 13kg TW-137XP6", zh: "东芝 ZABOON 奢华触控大容量旗舰 13kg TW-137XP6" },
+          desc: { ja: "洗濯13kg/乾燥7kgのメガ容量。UV温風除菌、大型カラータッチ液晶、トリプル自動投入の最高峰。", en: "Mega capacity: Wash 13kg / Dry 7kg. UV hot air disinfection, color touch screen, and triple auto-dosing.", zh: "洗涤13kg/烘干7kg行业特大容量。UV紫外线除菌、超大触控彩屏与三路自动投放兼备。" },
+          point: { ja: "予算を惜しまず、大家族の洗濯と乾燥を最高クラスの除菌・自動化技術で完結させたい方に。", en: "For buyers sparing no expense to achieve peak sanitization, automation, and colossal capacity.", zh: "不计预算追求行业顶级配置，希望用最前沿除菌技术与超大容量轻松搞定大家庭衣物的用户。" }
+        }
+      ]
+    },
+    refrigerator: {
+      i18n: {
+        ja: {
+          tabName: "冷蔵庫",
+          title: "冷蔵庫 最適モデル選定・接客診断",
+          lead: "世帯人数・自炊スタイル・保存重視点に合わせて、最適な3台の候補をご提案します。",
+          p1Indicator: "STEP 1 / 2（規格・大まかな方向性の確認）",
+          p2Indicator: "STEP 2 / 2（詳細機能・こだわりの絞り込み）",
+          btnNext1: "方向性と推奨スペックを確認する",
+          btnNext2: "最終候補の3モデルを診断する",
+          btnRestart: "最初からやり直す",
+          resultTitle: "診断結果：おすすめの3モデル",
+          summaryHeading: "📋 前半診断：お客様に最適な基本仕様",
+          recCapacityLabel: "推奨容量の目安:",
+          recClassLabel: "おすすめカテゴリー:",
+          recFeaturesLabel: "注目すべき機能:",
+          summaryNote: "※次の5問で設置幅・奥行、解凍不要機能、野菜室の位置などの詳細条件を絞り込みます。",
+          salesPitchLabel: "💡 おすすめする理由:",
+          salesDiffLabel: "⚖️ 他の候補との違い:",
+          salesClosingLabel: "🗣️ お客様に確認する一言トーク:",
+          fitPointsLabel: "適合ポイント:",
+          currency: "¥",
+          taxInc: "（税込）",
+          capLabel: "定格内容積: ",
+          widthLabel: "幅: ",
+          doorStandard: "片開き",
+          doorBoth: "左右どっちもドア",
+          doorFrench: "フレンチドア（観音開き）",
+          undecided: "まだ検討中"
+        },
+        en: {
+          tabName: "Refrigerator",
+          title: "Refrigerator Selector & Sales Consultant",
+          lead: "Find the top 3 refrigerator candidates tailored to your household size, cooking lifestyle, and storage priorities.",
+          p1Indicator: "STEP 1 / 2 (Primary Specs & Direction)",
+          p2Indicator: "STEP 2 / 2 (Detailed Features & Preferences)",
+          btnNext1: "Confirm Direction & Basic Specs",
+          btnNext2: "Diagnose Final 3 Recommended Models",
+          btnRestart: "Start Over",
+          resultTitle: "Diagnosis Results: Top 3 Recommended Models",
+          summaryHeading: "📋 Initial Assessment: Recommended Direction",
+          recCapacityLabel: "Target Capacity Range:",
+          recClassLabel: "Target Category:",
+          recFeaturesLabel: "Recommended Focus:",
+          summaryNote: "*The next 5 questions evaluate installation width/depth, no-thaw prep, and vegetable drawer layout.",
+          salesPitchLabel: "💡 Recommendation Reason:",
+          salesDiffLabel: "⚖️ Comparison with Others:",
+          salesClosingLabel: "🗣️ Customer Consultation Tip:",
+          fitPointsLabel: "Matching Criteria:",
+          currency: "¥",
+          taxInc: " (tax incl.)",
+          capLabel: "Capacity: ",
+          widthLabel: "Width: ",
+          doorStandard: "Single Swing Door",
+          doorBoth: "Dual Swing (Opens Both Ways)",
+          doorFrench: "French Doors",
+          undecided: "Undecided"
+        },
+        zh: {
+          tabName: "冰箱",
+          title: "冰箱选购助手 & 销售导购工具",
+          lead: "根据常住家庭人数、日常下厨自炊习惯及保鲜偏好，为您量身精选3款最适合的冰箱与导购话术。",
+          p1Indicator: "STEP 1 / 2（规格基准与大致方向确认）",
+          p2Indicator: "STEP 2 / 2（详细功能与使用偏好筛选）",
+          btnNext1: "确认大致方向与推荐规格",
+          btnNext2: "诊断并推荐最终3款候选产品",
+          btnRestart: "重新诊断",
+          resultTitle: "诊断结果：为您精选的3款冰箱",
+          summaryHeading: "📋 前半部分诊断：适合您的基本方案",
+          recCapacityLabel: "建议容量区间:",
+          recClassLabel: "推荐定位类别:",
+          recFeaturesLabel: "建议重点关注:",
+          summaryNote: "※接下来的5个问题将进一步细化安装宽度与深度、肉类免解冻瞬冻及果蔬室位置等实用细节。",
+          salesPitchLabel: "💡 推荐理由:",
+          salesDiffLabel: "⚖️ 与其他候选的区别:",
+          salesClosingLabel: "🗣️ 门店导购确认话术:",
+          fitPointsLabel: "契合要点:",
+          currency: "¥",
+          taxInc: "（含税）",
+          capLabel: "有效容积: ",
+          widthLabel: "机身宽度: ",
+          doorStandard: "单向单开门",
+          doorBoth: "左右双向任意开门",
+          doorFrench: "法式对开门（双开门）",
+          undecided: "还在考虑中"
+        }
+      },
+      questionsP1: [
+        {
+          id: "p1_members",
+          title: { ja: "Q1. 使用する人数（世帯構成）は何人ですか？", en: "Q1. How many people are in your household?", zh: "Q1. 该冰箱常住使用的人数是？" },
+          options: [
+            { value: "1", label: { ja: "1人（単身・一人暮らし）", en: "1 Person (Solo / Single)", zh: "1人（单身独居）" } },
+            { value: "2", label: { ja: "2人暮らし（夫婦・カップル・同居）", en: "2 People (Couple / Roommates)", zh: "2人（夫妻、二人世界、合租）" } },
+            { value: "3-4", label: { ja: "3～4人（標準ファミリー）", en: "3-4 People (Standard family)", zh: "3～4人（标准三口、四口之家）" } },
+            { value: "4-5", label: { ja: "4～5人（食べ盛りのご家庭）", en: "4-5 People (Growing family)", zh: "4～5人（孩子成长期多口之家）" } },
+            { value: "5+", label: { ja: "5人以上（大家族・2世帯・食材大量保存）", en: "5+ People (Large multi-generation household)", zh: "5人以上（大家庭、三代同堂、海量食材储存）" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p1_cooking",
+          title: { ja: "Q2. 自炊の頻度や食品のストック量は？", en: "Q2. How often do you cook at home, and how much food do you stock?", zh: "Q2. 您平时的下厨烹饪频率与食品储存量如何？" },
+          options: [
+            { value: "low", label: { ja: "自炊はほぼしない / 飲み物・最低限の食材のみ", en: "Rarely cook / Drinks & bare essentials only", zh: "极少做饭 / 存放饮品与最基础日常食品" } },
+            { value: "standard", label: { ja: "標準的（週の半分以上は自炊、数日分をストック）", en: "Standard (Cook most weeknights, stock a few days of food)", zh: "适中常规（每周做饭数次、常备数天食材）" } },
+            { value: "high", label: { ja: "週末に大量まとめ買い / 作り置き・ふるさと納税の冷凍肉を常備", en: "Heavy batch stocking / Bulk weekend shopping & frozen food", zh: "周末大采购囤货 / 习惯备餐便当与大份冷冻生鲜" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p1_focus",
+          title: { ja: "Q3. 最も重視したい食品の保存性能は？", en: "Q3. Which food preservation feature is most important to you?", zh: "Q3. 您最希望重点保障哪类食材的保鲜品质？" },
+          options: [
+            { value: "cost", label: { ja: "こだわりは特にない（とにかく本体価格の安さを重視）", en: "No specific preference (Prioritize lowest upfront cost)", zh: "无特殊保鲜偏好（以控制购机预算为最先）" } },
+            { value: "vegetable", label: { ja: "野菜の鮮度キープ（みずみずしさ維持・真ん中野菜室）", en: "Vegetable freshness (High humidity & middle vegetable drawer)", zh: "果蔬水润保鲜（长效水嫩不枯萎、偏好中间果蔬室）" } },
+            { value: "meat_fish", label: { ja: "肉・魚の鮮度長持ち（チルド・微凍結・低温保存）", en: "Meat & fish freshness (Chilled, micro-freeze, long-term non-frozen)", zh: "肉类生鲜长效保鲜（冰温微冻、保鲜不结冰）" } },
+            { value: "freezer", label: { ja: "冷凍食品・作り置き・冷凍室の大容量さ", en: "Frozen foods, batch prep & maximum freezer capacity", zh: "冷冻速冻食品、大容量多层冷冻大抽屉" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p1_door",
+          title: { ja: "Q4. キッチンのドア開閉・構造のご希望は？", en: "Q4. What is your preferred door opening mechanism?", zh: "Q4. 您对冰箱门开启方式与结构的偏好是？" },
+          options: [
+            { value: "standard", label: { ja: "片開き（右開き または 左開きで問題ない）", en: "Single swing door (Right or left swing is fine)", zh: "常规单侧开门（右开或左开均可）" } },
+            { value: "both", label: { ja: "左右どちらからでも開けたい（シャープ「どっちもドア」）", en: "Open from either side (Sharp Dual-Swing door)", zh: "左右双向任意开门（夏普独家左右开双向门）" } },
+            { value: "french", label: { ja: "フレンチドア（観音開き / 狭い通路でも省スペース）", en: "French doors (Center split / Space-saving in narrow aisles)", zh: "法式对开门（十字对开/中央双开，开门不挡过道）" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p1_budget",
+          title: { ja: "Q5. ご予算の目安はどれくらいですか？", en: "Q5. What is your approximate target budget?", zh: "Q5. 您的选购预算大约是多少？" },
+          options: [
+            { value: "under50", label: { ja: "〜5万円（超コスパ・単身向け）", en: "Under ¥50,000 (Ultra-budget / Single)", zh: "5万日元以下（超高性价比单身型）" } },
+            { value: "50-100", label: { ja: "5〜10万円（単身大きめ / 2人エントリー）", en: "¥50,000 - ¥100,000 (Spacious single / Entry 2-person)", zh: "5〜10万日元（独居大容量或二人入门款）" } },
+            { value: "100-150", label: { ja: "10〜15万円（中型3ドア / 格安400L超）", en: "¥100,000 - ¥150,000 (Mid-tier 3-door / Budget 400L+)", zh: "10〜15万日元（中型3门或平价400L以上）" } },
+            { value: "150-250", label: { ja: "15〜25万円（標準ファミリー 400〜500L）", en: "¥150,000 - ¥250,000 (Mainstream family 400-500L)", zh: "15〜25万日元（主流家庭400〜500L主力机）" } },
+            { value: "250-300", label: { ja: "25〜30万円（大型・高機能上位クラス 500〜550L）", en: "¥250,000 - ¥300,000 (Large premium tier 500-550L)", zh: "25〜30万日元（高阶大容量500〜550L）" } },
+            { value: "over300", label: { ja: "30万円〜（最上位フラッグシップ・600L超）", en: "¥300,000+ (Flagship luxury / 600L+ mega capacity)", zh: "30万日元以上（旗舰奢华尊享机型、600L特大容积）" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        }
+      ],
+      questionsP2: [
+        {
+          id: "p2_space",
+          title: { ja: "Q6. 設置スペース（横幅や奥行）の制限は？", en: "Q6. What are the installation width and depth constraints?", zh: "Q6. 厨房安装预留空间（宽度与深度）限制是？" },
+          options: [
+            { value: "narrow", label: { ja: "設置幅が狭い（スリム幅54〜60cm以下に抑えたい）", en: "Narrow width (Strictly <= 600mm width)", zh: "宽度受限（需严格控制在54〜60cm以下紧凑机身）" } },
+            { value: "thin", label: { ja: "通路が狭く、薄型（奥行65cm前後以下）が良い", en: "Thin depth (Depth <= 660mm to leave aisle room)", zh: "过道狭窄（希望深度在65cm左右超薄嵌入型）" } },
+            { value: "normal", label: { ja: "標準的（幅65〜68.5cm程度なら問題なく設置可能）", en: "Standard (Fits width ~650-685mm easily)", zh: "常规空间（宽度65〜68.5cm左右均可顺畅安装）" } },
+            { value: "wide", label: { ja: "広い（幅75cm以上の超大型でも余裕で置ける）", en: "Spacious (Width 750mm+ mega units fit freely)", zh: "充裕宽敞（宽度75cm以上超大型机型也能轻松放入）" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p2_freezer_detail",
+          title: { ja: "Q7. 冷凍室について特に重視する点は？", en: "Q7. What matters most to you regarding the freezer compartment?", zh: "Q7. 您对冷冻室的最核心诉求是？" },
+          options: [
+            { value: "mega", label: { ja: "とにかく大容量・引き出しや小分けケースで仕分け収納したい", en: "Maximum volume & multi-tiered organizing baskets", zh: "超大容量与多层抽屉分类整理，方便翻找" } },
+            { value: "quality", label: { ja: "冷凍焼けやドリップを防ぐ急速冷凍・鮮度維持", en: "Quick-freeze & frost prevention for high culinary quality", zh: "急速冷冻锁鲜、防止产生冰霜及化冻流血水" } },
+            { value: "standard", label: { ja: "通常の冷凍機能があれば十分", en: "Standard freezer capacity and function are enough", zh: "常规基础冷冻功能即可" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p2_thawing",
+          title: { ja: "Q8. 「肉や魚を解凍なしですぐサクッと切りたい」要望はありますか？", en: "Q8. Do you want no-thaw slicing for frozen meats and fish?", zh: "Q8. 是否需要“肉类生鲜无需解冻、直接下刀轻松切片”的功能？" },
+          options: [
+            { value: "yes", label: { ja: "ぜひ欲しい（三菱「切れちゃう瞬冷凍」やパナソニック「微凍結」）", en: "Yes (Mitsubishi Soft-Freeze / Panasonic Partial Freeze)", zh: "非常需要（如三菱“瞬冷冻易切微冻”或松下“微冻保鲜”）" } },
+            { value: "no", label: { ja: "電子レンジ等で解凍するので通常のチルドで構わない", en: "No (Thawing by microwave is fine; standard chill is ok)", zh: "不需要（习惯微波炉解冻，普通冷藏冰温室即可）" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p2_veg_pos",
+          title: { ja: "Q9. 野菜室の位置（レイアウト）にこだわりはありますか？", en: "Q9. Do you have a strong preference for the vegetable drawer position?", zh: "Q9. 对果蔬室所在的高度位置有明确偏好吗？" },
+          options: [
+            { value: "middle", label: { ja: "野菜を頻繁に使うので「真ん中野菜室」が良い（腰をかがめたくない）", en: "Middle drawer (Frequent cooking; minimize bending down)", zh: "天天做饭，首选“居中果蔬室”（拿取蔬菜不弯腰）" } },
+            { value: "bottom", label: { ja: "冷凍室が真ん中、または位置には特にこだわらない", en: "Freezer in middle or position doesn't matter", zh: "冷冻室居中，或对位置高低没有硬性要求" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p2_feature",
+          title: { ja: "Q10. 電子レンジの天面設置やデザイン・静音性のこだわりは？", en: "Q10. Any requirements for top-microwave placement, quietness, or glass styling?", zh: "Q10. 顶部放置微波炉、静音或钢化玻璃面板外观的要求是？" },
+          options: [
+            { value: "top_oven", label: { ja: "冷蔵庫の上に電子レンジを置きたい（耐熱100℃トップテーブル必須）", en: "Place microwave on top (Heat-resistant 100°C top required)", zh: "需要在冰箱顶部放置微波炉（必须耐热100℃顶盖）" } },
+            { value: "quiet", label: { ja: "ワンルーム等で音が気になる（22〜24dB前後の静音インバーター設計）", en: "Ultra-quiet operation for studio rooms (~22-24dB)", zh: "单间开间怕吵（约22〜24dB超静音变频设计）" } },
+            { value: "design", label: { ja: "ガラストップや洗練されたインテリアフラットデザイン重視", en: "Glass door finish & sleek flat contemporary interior styling", zh: "钢化玻璃镜面门板、极简现代家居一体化颜值" } },
+            { value: "none", label: { ja: "特にない（性能と価格のバランス重視）", en: "None in particular (Balance of performance and price)", zh: "无特殊要求（侧重性能与价格的综合平衡）" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        }
+      ],
+      products: [
+        {
+          id: "eym_117l", brand: "edion", capacity: 117, price: 27800, width: 480, depth: 520, door: "standard",
+          vegMiddle: false, heatTop: false, quiet: false, meatFish: false, freezeCap: false, quickFreeze: false,
+          name: { ja: "エディオン EYM-117L-W", en: "EDION EYM-117L-W", zh: "EDION 艾迪旺 EYM-117L-W" },
+          desc: { ja: "必要最低限の機能に絞った一人暮らし向け超安価モデル。", en: "Ultra-budget 117L single-living model focused strictly on essential cooling.", zh: "精简基础功能、极低门槛的117L超实惠独居单身小冰箱。" },
+          point: { ja: "とにかく購入費用を最優先で抑えたい一人暮らしのスタートに。", en: "Top pick for singles seeking the absolute lowest purchase cost.", zh: "以极度精打细算的预算开启独居生活的实用之选。" }
+        },
+        {
+          id: "hr_d16nj1", brand: "hisense", capacity: 162, price: 32780, width: 481, depth: 586, door: "standard",
+          vegMiddle: false, heatTop: false, quiet: true, meatFish: false, freezeCap: true, quickFreeze: false,
+          name: { ja: "ハイセンス HR-D16NJ1", en: "Hisense HR-D16NJ1", zh: "海信 Hisense HR-D16NJ1" },
+          desc: { ja: "162Lの余裕容量と2段式冷凍室。ファン式自動霜取り搭載でコスパ抜群。", en: "Generous 162L volume with 2-tier freezer. Frost-free fan cooling at an incredible price.", zh: "162L宽裕容量带双层冷冻抽屉，风冷无霜免去手动除霜烦恼。" },
+          point: { ja: "3万円台で霜取り不要のファン式＋160Lクラスを手に入れたい方に。", en: "Great balance of frost-free convenience and 160L roominess in the ¥30,000s.", zh: "3万多日元入手风冷无霜与160L大抽屉冷冻的超高性价比款。" }
+        },
+        {
+          id: "aqr_14a", brand: "aqua", capacity: 135, price: 35750, width: 495, depth: 573, door: "standard",
+          vegMiddle: false, heatTop: true, quiet: true, meatFish: false, freezeCap: true, quickFreeze: false,
+          name: { ja: "AQUA AQR-14A-DS", en: "AQUA AQR-14A-DS", zh: "AQUA 安诺 AQR-14A-DS" },
+          desc: { ja: "50L大容量引き出しフリーザーと耐熱100℃トップテーブルを搭載。", en: "Features a massive 50L slide-out freezer and a 100°C heat-resistant top table.", zh: "配备50L大容量冷冻抽屉与耐热100℃顶盖，上方可直接放微波炉。" },
+          point: { ja: "電子レンジを上に置けて、冷凍食品もしっかりストックしたい自炊派単身向け。", en: "Ideal for singles needing microwave top-mounting and abundant frozen food storage.", zh: "需要在冰箱上方放微波炉且热爱冷冻速冻食品的独居下厨派。" }
+        },
+        {
+          id: "jr_nf140nj", brand: "haier", capacity: 140, price: 38280, width: 495, depth: 553, door: "standard",
+          vegMiddle: false, heatTop: true, quiet: true, meatFish: false, freezeCap: true, quickFreeze: false,
+          name: { ja: "ハイアール JR-NF140NJ-H", en: "Haier JR-NF140NJ-H", zh: "海尔 Haier JR-NF140NJ-H" },
+          desc: { ja: "3段引き出し式フリーザーとファン式自動霜取り。冷凍食品の整理が極めて快適。", en: "3-tier pull-out freezer with frost-free cooling. Effortless sorting for frozen ingredients.", zh: "三层独立抽屉式冷冻室搭配风冷无霜，分类存放冷冻速食格外清晰。" },
+          point: { ja: "冷凍食品やアイスをたくさん買い置きしたい一人暮らしにジャストフィット。", en: "Hits the sweet spot for singles stocking up on frozen ready-meals and ice cream.", zh: "喜欢囤积速冻生鲜冰淇淋、希望冷冻室井井有条的单身首选。" }
+        },
+        {
+          id: "mr_p15m", brand: "mitsubishi", capacity: 146, price: 44330, width: 480, depth: 595, door: "standard",
+          vegMiddle: false, heatTop: true, quiet: true, meatFish: true, freezeCap: false, quickFreeze: false,
+          name: { ja: "三菱電機 MR-P15M", en: "Mitsubishi Electric MR-P15M", zh: "三菱电机 MITSUBISHI MR-P15M" },
+          desc: { ja: "約22dBの圧倒的静音性と低温ケース付き。ワンルームでの生活を快適に。", en: "Whisper-quiet ~22dB operation with chilled meat/cheese case. Ideal for studio apartments.", zh: "约22dB超静音运转带独立低温保鲜盒。小开间公寓放床边也无噪音干扰。" },
+          point: { ja: "ワンルームで就寝時の運転音が気になる方、上質な使い勝手を求める方に。", en: "Perfect for studio apartment living where running noise must be virtually silent.", zh: "对电机噪音敏感、注重洗练质感与生鲜保鲜的独居精致派。" }
+        },
+        {
+          id: "sj_td15r", brand: "sharp", capacity: 152, price: 47080, width: 495, depth: 598, door: "both",
+          vegMiddle: false, heatTop: true, quiet: true, meatFish: false, freezeCap: false, quickFreeze: false,
+          name: { ja: "シャープ つけかえどっちもドア SJ-TD15R", en: "SHARP Reversible Dual Door SJ-TD15R", zh: "夏普 SHARP 可换向双向开门 SJ-TD15R" },
+          desc: { ja: "ドアの開閉方向を左右自由に付け替え可能。引っ越しや模様替えでも安心。", en: "Reversible door hinges switch opening direction left or right. Ready for any apartment layout.", zh: "开门方向可左右自由换向，搬家或调整厨房动线都能自如适应。" },
+          point: { ja: "キッチンの壁の向きでドア開閉に困りたくない方、転勤や引越しの予定がある方に。", en: "The lifesaver for layouts where door swing direction makes or breaks kitchen flow.", zh: "担心新家厨房墙壁阻挡开门方向、经常租房搬迁用户的必选款。" }
+        },
+        {
+          id: "hr_b2501", brand: "hisense", capacity: 250, price: 43780, width: 550, depth: 595, door: "standard",
+          vegMiddle: false, heatTop: false, quiet: true, meatFish: false, freezeCap: true, quickFreeze: false,
+          name: { ja: "ハイセンス HR-B2501", en: "Hisense HR-B2501", zh: "海信 Hisense HR-B2501" },
+          desc: { ja: "幅550mmで250Lの大容量が4万円台。まとめ買いする単身者や2人暮らしの強い味方。", en: "Huge 250L capacity at 550mm width under ¥45,000. Big ally for heavy-stocking singles & couples.", zh: "机身仅550mm宽却有250L大容量，价格仅4万多日元，大屯货单身或二人家庭福音。" },
+          point: { ja: "小型冷蔵庫では絶対足りないけれど、予算は5万円前後に抑えたい方に抜群のコスパ。", en: "Tremendous space-per-yen value for anyone needing 200L+ on a modest budget.", zh: "小冰箱完全不够装，但预算又希望控制在5万日元左右的超强性价比之选。" }
+        },
+        {
+          id: "sj_pd28r", brand: "sharp", capacity: 280, price: 75680, width: 560, depth: 665, door: "standard",
+          vegMiddle: false, heatTop: false, quiet: true, meatFish: false, freezeCap: true, quickFreeze: false,
+          name: { ja: "シャープ メガフリーザー SJ-PD28R", en: "SHARP Mega Freezer SJ-PD28R", zh: "夏普 SHARP 特大巨无霸冷冻室 SJ-PD28R" },
+          desc: { ja: "125Lの巨大なメガフリーザー搭載。プラズマクラスターで庫内を清潔除菌。", en: "Armed with a colossal 125L Mega Freezer. Plasmacluster keeps interior air hygienic.", zh: "配备高达125L的特大巨无霸冷冻室，净离子群高效除菌除异味。" },
+          point: { ja: "週末の冷凍食品まとめ買いや作り置き、ふるさと納税のお肉をたっぷり入れたい方に。", en: "Unbeatable match for bulk frozen meal prep and heavy frozen grocery hoarding.", zh: "热衷周末大采购冷冻食品、冷冻便当或大份生鲜的冷冻大容量首选。" }
+        },
+        {
+          id: "gr_y33sc", brand: "toshiba", capacity: 326, price: 82280, width: 600, depth: 665, door: "standard",
+          vegMiddle: true, heatTop: false, quiet: true, meatFish: false, freezeCap: false, quickFreeze: false,
+          name: { ja: "東芝 VEGETA 真ん中野菜室 GR-Y33SC-KZ", en: "TOSHIBA VEGETA Middle Veggie GR-Y33SC-KZ", zh: "东芝 VEGETA 居中果蔬室 GR-Y33SC-KZ" },
+          desc: { ja: "中型クラスで貴重な「真ん中野菜室」。うるおいラップで野菜の鮮度をキープ。", en: "Rare middle vegetable drawer in the 300L class. Moisture wrap seals vegetable freshness.", zh: "300L级别罕见的“居中果蔬室”，润泽保湿气流锁住蔬菜鲜嫩水分。" },
+          point: { ja: "2〜3人世帯で野菜料理をよく作る方、腰をかがめずに野菜を取り出したい方に。", en: "Best choice for 2-3 person homes cooking fresh veggies daily without bending down.", zh: "2〜3口家庭且经常烹饪蔬菜，希望站立时顺手取放重蔬菜的贴心之作。" }
+        },
+        {
+          id: "r_v32x", brand: "hitachi", capacity: 315, price: 109780, width: 540, depth: 655, door: "standard",
+          vegMiddle: false, heatTop: false, quiet: true, meatFish: true, freezeCap: false, quickFreeze: false,
+          name: { ja: "日立 スリム幅54cm R-V32X-N", en: "Hitachi Slim 54cm R-V32X-N", zh: "日立 HITACHI 54cm超窄中型款 R-V32X-N" },
+          desc: { ja: "幅54cmの超スリム設計。うるおいチルド＆うるおい野菜室で狭い場所に強い。", en: "Ultra-slim 54cm width. Moisture chill & moisture vegetable drawer for tight kitchen gaps.", zh: "仅54cm超窄纤细机身。微润冰温与高保湿果蔬室，专攻狭小预留位。" },
+          point: { ja: "容量300L超が欲しいけれど、キッチンの設置幅が狭くて諦めていた方に。", en: "Solves the puzzle for narrow gaps needing full 300L+ family-capable capacity.", zh: "需要300L以上实用容量，但厨房安装预留宽度受限用户的精准解法。" }
+        },
+        {
+          id: "sj_pw37r", brand: "sharp", capacity: 374, price: 125400, width: 600, depth: 665, door: "both",
+          vegMiddle: true, heatTop: false, quiet: true, meatFish: false, freezeCap: false, quickFreeze: false,
+          name: { ja: "シャープ どっちもドア 374L SJ-PW37R", en: "SHARP Dual-Swing 374L SJ-PW37R", zh: "夏普 左右双向门3门中型 374L SJ-PW37R" },
+          desc: { ja: "左右どちらからも開く「どっちもドア」。真ん中野菜室で家事動線が極めて快適。", en: "Dual-swing door opens from either side. Middle vegetable drawer smooths kitchen workflow.", zh: "左右均可顺畅开门，搭配居中果蔬室，厨房料理动线极为舒适顺手。" },
+          point: { ja: "キッチンとダイニングの行き来が多く、どちら側からもサッと開けたいご家庭に。", en: "Fantastic for open floorplans where you approach the fridge from multiple angles.", zh: "客厅与厨房双向动线频繁，希望从任何角度都能随手拉开冰箱门的家庭。" }
+        },
+        {
+          id: "mr_cx37m", brand: "mitsubishi", capacity: 365, price: 129800, width: 600, depth: 656, door: "standard",
+          vegMiddle: true, heatTop: false, quiet: true, meatFish: true, freezeCap: false, quickFreeze: true,
+          name: { ja: "三菱電機 氷点下ストッカー MR-CX37M", en: "Mitsubishi Sub-Zero Chiller MR-CX37M", zh: "三菱电机 冰点下冷藏保鲜 365L MR-CX37M" },
+          desc: { ja: "「氷点下ストッカー」搭載。肉や魚を凍らせずに生のまま鮮度長持ち。", en: "Sub-Zero Chiller preserves raw meat & fish longer without freezing them solid.", zh: "搭载“冰点下保鲜室”，鱼肉生鲜在不结冰状态下长效锁定鲜嫩风味。" },
+          point: { ja: "肉や魚の解凍の手間を減らし、まとめ買いした生鮮食品を週末まで美味しく保ちたい方に。", en: "Best for home cooks buying fresh fish and meat in batches without hassle of thawing.", zh: "购买高品质鱼肉不想冷冻破坏肉质纤维、希望数天内随取随切烹饪的下厨达人。" }
+        },
+        {
+          id: "hr_d450k", brand: "hisense", capacity: 450, price: 109780, width: 700, depth: 660, door: "french",
+          vegMiddle: false, heatTop: false, quiet: true, meatFish: false, freezeCap: true, quickFreeze: false,
+          name: { ja: "ハイセンス フレンチドア 450L HR-D450K", en: "Hisense French Door 450L HR-D450K", zh: "海信 450L法式对开门大容量 HR-D450K" },
+          desc: { ja: "450L大容量＆フレンチドアを約10万円強で実現した圧倒的低価格ファミリー機。", en: "Delivers 450L capacity and French doors around ¥110,000. Astonishing family value.", zh: "仅10万日元出头即可享受450L大容量与法式双开门，震撼价格家庭机。" },
+          point: { ja: "4人家族で400L超が必要だけれど、20万円以上の高額予算は出せない方に最有力候補。", en: "The runaway favorite for 4-person families needing 400L+ without spending over ¥150,000.", zh: "多口之家急需400L以上大容量，但购机预算严格控制在十几万日元以内时的首选。" }
+        },
+        {
+          id: "gr_a450gt", brand: "toshiba", capacity: 452, price: 217800, width: 600, depth: 707, door: "standard",
+          vegMiddle: true, heatTop: false, quiet: true, meatFish: false, freezeCap: false, quickFreeze: false,
+          name: { ja: "東芝 VEGETA 幅60cm 452L GR-A450GT", en: "TOSHIBA VEGETA Slim 60cm 452L GR-A450GT", zh: "东芝 VEGETA 60cm超窄 452L GR-A450GT" },
+          desc: { ja: "幅60cmスリムで452Lを実現。「もっと潤う 摘みたて野菜室」を真ん中に配置。", en: "Fits 452L into a slim 60cm width. Features middle Fresh Harvest moist veggie drawer.", zh: "仅60cm纤薄机身容纳452L大容积。中间搭载“摘取般水润高保湿果蔬室”。" },
+          point: { ja: "「幅60cmしか置けないけれど、450L以上の大容量と本格野菜室が欲しい」ご家庭に。", en: "Answers the call for families restricted to 60cm widths who refuse to compromise on space.", zh: "预留位仅60cm宽，但强烈需要450L以上大容量且偏爱高保湿果蔬室的家庭。" }
+        },
+        {
+          id: "r_hws47x", brand: "hitachi", capacity: 470, price: 195800, width: 600, depth: 699, door: "standard",
+          vegMiddle: false, heatTop: false, quiet: true, meatFish: true, freezeCap: false, quickFreeze: true,
+          name: { ja: "日立 まるごとチルド 470L R-HWS47X", en: "Hitachi Whole-Chilled 470L R-HWS47X", zh: "日立 全室冰温低温保鲜 470L R-HWS47X" },
+          desc: { ja: "幅60cmスリム。冷蔵室全段が約2℃のチルドになる「まるごとチルド」で鮮度抜群。", en: "Slim 60cm width. Entire refrigerator compartment operates at ~2°C Whole-Chilled temperature.", zh: "60cm纤细机身。冷藏室整层全段约2℃恒温保鲜，食物无需包裹保鲜膜也不易风干。" },
+          point: { ja: "作り置きのおかずやサラダ、生鮮食品を冷蔵庫のどこに置いても鮮度キープしたい方に。", en: "Best for anyone stocking salads, meal preps, and sashimi across every shelf without wrapping.", zh: "喜欢常备下酒菜、沙拉及分装便当，希望放在冷藏室任何角落都保鲜如初的用户。" }
+        },
+        {
+          id: "nr_f45hy3", brand: "panasonic", capacity: 450, price: 247500, width: 650, depth: 699, door: "french",
+          vegMiddle: false, heatTop: false, quiet: true, meatFish: true, freezeCap: true, quickFreeze: true,
+          name: { ja: "Panasonic 微凍結パーシャル 450L NR-F45HY3", en: "Panasonic Partial Freeze 450L NR-F45HY3", zh: "松下 微冻保鲜全开抽屉 450L NR-F45HY3" },
+          desc: { ja: "「微凍結パーシャル」と「ナノイーX」搭載。100%全開するワンダフルオープン引き出し。", en: "Features Partial Freezing and nanoe X air purification. 100% full-extension drawers.", zh: "搭载-3℃微冻保鲜与nanoe X除菌除味。抽屉100%完全拉开，深处物品一目了然。" },
+          point: { ja: "引き出しの奥まで見渡せる使いやすさと、肉魚の解凍なし調理を両立したいファミリーに。", en: "Top match for parents wanting zero-thaw meal prep and zero hidden food waste in drawers.", zh: "看重食材完全拉出不卡手的人体工学便利，同时享受肉类免解冻切片的高品质家庭。" }
+        },
+        {
+          id: "aqr_tz51r", brand: "aqua", capacity: 512, price: 162800, width: 830, depth: 635, door: "french",
+          vegMiddle: false, heatTop: false, quiet: true, meatFish: false, freezeCap: true, quickFreeze: true,
+          name: { ja: "AQUA 薄型奥行63.5cm 512L AQR-TZ51R", en: "AQUA Slim Depth 63.5cm 512L AQR-TZ51R", zh: "AQUA 超薄纵深63.5cm 512L AQR-TZ51R" },
+          desc: { ja: "奥行63.5cmの超薄型設計＋512L。180Lの6ブロック整理式大容量フリーザーを完備。", en: "Ultra-shallow 63.5cm depth with 512L volume. Features massive 180L 6-box freezer storage.", zh: "纵深仅63.5cm齐平橱柜超薄设计。512L大容量内配180L六格抽屉精细化冷冻室。" },
+          point: { ja: "キッチンの通路を広々保ちたい方、冷凍食品やストックをすっきり小分け整理したい方に。", en: "Ideal for keeping kitchen corridors wide while organizing huge bulk-frozen inventories.", zh: "希望厨房过道宽敞不凸出，且热爱大批量采购冷冻食品并分类归纳的家庭。" }
+        },
+        {
+          id: "mr_mz54n", brand: "mitsubishi", capacity: 540, price: 316800, width: 650, depth: 699, door: "french",
+          vegMiddle: true, heatTop: false, quiet: true, meatFish: true, freezeCap: true, quickFreeze: true,
+          name: { ja: "三菱電機 切れちゃう瞬冷凍 540L MR-MZ54N", en: "Mitsubishi Soft-Freeze A.I. 540L MR-MZ54N", zh: "三菱电机 瞬冷冻AI微冻 540L MR-MZ54N" },
+          desc: { ja: "「切れちゃう瞬冷凍A.I.」＆「真ん中朝どれ野菜室」。生鮮肉の解凍不要＋真ん中野菜室の決定版。", en: "Soft-Freeze A.I. slices frozen food without thawing. Middle Morning-Harvest veggie drawer.", zh: "“瞬冷冻易切A.I.”与居中朝摘果蔬室。鱼肉冷冻无需化冻直接切，生鲜保鲜巅峰作。" },
+          point: { ja: "冷凍肉の解凍時間をゼロにし、野菜も肉も最上級の鮮度で毎日の料理を楽しみたい家庭へ。", en: "The dream appliance for home chefs wanting zero-thaw convenience and peak produce longevity.", zh: "彻底告别下厨前等待解冻的漫长煎熬，兼顾果蔬水灵与肉质多汁的料理达人本命款。" }
+        },
+        {
+          id: "gr_a540xfs", brand: "toshiba", capacity: 543, price: 294800, width: 685, depth: 699, door: "french",
+          vegMiddle: true, heatTop: false, quiet: true, meatFish: false, freezeCap: false, quickFreeze: true,
+          name: { ja: "東芝 VEGETA 最上位フラッグシップ GR-A540XFS", en: "TOSHIBA VEGETA Flagship 543L GR-A540XFS", zh: "东芝 VEGETA 旗舰巅峰 543L GR-A540XFS" },
+          desc: { ja: "東芝フラッグシップXFSシリーズ。最上位の野菜保存性能とうるおい冷気で鮮度を極限保持。", en: "Toshiba flagship XFS. Delivers top-tier vegetable moisture preservation and mist cooling.", zh: "东芝旗舰XFS系列。顶级果蔬透湿保鲜与双循环微风冷却，绿叶蔬菜长久鲜嫩如初。" },
+          point: { ja: "とにかく野菜のまとめ買いが多く、1週間後もシャキシャキの状態で料理したいご家庭に。", en: "For families buying bulk vegetables weekly who demand crisp, farm-fresh textures days later.", zh: "习惯每周大采购新鲜绿叶菜，希望存放一周依然爽脆水灵的蔬食主义家庭。" }
+        },
+        {
+          id: "nr_f65wx3", brand: "panasonic", capacity: 650, price: 356400, width: 750, depth: 745, door: "french",
+          vegMiddle: false, heatTop: false, quiet: true, meatFish: true, freezeCap: true, quickFreeze: true,
+          name: { ja: "Panasonic 最高峰プレミアム 650L NR-F65WX3", en: "Panasonic Ultimate 650L NR-F65WX3", zh: "松下 顶级奢华大容积 650L NR-F65WX3" },
+          desc: { ja: "国内最大級650L。微凍結パーシャル・Wシャキシャキ野菜室・AIエコナビをフル装備した最高峰。", en: "Mega 650L capacity. Fully loaded with Partial Freeze, W-Fresh Produce, and AI Econavi.", zh: "日本国内特大级别650L。微冻保鲜、双重控湿果蔬室与AI智能节能满配最高峰。" },
+          point: { ja: "大家族やまとめ買い派で、容量・保鮮技術・省エネ・デザインのすべてを妥協したくない方に。", en: "The ultimate choice for large households demanding immense capacity and uncompromising tech.", zh: "大家庭多代同堂，在容量、保鲜黑科技、节能与尊贵美学上拒绝任何妥协的终极之选。" }
+        }
+      ]
+    },
+    oralcare: {
+      i18n: {
+        ja: {
+          tabName: "オーラルケア",
+          title: "オーラルケア機器 最適モデル選定・接客診断",
+          lead: "歯ぐきのお悩み・磨き方の癖・ご予算に合わせて、最適な候補と店頭接客ポイントをご提案します。",
+          p1Indicator: "STEP 1 / 2（方向性・基本規格のヒアリング）",
+          p2Indicator: "STEP 2 / 2（磨き方の癖・詳細機能の絞り込み）",
+          btnNext1: "方向性と推奨スペックを確認する",
+          btnNext2: "最終候補の3モデルを診断する",
+          btnRestart: "最初からやり直す",
+          resultTitle: "診断結果：おすすめの3モデル",
+          summaryHeading: "📋 前半診断：お客様に最適な基本仕様",
+          recTypeLabel: "推奨カテゴリー:",
+          recClassLabel: "注力グループ:",
+          recFeaturesLabel: "重視すべき仕様:",
+          summaryNote: "※次の5問でブラシの圧センサー、磨き方式の好み、スマート機能などの詳細条件を絞り込みます。",
+          salesPitchLabel: "💡 おすすめする理由:",
+          salesDiffLabel: "⚖️ 他の候補との違い:",
+          salesClosingLabel: "🗣️ お客様に確認する一言トーク:",
+          fitPointsLabel: "適合ポイント:",
+          currency: "¥",
+          taxInc: "（税込）",
+          pressureYes: "過圧防止機能あり",
+          pressureNo: "過圧防止なし",
+          appYes: "スマホ連携あり",
+          appNo: "本体単体操作",
+          undecided: "まだ検討中"
+        },
+        en: {
+          tabName: "Oral Care",
+          title: "Oral Care Product Selector & Sales Consultant",
+          lead: "Find the top 3 electric toothbrushes or water flossers matched to your gum sensitivity, habits, and budget.",
+          p1Indicator: "STEP 1 / 2 (Primary Needs & Basic Specifications)",
+          p2Indicator: "STEP 2 / 2 (Brushing Habits & Detailed Features)",
+          btnNext1: "Confirm Direction & Basic Specs",
+          btnNext2: "Diagnose Final 3 Recommended Models",
+          btnRestart: "Start Over",
+          resultTitle: "Diagnosis Results: Top 3 Recommended Models",
+          summaryHeading: "📋 Initial Assessment: Recommended Direction",
+          recTypeLabel: "Recommended Category:",
+          recClassLabel: "Target Group:",
+          recFeaturesLabel: "Key Specifications:",
+          summaryNote: "*The next 5 questions will refine pressure sensors, driving mechanisms, and smart connectivity.",
+          salesPitchLabel: "💡 Recommendation Reason:",
+          salesDiffLabel: "⚖️ Comparison with Others:",
+          salesClosingLabel: "🗣️ Customer Consultation Tip:",
+          fitPointsLabel: "Matching Strengths:",
+          currency: "¥",
+          taxInc: " (tax incl.)",
+          pressureYes: "Pressure Sensor Included",
+          pressureNo: "No Pressure Sensor",
+          appYes: "Smart App Enabled",
+          appNo: "Standalone Operation",
+          undecided: "Undecided"
+        },
+        zh: {
+          tabName: "口腔护理",
+          title: "口腔护理电器选购助手 & 销售导购工具",
+          lead: "根据您的牙龈敏感度、刷牙习惯与预算，为您量身精选3款电动牙刷或冲牙器与导购话术。",
+          p1Indicator: "STEP 1 / 2（购买目的与基本规格咨询）",
+          p2Indicator: "STEP 2 / 2（刷牙习惯与进阶功能筛选）",
+          btnNext1: "确认大致方向与推荐规格",
+          btnNext2: "诊断并推荐最终3款候选产品",
+          btnRestart: "重新诊断",
+          resultTitle: "诊断结果：为您精选的3款产品",
+          summaryHeading: "📋 前半部分诊断：适合您的基本方案",
+          recTypeLabel: "推荐品类:",
+          recClassLabel: "重点组别:",
+          recFeaturesLabel: "建议关注规格:",
+          summaryNote: "※接下来的5个问题将进一步细化防按压过度传感器、刷头偏好及智能App连接等细节。",
+          salesPitchLabel: "💡 推荐理由:",
+          salesDiffLabel: "⚖️ 与其他候选的区别:",
+          salesClosingLabel: "🗣️ 门店导购确认话术:",
+          fitPointsLabel: "契合要点:",
+          currency: "¥",
+          taxInc: "（含税）",
+          pressureYes: "带压力感应保护",
+          pressureNo: "无压力感应保护",
+          appYes: "支持手机App互联",
+          appNo: "机身独立操作",
+          undecided: "还在考虑中"
+        }
+      },
+      questionsP1: [
+        {
+          id: "p1_user",
+          title: { ja: "Q1. 主に使用される対象の方はどなたですか？", en: "Q1. Who is the primary intended user?", zh: "Q1. 主要使用该设备的人群是？" },
+          options: [
+            { value: "adult", label: { ja: "大人（一般・シニア含む）", en: "Adult (General or seniors)", zh: "成人（普通成年人或长辈）" } },
+            { value: "kids", label: { ja: "子ども（3歳〜小学校低学年など乳歯・生え変わり期）", en: "Children (Age 3+ / primary teeth)", zh: "儿童（3岁以上至小学低年级、乳牙期）" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p1_type",
+          title: { ja: "Q2. お探しの機器カテゴリーはどれですか？", en: "Q2. Which device category are you looking for?", zh: "Q2. 您正在寻找哪类口腔护理仪器？" },
+          options: [
+            { value: "brush", label: { ja: "電動歯ブラシ（毎日の歯面・歯周ケアを手早くしっかり行いたい）", en: "Electric Toothbrush (Fast & thorough plaque removal)", zh: "电动牙刷（高效快速清洁齿面与牙周）" } },
+            { value: "water", label: { ja: "口腔洗浄器（歯間や歯周ポケットの汚れを水流・ジェットで弾き飛ばしたい）", en: "Water Flosser / Oral Irrigator (Blast food debris with water jets)", zh: "冲牙器 / 水牙线（利用超声脉冲水流冲净牙缝牙周污垢）" } },
+            { value: "combo", label: { ja: "歯ブラシと水流洗浄器の両方を検討したい", en: "Both Toothbrush and Water Flosser combo", zh: "牙刷与冲牙器两类都想了解对比" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p1_goal",
+          title: { ja: "Q3. 最も改善・ケアしたいお悩みは？", en: "Q3. What is your primary dental care priority or concern?", zh: "Q3. 您最希望重点改善或护理的口腔困扰是？" },
+          options: [
+            { value: "plaque", label: { ja: "歯垢の磨き残しゼロ・歯のツルツル感を最優先したい", en: "Zero plaque left behind & squeaky-clean tooth surface", zh: "彻底清除牙菌斑、追求牙面光滑如洗的洁净感" } },
+            { value: "gum", label: { ja: "歯周ポケット・歯ぐきの腫れ・出血をいたわりたい", en: "Periodontal pocket care & gentle protection for bleeding gums", zh: "牙周袋深层清洁、舒缓牙龈红肿出血" } },
+            { value: "interdental", label: { ja: "歯と歯の隙間に挟まる食べかす・フロス代わりに徹底洗浄したい", en: "Flossing alternative to remove trapped food between teeth", zh: "替代传统牙线、彻底冲净牙齿间隙死角菜渣" } },
+            { value: "starter", label: { ja: "とにかく低予算で電動歯ブラシを試してみたい", en: "Try out an electric toothbrush on an entry budget", zh: "以极低试错成本初次体验电动牙刷" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p1_place",
+          title: { ja: "Q4. 主な使用場所や持ち運びの予定は？", en: "Q4. Where do you primarily plan to use the device?", zh: "Q4. 主要使用场景及随身携带需求是？" },
+          options: [
+            { value: "home_sink", label: { ja: "自宅の洗面所（充電スタンド設置OK）", en: "Home bathroom sink (Space for a charging dock)", zh: "自家洗手台镜前（可放置常规充电底座）" } },
+            { value: "home_bath", label: { ja: "自宅のお風呂場（入浴中に使いたい・完全防水必須）", en: "In the shower / bathtub (100% waterproof required)", zh: "洗澡淋浴时顺便使用（必须完全防水）" } },
+            { value: "portable", label: { ja: "職場・ランチ後・出張や旅行に携帯したい", en: "Portable for office, post-lunch, business trips, or travel", zh: "常带去办公室午休后理容、或出差旅行随身携带" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p1_budget",
+          title: { ja: "Q5. ご予算の目安はどれくらいですか？", en: "Q5. What is your approximate budget range?", zh: "Q5. 您的选购预算大约是多少？" },
+          options: [
+            { value: "under5", label: { ja: "〜5,000円（手頃なエントリー・電池式・高コスパ）", en: "Under ¥5,000 (Affordable entry, battery-powered, high value)", zh: "5,000日元以下（平价实用入门、电池款、高性价比）" } },
+            { value: "5_15", label: { ja: "5,000〜15,000円（実力派スタンダード・普段使いの決定版）", en: "¥5,000 - ¥15,000 (Solid everyday workhorse standards)", zh: "5,000〜15,000日元（日常主力经典款、性能均衡）" } },
+            { value: "15_30", label: { ja: "15,000〜30,000円（高機能センサー・W音波・中上位iO）", en: "¥15,000 - ¥30,000 (Smart pressure sensor, Dual Sonic, mid-high iO)", zh: "15,000〜30,000日元（智能压力感应、双重声波、进阶iO系列）" } },
+            { value: "over30", label: { ja: "30,000円〜（最上位フラッグシップ・磁気駆動・アプリガイド）", en: "¥30,000+ (Peak flagships: Magnetic iO, real-time App guides)", zh: "30,000日元以上（顶级旗舰、磁驱微震科技、App实时导航）" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        }
+      ],
+      questionsP2: [
+        {
+          id: "p2_pressure",
+          title: { ja: "Q6. 歯ブラシを強く押し当ててしまう癖はありますか？", en: "Q6. Do you tend to press your toothbrush too hard against your teeth and gums?", zh: "Q6. 您是否有刷牙时用力过猛按压牙齿牙龈的习惯？" },
+          options: [
+            { value: "hard", label: { ja: "強く当てがち / 歯科医師から力加減を注意されたことがある（過圧防止機能必須）", en: "Yes (Dentist warned me about brushing too hard / Pressure sensor needed)", zh: "容易用力过猛 / 曾被牙医提醒刷牙太重（必须带防按压过度传感器）" } },
+            { value: "normal", label: { ja: "普通の力加減で磨ける / 意識してコントロールできる", en: "No (Normal pressure / I can control it consciously)", zh: "力度适中 / 能自觉控制轻重无需特殊保护" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p2_head",
+          title: { ja: "Q7. ブラシヘッドの形状や好みの磨き感は？", en: "Q7. Which brush head style and tactile sensation do you prefer?", zh: "Q7. 您偏好的刷头外观与清洁触感是？" },
+          options: [
+            { value: "round", label: { ja: "丸型回転（歯を1本1本包み込んで力強く掻き出す・Oral-B）", en: "Round Oscillating (Wraps each tooth for powerful scrubbing - Oral-B)", zh: "圆头包裹旋转式（逐颗包裹牙齿强力刮除牙垢 - 欧乐B）" } },
+            { value: "sonic_thin", label: { ja: "薄型極細毛＋音波振動（歯周ポケットに毛先がスッと入る・ドルツ）", en: "Ultra-thin bristles + Sonic vibration (Slips into gum pockets - Doltz)", zh: "超薄极细毛+声波微震（毛尖深入牙周袋 - 松下Doltz）" } },
+            { value: "sonic_fluid", label: { ja: "音波水流（高速振動で水流を発生させて毛先が届きにくい隙間も洗浄・ソニッケアー）", en: "Sonic Dynamic Fluid Action (Flushes fluid deep into gaps - Sonicare)", zh: "流动洁力水流（高频振动带动液体冲刷盲区 - 飞利浦Sonicare）" } },
+            { value: "any", label: { ja: "特にこだわりはない（お任せ）", en: "No strong preference (Leave it to best match)", zh: "无特殊偏好（交由系统推荐）" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p2_smart",
+          title: { ja: "Q8. スマホアプリ連携や磨き残し検知などのスマート機能は必要ですか？", en: "Q8. Do you want smart features like Bluetooth app tracking and position detection?", zh: "Q8. 是否需要手机App蓝牙互联与实时漏刷盲区检测功能？" },
+          options: [
+            { value: "yes", label: { ja: "欲しい（磨き残し箇所をリアルタイムで可視化して完璧に磨きたい）", en: "Yes (Real-time visual map of missed spots for perfection)", zh: "想要（手机屏幕直观显示哪里没刷到位，追求无死角清洁）" } },
+            { value: "no", label: { ja: "不要（本体のボタンを押してシンプルに磨くだけで十分）", en: "No (Simple standalone one-button operation is best)", zh: "不需要（按键即刷、简单纯粹即可）" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p2_power",
+          title: { ja: "Q9. 充電方式や給電スタイルへの希望は？", en: "Q9. What are your preferences for charging and power interface?", zh: "Q9. 对供电及充电方式有何偏好？" },
+          options: [
+            { value: "dock", label: { ja: "洗面所に置くだけの充電スタンド式（毎回のコード抜き差し不要）", en: "Sinktop charging stand (Drop-and-charge convenience)", zh: "洗漱台无线座充（随放随充无需插拔线缆）" } },
+            { value: "usbc", label: { ja: "USB Type-C充電（デスクやモバイルバッテリーから充電したい）", en: "USB Type-C (Charge from laptop, desk, or power bank)", zh: "USB Type-C通用直充（可用充电宝电脑便捷补电）" } },
+            { value: "battery", label: { ja: "乾電池式（充電の手間がなく、電池交換ですぐ使える）", en: "Replaceable dry battery (Instant swap without waiting to recharge)", zh: "干电池供电（无需等待充电、更换电池即用）" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p2_tank",
+          title: { ja: "Q10. 口腔洗浄器をご検討の場合、給水タンクの希望は？（歯ブラシのみ検討時は「該当なし」）", en: "Q10. If considering a water flosser, what water reservoir style fits you best? (Choose 'Not Applicable' for toothbrushes)", zh: "Q10. 若考虑冲牙器，您期望的水箱形态是？（仅选购牙刷请选“不适用”）" },
+          options: [
+            { value: "large", label: { ja: "据え置き大容量（途中で給水せず、家族でたっぷり一度に洗浄したい）", en: "Stationary large tank (No mid-clean refills; for the whole family)", zh: "台式大容量水箱（无需中途反复加水、全家畅快深层冲洗）" } },
+            { value: "cordless", label: { ja: "ハンディ防水（お風呂場で使えて洗面所をスッキリさせたい）", en: "Handheld cordless waterproof (Use in shower; keep sink tidy)", zh: "手持无线防水款（可在淋浴时使用、保持洗手台整洁）" } },
+            { value: "compact", label: { ja: "超小型・スライド携帯式（職場や外出先で食後ケアしたい）", en: "Ultra-compact telescopic portable (For post-meal office use)", zh: "伸缩折叠超便携（适合办公室午餐后或差旅随身冲洗）" } },
+            { value: "none", label: { ja: "該当なし（電動歯ブラシのみを探している）", en: "Not Applicable (Looking only for an electric toothbrush)", zh: "不适用（仅考虑选购电动牙刷）" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        }
+      ],
+      products: [
+        {
+          id: "oralb_kids", brand: "braun", category: "kids", price: 3140, method: "round", pressureSensor: true, app: true, portable: false, bath: true,
+          name: { ja: "ブラウン オーラルB すみずみクリーンキッズ プレミアム", en: "Braun Oral-B Kids Pro Electric Toothbrush", zh: "欧乐B 儿童柔羽多动力电动牙刷 升级版" },
+          desc: { ja: "3歳から使える安心設計。やわらか回転ブラシとポケモンウェブコンテンツで楽しく正しい歯磨き習慣を定着。", en: "Safe design for age 3+. Soft round bristles and interactive Pokémon web timer cultivate fun, correct habits.", zh: "专为3岁以上儿童设计。特软圆头刷毛搭配宝可梦互动计时，让孩子爱上自主刷牙。" },
+          point: { ja: "歯科推奨の丸型回転。乳歯を傷めず手磨きより圧倒的に歯垢を落とす。", en: "Dentist-inspired round head cleans plaque far better than manual without hurting baby teeth.", zh: "牙医推荐小圆头包裹式旋转，不伤稚嫩乳牙牙龈的同时强力清洁残留软垢。" }
+        },
+        {
+          id: "maruman_compact", brand: "maruman", category: "brush", price: 470, method: "sonic_thin", pressureSensor: false, app: false, portable: true, bath: false,
+          name: { ja: "マルマン プロソニックコンパクト (DH310BL)", en: "Maruman Pro Sonic Compact (DH310BL)", zh: "丸满 Maruman 极细毛便携声波牙刷 (DH310BL)" },
+          desc: { ja: "単4電池1本で約22,000ブラシストローク/分。手磨きアシストとして圧倒的に手軽な超軽量音波歯ブラシ。", en: "Runs on a single AAA battery delivering ~22,000 strokes/min. Super-lightweight manual brushing assistant.", zh: "单节7号电池驱动，每分钟约22,000次轻震。作为手动刷牙辅助工具的极致超轻平价款。" },
+          point: { ja: "まずは数百円で電動音波ハブラシの心地よさを試してみたい方に。", en: "Best entry point for anyone curious about sonic vibration under ¥500.", zh: "以百元日元极低成本尝鲜体验声波微震清洁感的新手首选。" }
+        },
+        {
+          id: "oralb_sumizumi_ex", brand: "braun", category: "brush", price: 3126, method: "round", pressureSensor: false, app: false, portable: false, bath: true,
+          name: { ja: "ブラウン オーラルB すみずみクリーンEX", en: "Braun Oral-B Vitality Pro Clean EX", zh: "欧乐B 经典清亮清爽型电动牙刷 EX" },
+          desc: { ja: "丸型回転ブラシが歯を1本1本包み込み、手磨きの最大2倍の歯垢除去力を発揮する定番エントリー機。", en: "Round head wraps around each tooth, removing up to 2x more plaque than manual toothbrushes.", zh: "经典小圆头旋转包裹齿面，清除多达手动牙刷2倍牙菌斑的入门标杆。" },
+          point: { ja: "3,000円台で歯科器具発想の力強い歯垢除去力を体験したい方に。", en: "Experience dental-inspired powerful cup-cleaning plaque removal in the ¥3,000s.", zh: "用3,000多日元亲民预算感受专业牙医器械级抛光般洁牙质感。" }
+        },
+        {
+          id: "oralb_black_ctrl", brand: "braun", category: "brush", price: 1640, method: "round", pressureSensor: false, app: false, portable: true, bath: true,
+          name: { ja: "ブラウン オーラルB ブラックコントロール (DB400N)", en: "Braun Oral-B Battery Power Black Control (DB400N)", zh: "欧乐B 电池型黑色动力旋转牙刷 (DB400N)" },
+          desc: { ja: "乾電池式ながら本格的な丸型回転ヘッドを採用。出張や旅行用の持ち運び機としても大活躍。", en: "Authentic round oscillating head powered by AA batteries. Ideal travel companion needing no charging dock.", zh: "干电池供电却依然保留强劲圆头旋转清洁力。无需携带充电座的出差旅行神器。" },
+          point: { ja: "充電器を持ち歩きたくない出張派、安価に丸型回転を使いたい方に。", en: "Great for travelers who dislike chargers but demand genuine Oral-B round scrubbing.", zh: "不想随身携带专用充电座、渴望随时随地享受旋转深洁的商旅客群。" }
+        },
+        {
+          id: "sonicare_2100", brand: "philips", category: "brush", price: 4816, method: "sonic_fluid", pressureSensor: false, app: false, portable: false, bath: true,
+          name: { ja: "フィリップス ソニッケアー 2100 (HX3651/32)", en: "Philips Sonicare 2100 (HX3651/32)", zh: "飞利浦 Sonicare 2100 声波电动牙刷 (HX3651/32)" },
+          desc: { ja: "毎分約31,000ストロークの高速振動で音波水流を発生。手頃な価格でソニッケアーの基本性能を網羅。", en: "Drives ~31,000 strokes/min generating fluid action. Covers core Sonicare performance on a modest budget.", zh: "每分钟31,000次高频摆动产生微泡水流。以极具亲和力的价格体验飞利浦声波水流技术。" },
+          point: { ja: "5,000円以下で手に入る音波水流のスタンダードエントリー。", en: "The standard entry-level choice to enjoy genuine sonic fluid action under ¥5,000.", zh: "5,000日元以下入手正品声波流动洁力电动牙刷的经典款。" }
+        },
+        {
+          id: "oralb_pro1", brand: "braun", category: "brush", price: 6050, method: "round", pressureSensor: true, app: false, portable: false, bath: true,
+          name: { ja: "ブラウン オーラルB PRO1", en: "Braun Oral-B PRO 1 3D Action", zh: "欧乐B PRO1 3D立体脉冲旋转牙刷" },
+          desc: { ja: "上下・左右の3D丸型回転＋過圧ストッパー搭載。押し付けすぎを防ぎながら驚きの歯垢除去力を実現。", en: "3D oscillating-rotating-pulsating motion with pressure sensor stop. Protects gums while removing tough plaque.", zh: "前后上下高频脉冲+左右旋转3D立体洁齿，搭载防按压过度自动减速保护。" },
+          point: { ja: "6,000円台で過圧防止機能まで備えた高コスパモデル。", en: "Outstanding cost-performance featuring automatic gum pressure protection in the ¥6,000s.", zh: "在6,000多日元价位即可拥有3D动力与防按压伤龈感应的高性价比主力。" }
+        },
+        {
+          id: "sonicare_3100", brand: "philips", category: "brush", price: 8680, method: "sonic_fluid", pressureSensor: true, app: false, portable: false, bath: true,
+          name: { ja: "フィリップス ソニッケアー 3100", en: "Philips Sonicare 3100 Series", zh: "飞利浦 Sonicare 3100 护龈感应声波牙刷" },
+          desc: { ja: "過圧防止センサー付きの音波水流モデル。ブラシヘッド交換時期もお知らせランプで通知。", en: "Sonic fluid action equipped with a pressure sensor and BrushSync head replacement reminder.", zh: "搭载按压力度过大蜂鸣提示与刷头老化更换指示灯。温柔呵护牙龈与邻面缝隙。" },
+          point: { ja: "歯ぐきに無理な負担をかけずに歯間まで水流でスッキリ磨きたい方に。", en: "Ideal for gently flushing tooth gaps without applying abrasive pressure on gum tissue.", zh: "无需对牙龈施加生硬压力、通过高频水流冲刷牙间隙的温和护龈代表作。" }
+        },
+        {
+          id: "doltz_da18", brand: "panasonic", category: "brush", price: 9680, method: "sonic_thin", pressureSensor: false, app: false, portable: false, bath: true,
+          name: { ja: "パナソニック 音波振動ハブラシ ドルツ EW-DA18/19", en: "Panasonic Doltz Sonic Toothbrush EW-DA18/19", zh: "松下 Doltz 声波水平摆动极细毛牙刷 EW-DA18/19" },
+          desc: { ja: "ヨコ方向の音波振動と薄型極細毛ヘッド。日本人の口内・歯周ポケットに合わせた繊細なアプローチ。", en: "Linear horizontal sonic drive with ultra-thin fine bristle head designed specifically for periodontal pockets.", zh: "水平方向高速声波微震搭配超薄细毛刷头。专为亚洲人牙周袋与狭小口腔轮廓定制。" },
+          point: { ja: "奥歯の奥や歯周ポケットに自然に毛先が届くスリム設計。", en: "Slim head naturally reaches deep molars and gumlines with zero bulkiness.", zh: "超薄小巧刷头轻松滑入深处智齿与牙周缝隙，刷感轻巧细腻。" }
+        },
+        {
+          id: "oralb_io3", brand: "braun", category: "brush", price: 11200, method: "round", pressureSensor: true, app: false, portable: false, bath: true,
+          name: { ja: "ブラウン オーラルB iO3", en: "Braun Oral-B iO Series 3", zh: "欧乐B iO3 磁驱微震微晶洁齿牙刷" },
+          desc: { ja: "磁気駆動による「遠心マイクロモーション」。静音かつ滑らかな極上の磨き心地とスマート押し付け防止センサー。", en: "Frictionless magnetic drive with micro-vibrating bristles. Whisper-quiet, smooth gliding, and smart pressure ring.", zh: "无摩擦磁力驱动科技将能量精准传递至刷毛末端。微震轻柔静音，带三色智能压感环。" },
+          point: { ja: "1万円台で手に入る革新的iOシリーズのベーシックモデル。", en: "Accessible entry around ¥10,000 to experience Braun's revolutionary iO magnetic technology.", zh: "用1万日元出头预算体验欧乐B革命性磁驱黑科技与无震手舒适感。" }
+        },
+        {
+          id: "doltz_da48", brand: "panasonic", category: "brush", price: 16500, method: "sonic_thin", pressureSensor: true, app: false, portable: false, bath: true,
+          name: { ja: "パナソニック 音波振動ハブラシ ドルツ EW-DA48/49", en: "Panasonic Doltz Gum Care EW-DA48/49", zh: "松下 Doltz 智感护龈薄型声波牙刷 EW-DA48/49" },
+          desc: { ja: "押しつけ防止センサーと薄型ヘッドを両立。歯周病が気になるデリケートな歯ぐきを優しく守りながら磨く。", en: "Harmonizes pressure guard sensor with thin bristle head. Protects delicate gums vulnerable to gingivitis.", zh: "将智能防按压过度感应与薄型细毛融为一体。针对易发炎出血的敏感脆弱牙龈提供温和洁齿。" },
+          point: { ja: "力を入れすぎて歯ぐきを痛めがちな方に最も安心な一台。", en: "The safest option for users who habitually brush too hard and damage their gumline.", zh: "最适合总习惯用力刷牙导致牙龈萎缩、渴望牙医级温和手法呵护的用户。" }
+        },
+        {
+          id: "oralb_io5", brand: "braun", category: "brush", price: 19030, method: "round", pressureSensor: true, app: true, portable: false, bath: true,
+          name: { ja: "ブラウン オーラルB iO5", en: "Braun Oral-B iO Series 5 Smart", zh: "欧乐B iO5 智能蓝牙AI识位牙刷" },
+          desc: { ja: "5つのスマートモードを搭載。Bluetoothでスマホと連動し、磨き残しをリアルタイムで検知・ガイド。", en: "Features 5 cleaning modes and Bluetooth pairing. Real-time AI recognition tracks brushing coverage.", zh: "配备5大洁齿模式与蓝牙App互联。通过AI智能识别并实时指导口腔漏刷死角。" },
+          point: { ja: "歯科衛生士のブラッシング指導を受けているような満足度。", en: "Provides the guidance and satisfaction of an in-person dental hygienist coaching session.", zh: "仿佛牙科专业洁疗师在旁实时监督指导刷牙，消除盲目刷牙的漏刷焦虑。" }
+        },
+        {
+          id: "sonicare_6500", brand: "philips", category: "brush", price: 28050, method: "sonic_fluid", pressureSensor: true, app: false, portable: false, bath: true,
+          name: { ja: "フィリップス ソニッケアー 6500", en: "Philips Sonicare ExpertClean 6500", zh: "飞利浦 Sonicare 6500 净白护龈专业声波牙刷" },
+          desc: { ja: "3段階の強さ設定と3つのブラッシングモード。ステイン（着色汚れ）除去と歯ぐきケアをワンランク上へ。", en: "3 intensity levels and 3 modes. Elevates surface stain removal and deep gum pocket health.", zh: "支持3档振动强度与3种专业模式。强力击退牙齿表面外源性茶渍烟渍咖啡色素。" },
+          point: { ja: "自分好みの強さに細かくカスタマイズしたいこだわり派に。", en: "Tailor-made for discerning users wanting precise customization of intensity and modes.", zh: "追求根据牙齿当天状态随心切换动力振幅、注重牙齿亮白美观的讲究派。" }
+        },
+        {
+          id: "doltz_dp58", brand: "panasonic", category: "brush", price: 35640, method: "sonic_thin", pressureSensor: true, app: false, portable: false, bath: true,
+          name: { ja: "パナソニック ドルツ EW-DP58", en: "Panasonic Doltz W-Sonic EW-DP58", zh: "松下 Doltz 双重声波马达 EW-DP58" },
+          desc: { ja: "ヨコ振動にタタキ振動を加えた独自の「W音波振動」。歯間と歯周ポケットの汚れをダブルで強力除去。", en: "Dual-motor W-Sonic drive combining horizontal sweep and tap vibrations for unprecedented cleaning.", zh: "采用双重马达打造“横向水平微摆+纵向垂直敲打”的W声波振动。强力振出牙间杂物。" },
+          point: { ja: "パナソニック最高峰の洗浄力。手磨きでは決して届かない境地へ。", en: "Panasonic's peak cleaning performance reaching depths manual brushing could never touch.", zh: "松下顶尖洁齿动力。彻底告别手动刷牙无力感、达到专业牙周深洁新境界。" }
+        },
+        {
+          id: "sonicare_diamond", brand: "philips", category: "brush", price: 39800, method: "sonic_fluid", pressureSensor: true, app: true, portable: true, bath: true,
+          name: { ja: "フィリップス ソニッケアー ダイヤモンドクリーン 9000", en: "Philips Sonicare DiamondClean 9000", zh: "飞利浦 钻石亮白智能系列 9000" },
+          desc: { ja: "グラス型充電器とトラベルケース付き。4つのモード・スマホアプリ連動でプレミアムな白さと健康美を実現。", en: "Includes iconic charging glass and travel case. 4 modes with App sync for radiant whitening and gum vitality.", zh: "标配标志性感应充电玻璃杯与便携盒。4大模式与App联动，打造晶亮洁白牙齿与健康牙龈。" },
+          point: { ja: "洗面所を彩る美しいデザインと最高峰のホワイトニング・歯垢除去力。", en: "Breathtaking design that elevates bathroom aesthetics combined with peak whitening prowess.", zh: "为现代洗手台增添奢华质感，兼具卓越牙垢清除力与色素净白效果的颜值天花板。" }
+        },
+        {
+          id: "doltz_dt88", brand: "panasonic", category: "brush", price: 48510, method: "sonic_thin", pressureSensor: true, app: true, portable: false, bath: true,
+          name: { ja: "パナソニック ドルツ EW-DT88", en: "Panasonic Doltz Flagship EW-DT88", zh: "松下 Doltz 旗舰双声波蓝牙互联 EW-DT88" },
+          desc: { ja: "W音波振動×Bluetoothアプリ連携。歯磨きの角度や動かし方を画面でリアルタイムチェック。", en: "W-Sonic vibration with Bluetooth app connectivity. Real-time screen verification of brush angle and stroke.", zh: "顶级双重声波微振结合手机蓝牙。在屏幕上实时矫正刷牙角度与动作轨迹，杜绝伤龈与漏刷。" },
+          point: { ja: "パナソニックの全技術を注ぎ込んだフラッグシップ。", en: "The absolute summit of Panasonic oral engineering delivering clinical-grade brushing precision.", zh: "汇聚松下全部口腔医疗前沿技术的终极旗舰款，为牙周健康提供坚实保障。" }
+        },
+        {
+          id: "oralb_io10", brand: "braun", category: "brush", price: 58300, method: "round", pressureSensor: true, app: true, portable: true, bath: true,
+          name: { ja: "ブラウン オーラルB iO10", en: "Braun Oral-B iO Series 10 with iOsense", zh: "欧乐B iO10 智能星环磁驱旗舰牙刷" },
+          desc: { ja: "スマート充電台「iOsense」が磨き残しやブラッシング時間を時計のように表示。スマホ不要で完璧にナビ。", en: "Smart iOsense charger displays live coverage, time, and pressure lights without opening your phone.", zh: "独创iOsense星环智能底座像时钟一样直观显示刷牙覆盖率与时间。无需翻看手机即可完美导航。" },
+          point: { ja: "世界最高峰のオーラルケア体験。磁気駆動テクノロジーの極致。", en: "The global benchmark in oral hygiene. The ultimate realization of magnetic micro-vibration.", zh: "全球口腔理容科技天花板。磁动微震无感动力与实时智能基座带来的至尊享受。" }
+        },
+        {
+          id: "festino_smhb103", brand: "festino", category: "water", price: 3110, method: "water_jet", pressureSensor: false, app: false, portable: true, bath: true,
+          name: { ja: "FESTINO USB充電式ポータブル口腔洗浄器 SMHB-103", en: "FESTINO Portable Oral Irrigator SMHB-103", zh: "FESTINO 便携伸缩超薄冲牙器 SMHB-103" },
+          desc: { ja: "手のひらサイズの超スリム形状・USB充電。ポーチに入れてオフィスや外食後にサッと歯間洗浄。", en: "Palm-sized ultra-slim telescopic design with USB charging. Pocket-ready for quick post-meal flossing.", zh: "掌心大小超薄伸缩水箱设计，USB便捷充电。随手放入手包，饭后迅速冲净齿缝残渣。" },
+          point: { ja: "3,000円台で始められるランチ後のエチケット新習慣。", en: "Affordable new post-lunch routine in the ¥3,000s for fresh breath everywhere.", zh: "用3,000多日元即可开启午后洁齿除味、随时随地清爽见客的社交礼仪神器。" }
+        },
+        {
+          id: "doltz_dj55", brand: "panasonic", category: "water", price: 17820, method: "water_jet", pressureSensor: false, app: false, portable: true, bath: true,
+          name: { ja: "パナソニック ジェットウォッシャー ドルツ EW-DJ55", en: "Panasonic Ultrasonic Water Flosser EW-DJ55", zh: "松下 无线超声波水流冲牙器 EW-DJ55" },
+          desc: { ja: "完全防水（IPX7）コードレスモデル。超音波水流で歯ブラシの届かない歯間・歯周ポケットの汚れを水流で弾き出す。", en: "IPX7 waterproof cordless flosser. Ultrasonic water stream blasts trapped debris from deep gum pockets.", zh: "IPX7整机完全防水无线便携款。独家超声波专利水流深入冲出牙刷难以触及的齿缝死角与牙周污垢。" },
+          point: { ja: "お風呂場で使えるため、水跳ねを気にせず毎日爽快洗浄。", en: "Shower-safe design allows zero-stress, splash-free thorough cleaning every evening.", zh: "可在洗澡淋浴时肆意使用，完全无惧水花飞溅弄湿洗手台和衣领。" }
+        },
+        {
+          id: "doltz_dj75", brand: "panasonic", category: "water", price: 19800, method: "water_jet", pressureSensor: false, app: false, portable: false, bath: false,
+          name: { ja: "パナソニック ジェットウォッシャー ドルツ EW-DJ75", en: "Panasonic Stationary Water Flosser EW-DJ75", zh: "松下 台式大容量超声波冲牙器 EW-DJ75" },
+          desc: { ja: "大容量600mLタンクを誇る据え置き型。家族全員での使用や、水を継ぎ足さずにじっくり徹底ケアしたい方に。", en: "Stationary model boasting a massive 600mL tank. Ideal for full family care and uninterrupted flossing.", zh: "配备600mL大容量独立水箱的台式专业机型。全家人共享、一次加水从容彻底清洁整个口腔。" },
+          point: { ja: "据え置きならではの安定した超音波水流パワーで毎日の口腔大掃除。", en: "Stationary AC power ensures strong, sustained ultrasonic flow for a complete mouth reset.", zh: "插电台式专享的稳定持续强劲超声波水流动力，每日深度彻底清扫牙周盲区。" }
+        }
+      ]
+    }
+  };
+
+  function switchAppliance(app) {
+    currentAppliance = app;
+    document.body.className = `app-${app}`;
+    document.querySelectorAll('.app-tab-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.id === `tab_${app}`);
+    });
+    
+    p1Answers = {};
+    p2Answers = {};
+    restart();
+    updateUITexts();
+  }
+
+  function setLanguage(lang) {
+    currentLang = lang;
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.textContent.toLowerCase().includes(lang === 'ja' ? '日本' : lang === 'en' ? 'eng' : '中'));
+    });
+    updateUITexts();
+  }
+
+  function updateUITexts() {
+    const cfg = APP_CONFIG[currentAppliance];
+    const t = cfg.i18n[currentLang];
+
+    document.getElementById('tab_washer').textContent = APP_CONFIG.washer.i18n[currentLang].tabName;
+    document.getElementById('tab_refrigerator').textContent = APP_CONFIG.refrigerator.i18n[currentLang].tabName;
+    document.getElementById('tab_oralcare').textContent = APP_CONFIG.oralcare.i18n[currentLang].tabName;
+
+    document.getElementById('ui_title').textContent = t.title;
+    document.getElementById('ui_lead').textContent = t.lead;
+    document.getElementById('ui_p1_indicator').textContent = t.p1Indicator;
+    document.getElementById('ui_p2_indicator').textContent = t.p2Indicator;
+    document.getElementById('ui_btn_next1').textContent = t.btnNext1;
+    document.getElementById('ui_btn_next2').textContent = t.btnNext2;
+    document.getElementById('ui_btn_restart').textContent = t.btnRestart;
+    document.getElementById('ui_result_title').textContent = t.resultTitle;
+
+    renderQuestionsPhase1();
+    renderQuestionsPhase2();
+
+    if (!document.getElementById('phase2').classList.contains('hidden') && document.getElementById('finalResult').classList.contains('hidden')) {
+      renderPhase1Summary();
+    }
+    if (!document.getElementById('finalResult').classList.contains('hidden')) {
+      renderFinalResults();
+    }
+  }
+
+  function renderQuestionsPhase1() {
+    const qList = APP_CONFIG[currentAppliance].questionsP1;
+    const container = document.getElementById('p1_questions_container');
+    container.innerHTML = qList.map(q => {
+      const selectedVal = p1Answers[q.id] || q.options[0].value;
+      return `
+        <div class="question-block">
+          <div class="question-title">${q.title[currentLang]}</div>
+          <div class="options-grid">
+            ${q.options.map(opt => `
+              <label class="option-label">
+                <input type="radio" name="${q.id}" value="${opt.value}" ${selectedVal === opt.value ? 'checked' : ''} onchange="p1Answers['${q.id}'] = this.value">
+                <span>${opt.label[currentLang]}</span>
+              </label>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function renderQuestionsPhase2() {
+    const qList = APP_CONFIG[currentAppliance].questionsP2;
+    const container = document.getElementById('p2_questions_container');
+    container.innerHTML = qList.map(q => {
+      const selectedVal = p2Answers[q.id] || q.options[0].value;
+      return `
+        <div class="question-block">
+          <div class="question-title">${q.title[currentLang]}</div>
+          <div class="options-grid">
+            ${q.options.map(opt => `
+              <label class="option-label">
+                <input type="radio" name="${q.id}" value="${opt.value}" ${selectedVal === opt.value ? 'checked' : ''} onchange="p2Answers['${q.id}'] = this.value">
+                <span>${opt.label[currentLang]}</span>
+              </label>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function submitPhase1() {
+    const qList = APP_CONFIG[currentAppliance].questionsP1;
+    qList.forEach(q => {
+      const checked = document.querySelector(`input[name="${q.id}"]:checked`);
+      p1Answers[q.id] = checked ? checked.value : 'undecided';
+    });
+
+    renderPhase1Summary();
+    document.getElementById('phase1').classList.add('hidden');
+    document.getElementById('phase2').classList.remove('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function renderPhase1Summary() {
+    const t = APP_CONFIG[currentAppliance].i18n[currentLang];
+    const summaryBox = document.getElementById('phase1Summary');
+
+    if (currentAppliance === 'washer') {
+      let recType = { ja: "縦型全自動洗濯機", en: "Top-load Washer", zh: "波轮全自动洗衣机" };
+      let recCapacity = { ja: "7〜8kg（標準サイズ）", en: "7-8kg (Standard)", zh: "7〜8kg（标准常规容量）" };
+      let recClass = { ja: "普段使い・コスパ重視グループ", en: "Standard Reliability & Value Group", zh: "实用耐用高性价比组" };
+
+      if (p1Answers.p1_dry === "daily") {
+        recType = { ja: "ドラム式洗濯乾燥機（ヒートポンプ乾燥推奨）", en: "Front-load Washer/Dryer (Heat Pump Recommended)", zh: "滚筒洗烘一体机（推荐节能热泵型）" };
+        recClass = { ja: "ドラム高性能・乾燥重視グループ", en: "Advanced Drum / Drying Focus Group", zh: "高端滚筒洗烘一体组" };
+      } else if (p1Answers.p1_dry === "occasional") {
+        recType = { ja: "縦型洗濯乾燥機 または コンパクトドラム", en: "Top-load Washer/Dryer or Compact Drum", zh: "波轮洗烘一体机 或 紧凑型滚筒" };
+        recClass = { ja: "縦型＋乾燥 / ドラム入門グループ", en: "Top-load with Dryer / Entry Drum Group", zh: "波轮洗烘 / 紧凑入门洗烘组" };
+      }
+
+      if (p1Answers.p1_members === "1") {
+        recCapacity = p1Answers.p1_volume === "heavy" 
+          ? { ja: "6〜7kg（まとめ洗い対応）", en: "6-7kg (Batch Washing)", zh: "6〜7kg（满足周末集中洗）" } 
+          : { ja: "4.5〜5.5kg（コンパクト）", en: "4.5-5.5kg (Compact)", zh: "4.5〜5.5kg（小巧轻便）" };
+        if (p1Answers.p1_dry !== "daily") {
+          recClass = { ja: "とにかく安く・一人暮らしグループ", en: "Ultra-Budget & Solo Living Group", zh: "实惠经济独居单身组" };
+        }
+      } else if (p1Answers.p1_members === "2-3") {
+        recCapacity = { ja: "7〜8kg", en: "7-8kg", zh: "7〜8kg" };
+      } else if (p1Answers.p1_members === "4-5") {
+        recCapacity = { ja: "10〜12kg（大容量）", en: "10-12kg (Large Capacity)", zh: "10〜12kg（多口大家庭容量）" };
+      } else if (p1Answers.p1_members === "6+") {
+        recCapacity = { ja: "12〜13kg（メガ容量）", en: "12-13kg (Colossal Capacity)", zh: "12〜13kg（特大容量）" };
+      }
+
+      summaryBox.innerHTML = `
+        <h2>${t.summaryHeading}</h2>
+        <p><strong>${t.recTypeLabel}</strong> ${recType[currentLang]}</p>
+        <p><strong>${t.recCapacityLabel}</strong> ${recCapacity[currentLang]}</p>
+        <p><strong>${t.recClassLabel}</strong> ${recClass[currentLang]}</p>
+        <p style="margin-top: 8px; font-size: 0.85rem; color: #166534;">${t.summaryNote}</p>
+      `;
+    } else if (currentAppliance === 'refrigerator') {
+      let recCapacity = { ja: "300〜400L", en: "300-400L", zh: "300〜400L" };
+      let recClass = { ja: "中型3ドア・スタンダードクラス", en: "Mid-tier 3-Door Standard Class", zh: "中型3门标准家庭级" };
+      let recFeatures = [];
+
+      if (p1Answers.p1_members === "1") {
+        if (p1Answers.p1_cooking === "high") {
+          recCapacity = { ja: "200〜280L（自炊・冷凍ストック対応）", en: "200-280L (Batch prep & freezer room)", zh: "200〜280L（满足下厨备餐与大冷冻）" };
+          recClass = { ja: "単身自炊・まとめ買いクラス", en: "Solo Batch-Stocking Class", zh: "独居做饭多屯货级" };
+        } else {
+          recCapacity = { ja: "130〜180L（省スペース）", en: "130-180L (Compact)", zh: "130〜180L（紧凑小巧型）" };
+          recClass = { ja: "一人暮らし・標準クラス", en: "Single Living Standard", zh: "独居单身标准级" };
+        }
+      } else if (p1Answers.p1_members === "2") {
+        recCapacity = { ja: "300〜400L", en: "300-400L", zh: "300〜400L" };
+        recClass = { ja: "2〜3人世帯・中型3ドアクラス", en: "2-3 Person Mid-Tier Class", zh: "2〜3人家庭中型3门级" };
+      } else if (p1Answers.p1_members === "3-4") {
+        recCapacity = { ja: "400〜500L", en: "400-500L", zh: "400〜500L" };
+        recClass = { ja: "ファミリー標準大型クラス", en: "Standard Family Large Class", zh: "标准家庭多门大型级" };
+      } else if (p1Answers.p1_members === "4-5") {
+        recCapacity = { ja: "500〜550L", en: "500-550L", zh: "500〜550L" };
+        recClass = { ja: "ファミリー大容量クラス", en: "Family Mega Capacity Class", zh: "多口家庭大容量级" };
+      } else if (p1Answers.p1_members === "5+") {
+        recCapacity = { ja: "550〜650L（特大サイズ）", en: "550-650L (Colossal)", zh: "550〜650L（特大家庭旗舰级）" };
+        recClass = { ja: "大家族・超大型プレミアムクラス", en: "Large Family Mega Premium Class", zh: "多代同堂超大型奢华级" };
+      }
+
+      if (p1Answers.p1_focus === "vegetable") {
+        recFeatures.push({ ja: "東芝VEGETA（真ん中野菜室・高湿度鮮度保持）", en: "Toshiba VEGETA (Middle produce drawer & high humidity)", zh: "东芝VEGETA（居中果蔬室、高湿度透湿保鲜）" });
+      } else if (p1Answers.p1_focus === "meat_fish") {
+        recFeatures.push({ ja: "日立（まるごとチルド）/ 三菱（氷点下ストッカー）/ パナ（微凍結）", en: "Hitachi Whole-Chilled / Mitsubishi Sub-Zero / Panasonic Partial", zh: "日立全室冰温 / 三菱冰点下保鲜 / 松下微冻保鲜" });
+      } else if (p1Answers.p1_focus === "freezer") {
+        recFeatures.push({ ja: "シャープ（メガフリーザー）/ AQUA（多段整理式）", en: "Sharp Mega Freezer / AQUA Multi-Box Freezer", zh: "夏普巨无霸冷冻室 / AQUA多层精细冷冻抽屉" });
+      }
+
+      if (p1Answers.p1_door === "both") {
+        recFeatures.push({ ja: "シャープ「左右どっちもドア」", en: "Sharp Dual-Swing Door", zh: "夏普左右双向任意开门" });
+      } else if (p1Answers.p1_door === "french") {
+        recFeatures.push({ ja: "フレンチドア（観音開き）", en: "French Doors (Center Split)", zh: "法式对开门（双开门）" });
+      }
+
+      if (recFeatures.length === 0 || p1Answers.p1_focus === "undecided") {
+        recFeatures.push({ ja: "使い勝手と価格のバランスに優れた標準構成", en: "Well-balanced practical configuration", zh: "兼具实用动线与高性价比的标准配置" });
+      }
+
+      const featureText = recFeatures.map(f => f[currentLang]).join("、");
+
+      summaryBox.innerHTML = `
+        <h2>${t.summaryHeading}</h2>
+        <p><strong>${t.recCapacityLabel}</strong> ${recCapacity[currentLang]}</p>
+        <p><strong>${t.recClassLabel}</strong> ${recClass[currentLang]}</p>
+        <p><strong>${t.recFeaturesLabel}</strong> ${featureText}</p>
+        <p style="margin-top: 8px; font-size: 0.85rem; color: #166534;">${t.summaryNote}</p>
+      `;
+    } else {
+      // oralcare
+      let recType = { ja: "音波振動電動歯ブラシ", en: "Sonic Vibration Electric Toothbrush", zh: "声波微震电动牙刷" };
+      let recClass = { ja: "普段使い・コスパ重視グループ", en: "Daily Reliability & Value Group", zh: "日常主力与高性价比组" };
+      let features = [];
+
+      if (p1Answers.p1_user === "kids") {
+        recType = { ja: "子ども用丸型回転式電動歯ブラシ", en: "Children's Round Oscillating Toothbrush", zh: "儿童安全圆头旋转式电动牙刷" };
+        recClass = { ja: "キッズ専用・正しい歯磨き習慣グループ", en: "Kids Care & Brushing Habits Group", zh: "儿童趣味护齿与防蛀习惯组" };
+        features.push({ ja: "やわらか極細毛・過圧防止・キャラクター連動", en: "Soft bristles, gum protection, interactive app timer", zh: "超柔刷毛、减压保护、卡通互动计时" });
+      } else if (p1Answers.p1_type === "water") {
+        recType = { ja: "水流口腔洗浄器（ジェットウォッシャー）", en: "Water Flosser / Oral Irrigator", zh: "超声波脉冲水流冲牙器" };
+        recClass = { ja: "歯間・歯周ポケット水流特化グループ", en: "Interdental & Deep Pocket Jet Clean Group", zh: "齿缝菜渣与牙周袋深层冲洗组" };
+        features.push({ ja: "超音波水流・フロス代替・歯ぐきマッサージ", en: "Ultrasonic water stream, floss alternative, gum massage", zh: "超声波水流、替代牙线、牙龈水疗" });
+      } else if (p1Answers.p1_type === "combo") {
+        recType = { ja: "電動歯ブラシ ＋ 口腔洗浄器（ハイブリッド提案）", en: "Electric Toothbrush + Water Flosser Combo", zh: "电动牙刷 + 冲牙器（齿面+齿间联合护理）" };
+        recClass = { ja: "トータルオーラルケア（歯面＋歯間）", en: "Total Oral Care (Surface + Interdental)", zh: "全方位立体口腔深度护理组" };
+        features.push({ ja: "歯垢除去用ブラシ ＋ 水流による隙間洗浄の併用", en: "Surface plaque removal brush + interdental fluid jets", zh: "齿面牙菌斑物理刷除 + 齿缝高压水流冲刷" });
+      } else {
+        if (p1Answers.p1_goal === "plaque") {
+          recType = { ja: "3D丸型回転 / 磁気駆動iO または 高出力音波水流", en: "3D Round Oscillating / Magnetic iO or Sonic Flow", zh: "3D圆头旋转 / 磁驱iO 或 高频声波水流" };
+          recClass = { ja: "歯垢除去・ツルツル感重視グループ", en: "Plaque Removal & Ultra-Smooth Finish Group", zh: "强效牙菌斑清除与光滑齿面组" };
+          features.push({ ja: "1本1本包み込むブラッシング・毎分約31,000振動", en: "Tooth-by-tooth cupping brush, ~31,000 vibrations/min", zh: "单颗牙齿包裹式刷洗、每分钟31,000次高频微震" });
+        } else if (p1Answers.p1_goal === "gum") {
+          recType = { ja: "薄型極細毛音波ハブラシ（ドルツ等）", en: "Ultra-thin bristle sonic toothbrush (Doltz, etc.)", zh: "超薄极细毛声波牙刷（松下Doltz等）" };
+          recClass = { ja: "歯周ポケット・歯ぐきケア重視グループ", en: "Gum Pocket & Gingival Health Group", zh: "牙周袋深入洁净与温和护龈组" };
+          features.push({ ja: "ヨコ磨き・押しつけ防止センサー・歯ぐきへの低刺激", en: "Horizontal scrub, pressure alert, gentle contact", zh: "水平摆动、防用力过度按压传感器、温和低摩擦" });
+        } else if (p1Answers.p1_goal === "starter") {
+          recType = { ja: "エントリー音波 / 回転式歯ブラシ", en: "Entry-level Sonic / Rotary Toothbrush", zh: "实惠入门声波 / 旋转式牙刷" };
+          recClass = { ja: "とにかく安く・初心者グループ", en: "Affordable Budget & Starter Group", zh: "亲民平价尝鲜与新手起步组" };
+          features.push({ ja: "手頃な価格・シンプルな操作性", en: "Low cost, straightforward single-button operation", zh: "亲民价位、一键极简操作" });
+        }
+      }
+
+      if (p1Answers.p1_place === "portable") {
+        features.push({ ja: "携帯性・コンパクト・電池式またはUSB充電", en: "Portability, compact build, battery/USB-C", zh: "轻巧便携、干电池或USB便捷充电" });
+      } else if (p1Answers.p1_place === "home_bath") {
+        features.push({ ja: "IPX7完全防水対応", en: "IPX7 full waterproof design", zh: "IPX7整机防水设计" });
+      }
+      if (features.length === 0 || p1Answers.p1_goal === "undecided") {
+        features.push({ ja: "お客様のお悩みに合わせた柔軟な機能提案", en: "Flexible customization based on dental habits", zh: "根据您的具体口腔状况灵活量身定制" });
+      }
+
+      const featureText = features.map(f => f[currentLang]).join("、");
+
+      summaryBox.innerHTML = `
+        <h2>${t.summaryHeading}</h2>
+        <p><strong>${t.recTypeLabel}</strong> ${recType[currentLang]}</p>
+        <p><strong>${t.recClassLabel}</strong> ${recClass[currentLang]}</p>
+        <p><strong>${t.recFeaturesLabel}</strong> ${featureText}</p>
+        <p style="margin-top: 8px; font-size: 0.85rem; color: #166534;">${t.summaryNote}</p>
+      `;
+    }
+  }
+
+  function submitPhase2() {
+    const qList = APP_CONFIG[currentAppliance].questionsP2;
+    qList.forEach(q => {
+      const checked = document.querySelector(`input[name="${q.id}"]:checked`);
+      p2Answers[q.id] = checked ? checked.value : 'undecided';
+    });
+
+    renderFinalResults();
+    document.getElementById('phase2').classList.add('hidden');
+    document.getElementById('finalResult').classList.remove('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function renderFinalResults() {
+    const t = APP_CONFIG[currentAppliance].i18n[currentLang];
+    const products = APP_CONFIG[currentAppliance].products;
+
+    let scoredProducts = [];
+
+    if (currentAppliance === 'washer') {
+      scoredProducts = products.map(product => {
+        let score = 50;
+        let reasons = [];
+
+        if (p1Answers.p1_dry === "daily") {
+          if (product.type === "drum") {
+            score += 40;
+            reasons.push({ ja: "毎日洗濯から乾燥までフル活用できるドラム式設計", en: "Front-load drum designed for daily full-cycle wash-to-dry automation", zh: "每天洗烘全自动托管的滚筒洗烘一体设计" });
+          } else {
+            score -= 30;
+          }
+        } else if (p1Answers.p1_dry === "occasional") {
+          if (product.type === "vertical_dryer" || (product.type === "drum" && product.price < 150000)) {
+            score += 35;
+            reasons.push({ ja: "雨の日や急ぎの時だけ温風乾燥できる実用設計", en: "Equipped with auxiliary drying for rainy days and emergencies", zh: "梅雨雨天及应急时可从容热风烘干的实用配置" });
+          }
+        } else if (p1Answers.p1_dry === "none") {
+          if (product.type === "vertical") {
+            score += 30;
+            reasons.push({ ja: "乾燥不要な方に無駄のない高洗浄力縦型スタイル", en: "Cost-effective, powerful top-load washer without unwanted drying costs", zh: "无需烘干功能，专注高效洗净与实惠的波轮款式" });
+          } else if (product.type === "drum") {
+            score -= 20;
+          }
+        }
+
+        let targetCap = 7.0;
+        if (p1Answers.p1_members === "1") targetCap = p1Answers.p1_volume === "heavy" ? 6.5 : 5.0;
+        if (p1Answers.p1_members === "2-3") targetCap = 8.0;
+        if (p1Answers.p1_members === "4-5") targetCap = 11.0;
+        if (p1Answers.p1_members === "6+") targetCap = 12.5;
+
+        if (p1Answers.p1_members !== "undecided") {
+          const capDiff = Math.abs(product.capacity - targetCap);
+          if (capDiff <= 1.0) {
+            score += 25;
+            reasons.push({ ja: `世帯人数・洗濯量にちょうど良い${product.capacity}kg容量`, en: `Optimal ${product.capacity}kg capacity matched to your household volume`, zh: `恰好符合您家庭人数与洗涤量的${product.capacity}kg实用容量` });
+          } else if (capDiff > 3.0) {
+            score -= 20;
+          }
+        }
+
+        let minBudget = 0, maxBudget = 500000;
+        if (p1Answers.p1_budget === "under50") { maxBudget = 50000; }
+        else if (p1Answers.p1_budget === "50-100") { minBudget = 45000; maxBudget = 105000; }
+        else if (p1Answers.p1_budget === "100-200") { minBudget = 90000; maxBudget = 205000; }
+        else if (p1Answers.p1_budget === "200-300") { minBudget = 180000; maxBudget = 305000; }
+        else if (p1Answers.p1_budget === "over300") { minBudget = 280000; }
+
+        if (p1Answers.p1_budget !== "undecided") {
+          if (product.price >= minBudget && product.price <= maxBudget) {
+            score += 20;
+            reasons.push({ ja: "ご希望の予算帯にぴったり合致", en: "Fits comfortably within your target budget range", zh: "精准契合您预期的购买预算区间" });
+          } else if (product.price > maxBudget) {
+            score -= 30;
+          }
+        }
+
+        if (p2Answers.p2_autodose === "essential") {
+          if (product.autodose) {
+            score += 30;
+            reasons.push({ ja: "毎回の計量の手間をなくす「液体洗剤・柔軟剤 自動投入」搭載", en: "Automatic detergent and softener dispensing for effortless daily use", zh: "配备洗衣液柔顺剂智能自动投放，免去每次手动量取麻烦" });
+          } else {
+            score -= 25;
+          }
+        } else if (p2Answers.p2_autodose === "unneeded") {
+          if (!product.autodose) score += 10;
+        }
+
+        if (p2Answers.p2_space === "narrow") {
+          if (product.width <= 560 || product.id === "es_s7s1" || product.id === "jw_fp80a") {
+            score += 30;
+            reasons.push({ ja: `限られた設置スペースにも収まるスリム設計（幅約${product.width}mm）`, en: `Slim profile (width ~${product.width}mm) fitting narrow waterproof pans`, zh: `机身宽度仅约${product.width}mm，轻松进驻窄小防水盘空间` });
+          } else if (product.width > 620) {
+            score -= 40;
+          }
+        }
+
+        if (p2Answers.p2_quiet === "yes") {
+          if (product.inverter && product.quiet) {
+            score += 20;
+            reasons.push({ ja: "夜間や早朝でも気兼ねなく回せるインバーター低騒音設計", en: "Whisper-quiet inverter motor safe for night and early-morning washing", zh: "变频低噪音直驱电机，夜间早晨洗衣不扰邻" });
+          } else if (!product.inverter) {
+            score -= 25;
+          }
+        }
+
+        if (p2Answers.p2_clean === "high") {
+          if (product.cleanSlotless) {
+            score += 35;
+            reasons.push({ ja: "黒カビをブロックして徹底節水できるシャープ独自の「穴なし槽」", en: "Sharp's exclusive hole-less tub blocks outer mold and saves water", zh: "夏普独家无孔内筒有效隔绝外筒黑霉反渗，实现极致节水" });
+          } else if (product.strongWash) {
+            score += 10;
+          }
+        }
+
+        if (p2Answers.p2_fabric === "dirt" && product.strongWash) {
+          score += 25;
+          reasons.push({ ja: "泥汚れや作業着の頑固な汚れもしっかり落とす強力水流", en: "Powerful water flow easily lifting heavy mud and stubborn dirt", zh: "强劲立体大水流彻底冲刷泥渍与厚重衣物顽垢" });
+        } else if (p2Answers.p2_fabric === "delicate") {
+          if (product.dry === "heatpump" || product.dry === "wind_iron") {
+            score += 25;
+            reasons.push({ ja: "衣類を傷めずシワを抑えてふんわり仕上げる高級乾燥方式", en: "Gentle heat-pump / wind-iron drying for wrinkle-free, fluffy clothes", zh: "热泵或风熨斗高级烘干，不伤衣物且蓬松平整抗皱" });
+          }
+        }
+
+        return { ...product, finalScore: score, reasons: reasons };
+      });
+    } else if (currentAppliance === 'refrigerator') {
+      scoredProducts = products.map(product => {
+        let score = 50;
+        let reasons = [];
+
+        let targetCap = 350;
+        if (p1Answers.p1_members === "1") targetCap = p1Answers.p1_cooking === "high" ? 250 : 150;
+        if (p1Answers.p1_members === "2") targetCap = 340;
+        if (p1Answers.p1_members === "3-4") targetCap = 450;
+        if (p1Answers.p1_members === "4-5") targetCap = 520;
+        if (p1Answers.p1_members === "5+") targetCap = 620;
+
+        if (p1Answers.p1_members !== "undecided") {
+          const capDiff = Math.abs(product.capacity - targetCap);
+          if (capDiff <= 40) {
+            score += 30;
+            reasons.push({ ja: `世帯人数・自炊量に最適な${product.capacity}Lの容量設計`, en: `Optimal ${product.capacity}L capacity tailored to your household volume`, zh: `精准贴合您常住人数与囤货需求的${product.capacity}L容量设计` });
+          } else if (capDiff <= 90) {
+            score += 15;
+          } else if (capDiff > 180) {
+            score -= 35;
+          }
+        }
+
+        if (p1Answers.p1_door === "both") {
+          if (product.door === "both") {
+            score += 40;
+            reasons.push({ ja: "左右どちらからでも開けられるシャープ独自のドア構造", en: "Sharp's exclusive dual-swing door opens freely from either side", zh: "夏普独家左右双向任意开启门板构造" });
+          } else {
+            score -= 30;
+          }
+        } else if (p1Answers.p1_door === "french") {
+          if (product.door === "french") {
+            score += 25;
+            reasons.push({ ja: "ドアの開閉スペースが小さく狭い通路でも邪魔にならないフレンチドア", en: "French doors minimizing aisle blockage in tight kitchen spaces", zh: "开门半径更小、不阻挡狭窄过道的法式对开门设计" });
+          } else {
+            score -= 15;
+          }
+        }
+
+        let minBudget = 0, maxBudget = 500000;
+        if (p1Answers.p1_budget === "under50") { maxBudget = 50000; }
+        else if (p1Answers.p1_budget === "50-100") { minBudget = 45000; maxBudget = 105000; }
+        else if (p1Answers.p1_budget === "100-150") { minBudget = 95000; maxBudget = 155000; }
+        else if (p1Answers.p1_budget === "150-250") { minBudget = 145000; maxBudget = 255000; }
+        else if (p1Answers.p1_budget === "250-300") { minBudget = 240000; maxBudget = 315000; }
+        else if (p1Answers.p1_budget === "over300") { minBudget = 290000; }
+
+        if (p1Answers.p1_budget !== "undecided") {
+          if (product.price >= minBudget && product.price <= maxBudget) {
+            score += 25;
+            reasons.push({ ja: "ご希望の予算レンジにぴったり合致", en: "Fits comfortably within your target budget range", zh: "精准契合您预期的购买预算区间" });
+          } else if (product.price > maxBudget) {
+            score -= 30;
+          }
+        }
+
+        if (p1Answers.p1_focus === "vegetable") {
+          if (product.brand === "toshiba") {
+            score += 35;
+            reasons.push({ ja: "東芝VEGETAならではの圧倒的な野菜鮮度キープ技術", en: "Toshiba VEGETA's unmatched high-humidity produce preservation", zh: "东芝VEGETA招牌级水嫩透湿果蔬长效锁鲜技术" });
+          }
+          if (product.vegMiddle) score += 15;
+        } else if (p1Answers.p1_focus === "meat_fish") {
+          if (product.meatFish) {
+            score += 35;
+            reasons.push({ ja: "肉・魚を凍らせず長持ちさせる高鮮度チルド・微凍結室を完備", en: "Dedicated chilled/partial-freeze drawer keeping raw meat/fish fresh", zh: "配备鱼肉生鲜免解冻/微冻长效保鲜冷藏室" });
+          }
+        } else if (p1Answers.p1_focus === "freezer") {
+          if (product.freezeCap) {
+            score += 35;
+            reasons.push({ ja: "冷凍食品や作り置きをたっぷり収納できる大型・多段フリーザー", en: "Mega-capacity multi-tiered freezer for massive frozen stockpiling", zh: "多层大容量冷冻抽屉，轻松吞纳海量冷冻速食" });
+          }
+        }
+
+        if (p2Answers.p2_space === "narrow") {
+          if (product.width <= 600) {
+            score += 30;
+            reasons.push({ ja: `設置幅60cm以下のスリム設計（幅約${product.width}mm）`, en: `Slim width <= 600mm (width ~${product.width}mm) fitting tight spaces`, zh: `宽度仅约${product.width}mm，可轻松嵌入60cm以内的狭小预留位` });
+          } else {
+            score -= 35;
+          }
+        } else if (p2Answers.p2_space === "thin") {
+          if (product.depth <= 660) {
+            score += 30;
+            reasons.push({ ja: `キッチンの通路を邪魔しない薄型奥行（奥行約${product.depth}mm）`, en: `Shallow depth (~${product.depth}mm) preserving comfortable kitchen walkway`, zh: `进深仅约${product.depth}mm超薄不凸出，保障厨房过道宽敞流通` });
+          }
+        }
+
+        if (p2Answers.p2_thawing === "yes") {
+          if (product.quickFreeze && (product.brand === "mitsubishi" || product.brand === "panasonic")) {
+            score += 30;
+            reasons.push({ ja: "サクッと包丁で切れて解凍の手間をゼロにする瞬間冷凍・微凍結機能", en: "Zero-thaw slicing via Mitsubishi Soft-Freeze / Panasonic Partial", zh: "无需漫长解冻即可下刀轻松切片分装的瞬冷冻微冻黑科技" });
+          }
+        }
+
+        if (p2Answers.p2_veg_pos === "middle") {
+          if (product.vegMiddle) {
+            score += 25;
+            reasons.push({ ja: "重い野菜も腰をかがめずに出し入れできる「真ん中野菜室」", en: "Middle veggie drawer for effortless, bend-free produce access", zh: "取放沉重蔬菜不用费力弯腰低头的便利居中果蔬室" });
+          } else {
+            score -= 15;
+          }
+        }
+
+        if (p2Answers.p2_feature === "top_oven") {
+          if (product.heatTop) {
+            score += 35;
+            reasons.push({ ja: "天面に電子レンジが直接置ける耐熱100℃トップテーブル", en: "Heat-resistant 100°C top table allowing microwave placement", zh: "耐热100℃顶盖，上方可直接稳妥摆放微波炉烤箱" });
+          } else if (product.capacity > 280) {
+            score -= 30;
+          }
+        } else if (p2Answers.p2_feature === "quiet") {
+          if (product.quiet) {
+            score += 25;
+            reasons.push({ ja: "ワンルームでも運転音が気にならない静音インバーター設計", en: "Inverter whisper-quiet operation ideal for studio apartment bedrooms", zh: "静音变频运行，小开间放卧室旁也安然无扰" });
+          }
+        }
+
+        return { ...product, finalScore: score, reasons: reasons };
+      });
+    } else {
+      // oralcare
+      let pool = products;
+      if (p1Answers.p1_user === "kids") {
+        pool = products.filter(p => p.category === "kids");
+      } else {
+        if (p1Answers.p1_type === "water") {
+          pool = products.filter(p => p.category === "water");
+        } else if (p1Answers.p1_type === "brush") {
+          pool = products.filter(p => p.category === "brush");
+        } else {
+          pool = products.filter(p => p.category !== "kids");
+        }
+      }
+
+      scoredProducts = pool.map(product => {
+        let score = 50;
+        let reasons = [];
+
+        if (p1Answers.p1_goal === "plaque") {
+          if (product.method === "round" || product.id.includes("io") || product.brand === "philips") {
+            score += 35;
+            reasons.push({ ja: "歯垢を根こそぎ掻き出す強力なブラッシング方式", en: "Powerful scrubbing dynamic sweeping away stubborn plaque", zh: "强力刮除并击碎顽固附着牙菌斑的清洁方式" });
+          }
+        } else if (p1Answers.p1_goal === "gum") {
+          if (product.method === "sonic_thin" || product.brand === "panasonic" || product.id === "oralb_io3" || product.id === "sonicare_3100") {
+            score += 35;
+            reasons.push({ ja: "デリケートな歯周ポケットに毛先が優しく届く安全設計", en: "Gentle fine bristles sliding smoothly into gum pockets safely", zh: "细软毛尖温和深入牙周盲区、不伤敏感红肿牙龈" });
+          }
+        } else if (p1Answers.p1_goal === "interdental") {
+          if (product.category === "water" || product.method === "sonic_fluid") {
+            score += 40;
+            reasons.push({ ja: "水流の力で歯と歯の隙間の詰まり汚れを一掃", en: "Dynamic fluid and water jets flushing food from tight interdental spaces", zh: "高频水流冲力彻底冲出齿缝卡顿菜渣污垢" });
+          }
+        } else if (p1Answers.p1_goal === "starter") {
+          if (product.price <= 6500) {
+            score += 30;
+            reasons.push({ ja: "初めてでも気軽に試せるお求めやすい価格設定", en: "Budget-friendly price point for an easy first-time trial", zh: "平易近人的实惠价格，初次尝试毫无经济负担" });
+          }
+        }
+
+        if (p2Answers.p2_pressure === "hard") {
+          if (product.pressureSensor) {
+            score += 30;
+            reasons.push({ ja: "強く押し付けすぎると自動で制御・光で知らせる過圧防止機能付き", en: "Built-in smart pressure alert protecting gums from excessive force", zh: "力度过大时自动降速或亮灯报警的防按压过度保护" });
+          } else if (product.price > 8000) {
+            score -= 20;
+          }
+        }
+
+        if (p2Answers.p2_head === "round") {
+          if (product.method === "round") {
+            score += 30;
+            reasons.push({ ja: "歯を1本1本包み込んで磨くブラウン独自の丸型回転ヘッド", en: "Oral-B's signature round head cupping each tooth individually", zh: "欧乐B标志性小圆头逐颗包裹旋转洁齿" });
+          }
+        } else if (p2Answers.p2_head === "sonic_thin") {
+          if (product.method === "sonic_thin") {
+            score += 30;
+            reasons.push({ ja: "日本人の口内形状にフィットするパナソニックの極細毛ヘッド", en: "Panasonic's ultra-fine bristle head tailored for narrow gumlines", zh: "松下专为亚洲人口腔定制的薄型极细毛声波刷头" });
+          }
+        } else if (p2Answers.p2_head === "sonic_fluid") {
+          if (product.method === "sonic_fluid") {
+            score += 30;
+            reasons.push({ ja: "唾液と水分を活用して隙間まで届くフィリップスの音波水流", en: "Philips Sonicare dynamic fluid action flushing liquid into tight gaps", zh: "飞利浦利用高速微振驱动水流冲刷牙缝盲区" });
+          }
+        }
+
+        if (p2Answers.p2_smart === "yes") {
+          if (product.app) {
+            score += 25;
+            reasons.push({ ja: "スマホアプリやディスプレイで磨き残しをリアルタイムガイド", en: "Interactive display or app guidance tracking brushing coverage", zh: "手机App或智能屏实时定位盲区，精准指导洁齿" });
+          } else {
+            score -= 15;
+          }
+        } else if (p2Answers.p2_smart === "no") {
+          if (!product.app) score += 10;
+        }
+
+        if (p1Answers.p1_place === "portable") {
+          if (product.portable) {
+            score += 30;
+            reasons.push({ ja: "外出先や職場、旅行にも負担なく持ち運べるコンパクト仕様", en: "Compact, travel-ready profile for office and mobile use", zh: "机身小巧轻巧便携，差旅出行放包即走" });
+          } else if (product.id === "doltz_dj75") {
+            score -= 40;
+          }
+        } else if (p1Answers.p1_place === "home_bath") {
+          if (product.bath) {
+            score += 20;
+            reasons.push({ ja: "入浴中にも気兼ねなく使える安心の防水設計", en: "Waterproof build completely safe for shower and bath use", zh: "可在淋浴时放心使用的安心防水密封结构" });
+          }
+        }
+
+        if (product.category === "water") {
+          if (p2Answers.p2_tank === "large" && product.id === "doltz_dj75") {
+            score += 35;
+            reasons.push({ ja: "給水の手間がない600mL大容量据え置きタンク", en: "Massive 600mL stationary reservoir with no mid-clean refills", zh: "600mL台式大水箱，中途无需反复加水冲个过瘾" });
+          } else if (p2Answers.p2_tank === "cordless" && product.id === "doltz_dj55") {
+            score += 35;
+            reasons.push({ ja: "お風呂場で使えるコードレス超音波水流モデル", en: "Cordless shower-ready ultrasonic water jet model", zh: "可在浴室淋浴时使用的无线便携超声波水流款" });
+          } else if (p2Answers.p2_tank === "compact" && product.id === "festino_smhb103") {
+            score += 35;
+            reasons.push({ ja: "ポーチに収まる超小型スライド携帯設計", en: "Ultra-compact telescopic body fitting right into small pouches", zh: "可伸缩折叠放入化妆包的掌心迷你随身款" });
+          }
+        }
+
+        let minB = 0, maxB = 100000;
+        if (p1Answers.p1_budget === "under5") { maxB = 5500; }
+        else if (p1Answers.p1_budget === "5_15") { minB = 4500; maxB = 16000; }
+        else if (p1Answers.p1_budget === "15_30") { minB = 14000; maxB = 32000; }
+        else if (p1Answers.p1_budget === "over30") { minB = 28000; }
+
+        if (product.price >= minB && product.price <= maxB) {
+          score += 25;
+          reasons.push({ ja: "ご希望のご予算範囲にベストマッチ", en: "Fits comfortably within your target budget range", zh: "精准契合您预期的购买预算区间" });
+        } else if (product.price > maxB) {
+          score -= 25;
+        }
+
+        return { ...product, finalScore: score, reasons: reasons };
+      });
+    }
+
+    scoredProducts.sort((a, b) => b.finalScore - a.finalScore);
+
+    const firstChoice = scoredProducts[0];
+    let secondChoice, thirdChoice;
+
+    if (currentAppliance === 'oralcare') {
+      const altMethodCandidates = scoredProducts.filter(p => p.method !== firstChoice.method && p.id !== firstChoice.id);
+      secondChoice = altMethodCandidates.length > 0 ? altMethodCandidates[0] : (scoredProducts[1] || scoredProducts[0]);
+      const priceDiffCandidates = scoredProducts.filter(p => p.id !== firstChoice.id && p.id !== secondChoice.id && Math.abs(p.price - firstChoice.price) > 3000);
+      thirdChoice = priceDiffCandidates.length > 0 ? priceDiffCandidates[0] : (scoredProducts[2] || scoredProducts[1]);
+    } else {
+      const altBrandCandidates = scoredProducts.filter(p => p.brand !== firstChoice.brand && p.id !== firstChoice.id);
+      secondChoice = altBrandCandidates.length > 0 ? altBrandCandidates[0] : (scoredProducts[1] || scoredProducts[0]);
+      const priceDiffCandidates = scoredProducts.filter(p => p.id !== firstChoice.id && p.id !== secondChoice.id && Math.abs(p.price - firstChoice.price) > 30000);
+      thirdChoice = priceDiffCandidates.length > 0 ? priceDiffCandidates[0] : (scoredProducts[2] || scoredProducts[1]);
+    }
+
+    const roleMap = {
+      washer: [
+        { ja: "🥇 第一候補（本命・お客様の条件に最も適合）", en: "🥇 1st Choice (Best Match for Your Needs)", zh: "🥇 第一候选（最佳契合您的核心诉求）" },
+        { ja: "🥈 第二候補（別アプローチ・他メーカーの有力対抗）", en: "🥈 2nd Choice (Alternative Brand & Approach)", zh: "🥈 第二候选（不同品牌技术的有力对标）" },
+        { ja: "🥉 第三候補（価格・グレード違いの比較案）", en: "🥉 3rd Choice (Budget or Tier Comparison)", zh: "🥉 第三候选（价格档次与功能对比参考）" }
+      ],
+      refrigerator: [
+        { ja: "🥇 第一候補（本命・お客様の条件に最も適合）", en: "🥇 1st Choice (Best Match for Your Needs)", zh: "🥇 第一候选（最佳契合您的核心诉求）" },
+        { ja: "🥈 第二候補（別アプローチ・他メーカーの有力対抗）", en: "🥈 2nd Choice (Alternative Brand & Approach)", zh: "🥈 第二候选（不同品牌技术的有力对标）" },
+        { ja: "🥉 第三候補（価格・グレード違いの比較案）", en: "🥉 3rd Choice (Budget or Tier Comparison)", zh: "🥉 第三候选（价格档次与功能对比参考）" }
+      ],
+      oralcare: [
+        { ja: "🥇 第一候補（本命・お客様の条件に最も適合）", en: "🥇 1st Choice (Best Match for Your Needs)", zh: "🥇 第一候选（最佳契合您的核心诉求）" },
+        { ja: "🥈 第二候補（別方式・磨き心地の比較対抗）", en: "🥈 2nd Choice (Alternative Driving Mechanism)", zh: "🥈 第二候选（不同清洁手法的有力对标）" },
+        { ja: "🥉 第三候補（価格・機能グレード違いの比較案）", en: "🥉 3rd Choice (Budget or Feature Comparison)", zh: "🥉 第三候选（价格档次与功能对比参考）" }
+      ]
+    };
+
+    const displayProducts = [
+      { item: firstChoice, role: roleMap[currentAppliance][0], badgeClass: "", rankType: "first" },
+      { item: secondChoice, role: roleMap[currentAppliance][1], badgeClass: "badge-silver", rankType: "second" },
+      { item: thirdChoice, role: roleMap[currentAppliance][2], badgeClass: "badge-bronze", rankType: "third" }
+    ];
+
+    const uniqueDisplay = [];
+    const usedIds = new Set();
+    for (const d of displayProducts) {
+      if (!usedIds.has(d.item.id)) {
+        uniqueDisplay.push(d);
+        usedIds.add(d.item.id);
+      }
+    }
+
+    function generateSalesPitchMulti(p, rankType, firstItem) {
+      if (currentAppliance === 'washer') {
+        if (currentLang === 'en') {
+          if (rankType === "first") {
+            return {
+              pitch: `${p.point.en} Perfectly fulfills your primary laundry requirement.`,
+              diff: `Offers the best harmony of capacity, wash performance, and space efficiency in this class.`,
+              closing: `Ask: "Do you wash daily or in weekend batches, and is drying frequency essential?" to highlight this unit's strengths.`
+            };
+          } else if (rankType === "second") {
+            return {
+              pitch: `A strong alternative adopting a distinct philosophy from ${firstItem.name.en}.`,
+              diff: `Compared to the 1st choice, it offers unique advantages in ${p.type === 'drum' ? 'gentle drum fabric care and auto wash-to-dry' : p.cleanSlotless ? 'tub mold prevention and water savings' : 'deep stain removal and cost efficiency'}.`,
+              closing: `Ask: "Would you prioritize ${p.type === 'drum' ? 'wrinkle-free heat-pump drying' : 'heavy-duty stain removal'} as your top preference?"`
+            };
+          } else {
+            const isHigher = p.price > firstItem.price;
+            return {
+              pitch: isHigher ? `A premium comparison choice if you wish to invest in top-tier drying and automation.` : `A high-value alternative that secures all essentials while keeping costs reasonable.`,
+              diff: `Price difference with 1st choice is ¥${Math.abs(p.price - firstItem.price).toLocaleString()}. ${isHigher ? 'Upgrades your laundry to full heat-pump fluffiness and auto-dosing ease.' : 'Delivers reliable core washing performance without stretching your budget.'}`,
+              closing: isHigher ? `Ask: "Would you like to step up to fully automated daily wash-to-dry convenience?"` : `Ask: "Would you prefer to save your budget for other home appliances?"`
+            };
+          }
+        } else if (currentLang === 'zh') {
+          if (rankType === "first") {
+            return {
+              pitch: `${p.point.zh} 与您的洗衣习惯及核心诉求最为吻合的本命之选。`,
+              diff: `在当前同等价位段中，洗净能力、容量适配度与机身尺寸达到了绝佳平衡。`,
+              closing: `导购询问：“您平时是每天洗还是习惯周末集中洗，阴雨天烘干使用多吗？”顺势突出其强项。`
+            };
+          } else if (rankType === "second") {
+            return {
+              pitch: `采用截然不同设计理念的有力对标方案。`,
+              diff: `相比第一候选 ${firstItem.name.zh}，在${p.type === 'drum' ? '全自动烘干与护衣蓬松度' : p.cleanSlotless ? '内筒防霉防黑斑与节水' : '强力冲刷去污与性价比'}上展现出专属特长。`,
+              closing: `导购询问：“您更倾向于选购带有${p.type === 'drum' ? '低温热泵洗烘一体机' : '强力去泥渍波轮'}的机型吗？”对比不同洁衣体验。`
+            };
+          } else {
+            const isHigher = p.price > firstItem.price;
+            return {
+              pitch: isHigher ? `适当提高预算、获取更高阶全自动享受（如热泵烘干或智能自动投放）的进阶参考。` : `精简次要功能、在亲民实惠预算内扎实满足洗衣需求的高性价比备选。`,
+              diff: `与第一候选差价为 ¥${Math.abs(p.price - firstItem.price).toLocaleString()}。${isHigher ? '彻底解决晾衣烦恼，享受免熨烫蓬松烘干。' : '能以极低门槛享受体面干净的每日洗衣。'}`,
+              closing: isHigher ? `导购询问：“是否希望每天清晨彻底省去晾晒衣物的繁琐步骤？”` : `导购询问：“是否希望将节省下来的预算用于添置其他高品质生活家电？”`
+            };
+          }
+        } else {
+          if (rankType === "first") {
+            return {
+              pitch: `${p.point.ja} お客様のご要望に最も合致する本命モデルです。`,
+              diff: `この価格帯において、容量・洗浄力・設置性のバランスが最も優れています。`,
+              closing: `「普段の洗濯で一番ストレスを感じる点（干す手間、泥汚れ、設置場所の狭さなど）はどこですか？」とお伺いし、この商品の強みをお伝えください。`
+            };
+          } else if (rankType === "second") {
+            return {
+              pitch: `第一候補とは異なるアプローチ（${p.type === 'drum' ? 'ドラム式の乾燥力・衣類ケア' : p.cleanSlotless ? '穴なし槽の清潔・節水性' : '縦型ならではの泥汚れ洗浄力'}）を持つ有力な対抗モデルです。`,
+              diff: `第一候補の${firstItem.name.ja}に比べ、${p.price > firstItem.price ? '乾燥仕上がりの良さや自動化機能' : '本体のコンパクトさやコストパフォーマンス'}に特徴があります。`,
+              closing: `「洗濯機は${p.type === 'drum' ? '毎日の乾燥まで任せたいですか？' : 'まずは洗浄力と使いやすさを重視しますか？'}」と価値観を比較案内してください。`
+            };
+          } else {
+            const isHigher = p.price > firstItem.price;
+            return {
+              pitch: isHigher ? `ご予算を少し上げて、より上位の機能（ヒートポンプ乾燥や洗剤自動投入）を手に入れたい場合の比較選択肢です。` : `基本性能をしっかり抑えつつ、ご予算をリーズナブルに抑えたい場合のコスパ候補です。`,
+              diff: `第一候補との価格差は¥${Math.abs(p.price - firstItem.price).toLocaleString()}です。${isHigher ? '毎日の干す手間をゼロにし、タオルもふわふわに仕上げる付加価値が得られます。' : '初期費用をぐっと抑えつつ、十分な洗浄力を得られます。'}`,
+              closing: isHigher ? `「せっかく買い替えるなら、毎日の乾燥まで任せられる上位機にしますか？」とお伺いしてください。` : `「浮いたご予算で、他の生活家電を揃えてみませんか？」と選択肢を広げてください。`
+            };
+          }
+        }
+      } else if (currentAppliance === 'refrigerator') {
+        if (currentLang === 'en') {
+          if (rankType === "first") {
+            return {
+              pitch: `${p.point.en} Best match for your household capacity and food lifestyle.`,
+              diff: `Offers the best harmony of footprint, storage layout, and preservation in this class.`,
+              closing: `Ask: "Do you prioritize produce crispness, raw meat non-freezing, or bulk freezer space?" to highlight its key strengths.`
+            };
+          } else if (rankType === "second") {
+            return {
+              pitch: `A strong alternative adopting a distinct philosophy from ${firstItem.name.en}.`,
+              diff: `Compared to the 1st choice, it offers unique advantages in ${p.brand === 'toshiba' ? 'moisture-rich produce preservation' : p.brand === 'mitsubishi' ? 'no-thaw soft-freeze convenience' : p.brand === 'sharp' ? 'mega-freezer volume & dual-swing access' : 'cost-efficiency and shallow depth'}.`,
+              closing: `Ask: "Would you prefer ${p.vegMiddle ? 'middle produce drawer convenience' : 'sub-zero fresh meat storage'} over standard layouts?"`
+            };
+          } else {
+            const isHigher = p.price > firstItem.price;
+            return {
+              pitch: isHigher ? `A premium comparison choice if you wish to step up to top-tier preservation tech.` : `A high-value alternative that secures all essentials while keeping purchase cost modest.`,
+              diff: `Price difference with 1st choice is ¥${Math.abs(p.price - firstItem.price).toLocaleString()}. ${isHigher ? 'Upgrades storage with cutting-edge freshness preservation.' : 'Focuses on solid core cooling capacity without stretching your budget.'}`,
+              closing: isHigher ? `Ask: "Would you like to step up to flagship preservation for long-term culinary enjoyment?"` : `Ask: "Would you prefer saving budget for other home furnishings?"`
+            };
+          }
+        } else if (currentLang === 'zh') {
+          if (rankType === "first") {
+            return {
+              pitch: `${p.point.zh} 与您的常住家庭人数及食材保鲜诉求最为吻合的本命之选。`,
+              diff: `在当前同级机型中，机身占地尺寸、内部收纳格局与保鲜黑科技达到了绝佳平衡。`,
+              closing: `导购询问：“您平时最看重的是绿叶蔬菜水润不黄、生鲜鱼肉无需解冻还是超大冷冻囤货？”顺势突出其强项。`
+            };
+          } else if (rankType === "second") {
+            return {
+              pitch: `采用截然不同保鲜与格局设计理念的有力对标方案。`,
+              diff: `相比第一候选 ${firstItem.name.zh}，在${p.brand === 'toshiba' ? '果蔬高保湿水润锁鲜' : p.brand === 'mitsubishi' ? '生鲜肉类免解冻瞬切' : p.brand === 'sharp' ? '特大巨无霸冷冻室与左右开门' : '整机超薄进深与高性价比'}上展现出专属特长。`,
+              closing: `导购询问：“您更倾向于选购带有${p.vegMiddle ? '居中果蔬室' : '肉类免解冻保鲜'}的机型吗？”对比不同使用体验。`
+            };
+          } else {
+            const isHigher = p.price > firstItem.price;
+            return {
+              pitch: isHigher ? `适当提高预算、获取顶级食材长效保鲜黑科技的进阶参考。` : `精简次要功能、在亲民实惠预算内扎实满足食材冷藏冷冻的性价比备选。`,
+              diff: `与第一候选差价为 ¥${Math.abs(p.price - firstItem.price).toLocaleString()}。${isHigher ? '彻底解决食材风干变质，带来顶级下厨料理享受。' : '能以极低门槛享受扎实体面的大容量冷藏冷冻。'}`,
+              closing: isHigher ? `导购询问：“既然冰箱要使用十年之久，是否考虑一步到位选用高阶保鲜旗舰款？”` : `导购询问：“是否希望将节省下来的预算用于添置其他高品质生活家电？”`
+            };
+          }
+        } else {
+          if (rankType === "first") {
+            return {
+              pitch: `${p.point.ja} お客様のご要望に最も合致する本命モデルです。`,
+              diff: `この価格帯において、設置寸法・庫内レイアウト・保存性能のバランスが最も優れています。`,
+              closing: `「普段の自炊で一番鮮度を保ちたい食材（野菜、肉魚、冷凍ストックなど）はどれですか？」とお伺いし、この商品の強みをお伝えください。`
+            };
+          } else if (rankType === "second") {
+            return {
+              pitch: `第一候補とは異なるアプローチ（${p.brand === 'toshiba' ? '東芝の摘みたて野菜室' : p.brand === 'mitsubishi' ? '三菱の切れちゃう瞬冷凍' : p.brand === 'sharp' ? 'シャープのメガフリーザー・どっちもドア' : 'AQUAの薄型奥行・高コスパ'}）を持つ有力な対抗モデルです。`,
+              diff: `第一候補の${firstItem.name.ja}に比べ、${p.vegMiddle ? '真ん中野菜室の使い勝手' : p.quickFreeze ? '肉魚の解凍不要時短' : '冷凍容量や本体の薄さ'}に特徴があります。`,
+              closing: `「冷蔵庫は${p.vegMiddle ? '野菜の取り出しやすさを重視しますか？' : '肉や魚の解凍不要を重視しますか？'}」と価値観を比較案内してください。`
+            };
+          } else {
+            const isHigher = p.price > firstItem.price;
+            return {
+              pitch: isHigher ? `ご予算を少し上げて、より上位の保存性能（高湿度野菜保存や瞬間冷凍）を手に入れたい場合の比較選択肢です。` : `基本性能をしっかり抑えつつ、ご予算をリーズナブルに抑えたい場合のコスパ候補です。`,
+              diff: `第一候補との価格差は¥${Math.abs(p.price - firstItem.price).toLocaleString()}です。${isHigher ? '週末にまとめ買いした生鮮食品を1週間後も美味しく味わえる付加価値が得られます。' : '初期費用をぐっと抑えつつ、十分な容量を確保できます。'}`,
+              closing: isHigher ? `「せっかく長く使うものなので、食材の鮮度キープにこだわって上位機にしますか？」とお伺いしてください。` : `「浮いたご予算で、他のキッチン家電を揃えてみませんか？」と選択肢を広げてください。`
+            };
+          }
+        }
+      } else {
+        // oralcare
+        const methodMap = {
+          ja: { round: "丸型回転ブラシ（1本1本包み込み）", sonic_thin: "音波振動＋極細毛（歯周ポケット直撃）", sonic_fluid: "音波水流（隙間の水流洗浄）", water_jet: "超音波ジェット水流（歯間専用）" },
+          en: { round: "Round Oscillating (Cup & Clean)", sonic_thin: "Sonic Fine Bristles (Gum Pocket Scrub)", sonic_fluid: "Sonic Dynamic Fluid Action", water_jet: "Ultrasonic Water Stream (Interdental)" },
+          zh: { round: "小圆头旋转包裹式（逐颗抛光）", sonic_thin: "声波水平微摆细毛（深入牙周盲区）", sonic_fluid: "流动洁力微泡水流（齿缝盲区冲刷）", water_jet: "超声波高压脉冲水流（专注齿间残渣）" }
+        };
+
+        if (currentLang === 'en') {
+          if (rankType === "first") {
+            return {
+              pitch: `${p.point.en} Perfectly tailored to your primary oral care goal.`,
+              diff: `Achieves the highest balance of cleaning comfort, plaque removal, and daily durability in this class.`,
+              closing: `Ask: "Do you feel any missed plaque behind molars or tenderness along the gumline right now?" to highlight this unit's strengths.`
+            };
+          } else if (rankType === "second") {
+            return {
+              pitch: `A strong alternative adopting a distinct mechanism (${methodMap.en[p.method] || 'different mechanism'}).`,
+              diff: `Compared to ${firstItem.name.en}, it offers unique tactile advantages in ${p.method === 'round' ? 'physical scrubbing power per tooth' : p.method === 'sonic_thin' ? 'soft gentle pocket navigation' : 'gentle fluid flushing through tight gaps'}.`,
+              closing: `Ask: "Have you ever tried ${p.brand === 'braun' ? 'Oral-B round oscillating' : p.brand === 'panasonic' ? 'Panasonic sonic thin bristles' : 'Philips fluid action'} before?" to compare mouthfeel.`
+            };
+          } else {
+            const isHigher = p.price > firstItem.price;
+            return {
+              pitch: isHigher ? `A premium comparison choice if you wish to invest in top-tier guidance (${p.app ? 'Real-time 3D coverage tracking' : 'Dual-Sonic / Magnetic iO power'}).` : `A high-value alternative that secures all essentials while keeping costs low.`,
+              diff: `Price difference with 1st choice is ¥${Math.abs(p.price - firstItem.price).toLocaleString()}. ${isHigher ? 'Eliminates missed brushing spots with live smart coaching.' : 'Lets you enjoy authentic motorized cleaning without stretching your budget.'}`,
+              closing: isHigher ? `Ask: "Would you like to visually see any missed spots on your smartphone screen to ensure perfection?"` : `Ask: "Would you prefer to save your budget for extra replacement brush heads?"`
+            };
+          }
+        } else if (currentLang === 'zh') {
+          if (rankType === "first") {
+            return {
+              pitch: `${p.point.zh} 与您的口腔护理目标及预算最为吻合的本命机型。`,
+              diff: `在当前价位区间内，齿面清洁力、牙龈友好度与日常耐用性达到了极佳平衡。`,
+              closing: `导购询问：“您平时刷牙最担心的是智齿刷不干净，还是牙龈容易出血酸痛？”顺势引出本品优势。`
+            };
+          } else if (rankType === "second") {
+            return {
+              pitch: `采用截然不同洁齿理念（${methodMap.zh[p.method] || '不同技术路径'}）的有力对标方案。`,
+              diff: `相比第一候选 ${firstItem.name.zh}，在${p.method === 'round' ? '单颗牙齿强力机械刮除牙垢' : p.method === 'sonic_thin' ? '极其温柔深入牙周袋清掏' : '微泡水流冲刷牙缝盲区'}上具有鲜明手感差异。`,
+              closing: `导购询问：“您之前体验过${p.brand === 'braun' ? '欧乐B圆头旋转' : p.brand === 'panasonic' ? '松下极细毛声波' : '飞利浦声波流动水流'}吗？”对比不同洁齿触感。`
+            };
+          } else {
+            const isHigher = p.price > firstItem.price;
+            return {
+              pitch: isHigher ? `适当提高预算、获取更高阶享受（${p.app ? '实时3D防漏刷屏幕导航' : '双重马达或磁驱微震微晶洁齿'}）的进阶参考。` : `精简次要功能、在亲民实惠预算内扎实体验电动洁齿的性价比备选。`,
+              diff: `与第一候选差价为 ¥${Math.abs(p.price - firstItem.price).toLocaleString()}。${isHigher ? '彻底解决盲目刷牙问题，带来殿堂级口腔健康守护。' : '能以极低门槛享受远超手动牙刷的清洁效率。'}`,
+              closing: isHigher ? `导购询问：“是否希望在手机屏幕上直观看到哪颗牙齿没刷干净？”` : `导购询问：“是否希望将节省下来的预算用于储备一整年份的替换原装刷头？”`
+            };
+          }
+        } else {
+          if (rankType === "first") {
+            return {
+              pitch: `${p.point.ja} お客様のご要望に最も合致する本命モデルです。`,
+              diff: `この価格帯において、日々の使いやすさと磨き上がりの爽快感のバランスが最も優れています。`,
+              closing: `「普段の歯磨きで、奥歯の磨き残しや歯ぐきのチクチク感が気になることはありますか？」とお伺いし、この商品の強みをご案内してください。`
+            };
+          } else if (rankType === "second") {
+            return {
+              pitch: `第一候補の方式とは異なるアプローチ（${methodMap.ja[p.method] || '別駆動方式'}）を採用した有力な対抗モデルです。`,
+              diff: `第一候補の${firstItem.name.ja}に比べ、${p.method === 'round' ? '歯垢を物理的に力強くこそぎ落とす感触' : p.method === 'sonic_thin' ? '歯ぐきへの当たりが極めてマイルドでポケットに入り込む感触' : '高速水流で歯間まで自然に洗い流す爽快感'}に違いがあります。`,
+              closing: `「これまでに${p.brand === 'braun' ? 'ブラウンの回転式' : p.brand === 'panasonic' ? 'ドルツの音波式' : 'ソニッケアー'}をお試しになったことはございますか？」と磨き心地のお好みを比較してください。`
+            };
+          } else {
+            const isHigher = p.price > firstItem.price;
+            return {
+              pitch: isHigher ? `ご予算を少し上げて、より上位のケア性能（${p.app ? 'リアルタイム磨き残しガイド' : 'W音波振動/高性能センサー'}）を手に入れたい場合の選択肢です。` : `基本性能をしっかり押さえつつ、お求めやすいご予算で手軽にスタートできるコスパ候補です。`,
+              diff: `第一候補との差額は¥${Math.abs(p.price - firstItem.price).toLocaleString()}です。${isHigher ? '日々の磨き残しを完全にゼロにするための付加価値が加わります。' : '初期投資を抑えて電動歯ブラシの効果を十分に実感できます。'}`,
+              closing: isHigher ? `「磨き残し箇所をスマホや画面で目に見える形でチェックしてみたいですか？」と確認してください。` : `「浮いたご予算で、予備の替えブラシやフロスを揃えてみませんか？」とご提案してください。`
+            };
+          }
+        }
+      }
+    }
+
+    const container = document.getElementById('productRankings');
+    container.innerHTML = uniqueDisplay.map(({ item, role, badgeClass, rankType }) => {
+      const talk = generateSalesPitchMulti(item, rankType, firstChoice);
+      const uniqueReasons = item.reasons.length > 0 
+        ? [...new Set(item.reasons.map(r => r[currentLang]))].slice(0, 3) 
+        : [t.fitPointsLabel];
+
+      let metaDetail = "";
+      if (currentAppliance === 'washer') {
+        const typeName = item.type === "drum" ? t.typeDrum : (item.type === "vertical_dryer" ? t.typeVerticalDryer : t.typeVertical);
+        const autoDoseText = item.autodose ? t.autoDoseYes : t.autoDoseNo;
+        metaDetail = `${t.capLabel}${item.capacity}kg ｜ ${typeName} ｜ ${t.widthLabel}${item.width}mm ｜ ${autoDoseText}`;
+      } else if (currentAppliance === 'refrigerator') {
+        const doorText = item.door === "both" ? t.doorBoth : (item.door === "french" ? t.doorFrench : t.doorStandard);
+        metaDetail = `${t.capLabel}${item.capacity}L ｜ ${t.widthLabel}${item.width}mm ｜ ${doorText}`;
+      } else {
+        const pressureText = item.pressureSensor ? t.pressureYes : t.pressureNo;
+        const appText = item.app ? t.appYes : t.appNo;
+        metaDetail = `${pressureText} ｜ ${appText}`;
+      }
+
+      return `
+        <div class="product-card">
+          <span class="product-badge ${badgeClass}">${role[currentLang]}</span>
+          <div class="product-title">${item.name[currentLang]}</div>
+          <div class="product-meta">${t.currency}${item.price.toLocaleString()}${t.taxInc} ｜ ${metaDetail}</div>
+          <div class="product-desc">${item.desc[currentLang]}</div>
+          <div class="sales-box">
+            <div class="sales-item"><strong>${t.salesPitchLabel}</strong> ${talk.pitch}</div>
+            <div class="sales-item"><strong>${t.salesDiffLabel}</strong> ${talk.diff}</div>
+            <div class="sales-item"><strong>${t.salesClosingLabel}</strong> ${talk.closing}</div>
+            <div style="font-size: 0.75rem; color: #64748b; margin-top: 4px;">
+              <strong>${t.fitPointsLabel}</strong> ${uniqueReasons.join(" ／ ")}
+            </div>
+          </div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  function restart() {
+    document.getElementById('finalResult').classList.add('hidden');
+    document.getElementById('phase2').classList.add('hidden');
+    document.getElementById('phase1').classList.remove('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    updateUITexts();
+  });
+</script>
+
+</body>
+</html>
+

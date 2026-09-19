@@ -1,0 +1,1476 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home Appliance Selector / 住まい・生活家電 最適モデル診断</title>
+  <style>
+    :root {
+      --primary: #0284c7;
+      --primary-hover: #0369a1;
+      --bg: #f0fdf4;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #bae6fd;
+      --accent: #e0f2fe;
+      --box-bg: #ecfdf5;
+      --box-border: #a7f3d0;
+      --box-text: #065f46;
+      --indicator-bg: #e0f2fe;
+    }
+
+    body.theme-vacuum {
+      --primary: #0d9488;
+      --primary-hover: #0f766e;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #cbd5e1;
+      --accent: #f0fdfa;
+      --box-bg: #f0fdfa;
+      --box-border: #99f6e4;
+      --box-text: #115e59;
+      --indicator-bg: #ccfbf1;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 24px 16px;
+      transition: background-color 0.3s ease;
+    }
+    .container {
+      max-width: 780px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      padding: 32px 24px;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.06), 0 2px 4px -1px rgba(0,0,0,0.04);
+    }
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 16px;
+    }
+    .mode-switcher {
+      display: flex;
+      gap: 8px;
+    }
+    .mode-btn {
+      padding: 6px 14px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      background: #fff;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .mode-btn.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+    .lang-switcher {
+      display: flex;
+      gap: 6px;
+    }
+    .lang-btn {
+      padding: 4px 12px;
+      font-size: 0.8rem;
+      border: 1px solid var(--border);
+      background: #fff;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .lang-btn.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      font-weight: bold;
+    }
+    h1 {
+      font-size: 1.5rem;
+      text-align: center;
+      margin-bottom: 8px;
+      color: var(--primary);
+      transition: color 0.3s;
+    }
+    p.lead {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 24px;
+    }
+    .step-indicator {
+      display: inline-block;
+      font-size: 0.8rem;
+      font-weight: bold;
+      color: var(--primary);
+      background: var(--indicator-bg);
+      padding: 4px 12px;
+      border-radius: 9999px;
+      margin-bottom: 12px;
+    }
+    .question-block {
+      margin-bottom: 24px;
+    }
+    .question-title {
+      font-weight: 600;
+      margin-bottom: 10px;
+      font-size: 1rem;
+    }
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+    .option-label {
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .option-label:hover {
+      background-color: var(--accent);
+    }
+    .option-label input {
+      margin-right: 12px;
+    }
+    button.btn {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      background-color: var(--primary);
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      margin-top: 16px;
+    }
+    button.btn:hover {
+      background-color: var(--primary-hover);
+    }
+    .intermediate-box {
+      background-color: var(--box-bg);
+      border: 1px solid var(--box-border);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+    .intermediate-box h2 {
+      font-size: 1.15rem;
+      color: var(--box-text);
+      margin-bottom: 12px;
+    }
+    .product-card {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 18px;
+      margin-bottom: 18px;
+      background: #fff;
+    }
+    .product-badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: bold;
+      color: #fff;
+      background: var(--primary);
+      padding: 3px 10px;
+      border-radius: 4px;
+      margin-bottom: 8px;
+    }
+    .badge-silver { background: #475569; }
+    .badge-bronze { background: #b45309; }
+    .product-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .product-meta {
+      font-size: 0.9rem;
+      color: var(--primary);
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+    .product-desc {
+      font-size: 0.85rem;
+      color: #334155;
+      margin-bottom: 12px;
+    }
+    .sales-box {
+      font-size: 0.85rem;
+      background: #f8fafc;
+      padding: 12px 16px;
+      border-radius: 6px;
+      border-left: 4px solid var(--primary);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .sales-item strong {
+      color: #0f172a;
+    }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="top-bar">
+    <div class="mode-switcher">
+      <button type="button" class="mode-btn active" id="btn_mode_shower" onclick="switchCategory('shower')">シャワーヘッド</button>
+      <button type="button" class="mode-btn" id="btn_mode_vacuum" onclick="switchCategory('vacuum')">掃除機</button>
+    </div>
+    <div class="lang-switcher">
+      <button type="button" class="lang-btn active" onclick="setLanguage('ja')">日本語</button>
+      <button type="button" class="lang-btn" onclick="setLanguage('en')">English</button>
+      <button type="button" class="lang-btn" onclick="setLanguage('zh')">中文</button>
+    </div>
+  </div>
+
+  <h1 id="ui_title"></h1>
+  <p class="lead" id="ui_lead"></p>
+
+  <!-- 前半5問フォーム -->
+  <div id="phase1">
+    <span class="step-indicator" id="ui_p1_indicator"></span>
+    <div id="p1_questions_container"></div>
+    <button type="button" class="btn" id="ui_btn_next1" onclick="submitPhase1()"></button>
+  </div>
+
+  <!-- 前半結果 ＋ 後半5問フォーム -->
+  <div id="phase2" class="hidden">
+    <div class="intermediate-box" id="phase1Summary"></div>
+    <span class="step-indicator" id="ui_p2_indicator"></span>
+    <div id="p2_questions_container"></div>
+    <button type="button" class="btn" id="ui_btn_next2" onclick="submitPhase2()"></button>
+  </div>
+
+  <!-- 最終結果 -->
+  <div id="finalResult" class="hidden">
+    <h2 style="font-size: 1.3rem; margin-bottom: 16px; text-align: center; color: var(--primary);" id="ui_result_title"></h2>
+    <div id="productRankings"></div>
+    <button type="button" class="btn" style="background-color: #64748b;" id="ui_btn_restart" onclick="restart()"></button>
+  </div>
+</div>
+
+<script>
+  let currentCategory = 'shower';
+  let currentLang = 'ja';
+  let p1Answers = {};
+  let p2Answers = {};
+
+  const APP_CONFIG = {
+    shower: {
+      themeClass: '',
+      i18n: {
+        ja: {
+          navTitle: "シャワーヘッド",
+          title: "シャワーヘッド 最適モデル選定・接客診断",
+          lead: "水道代節約・水圧の悩み・毛穴ケア・ヘアケアに合わせて、最適な3台の候補をご提案します。",
+          p1Indicator: "STEP 1 / 2（目的・基本仕様のヒアリング）",
+          p2Indicator: "STEP 2 / 2（詳細機能・こだわりの絞り込み）",
+          btnNext1: "方向性と推奨スペックを確認する",
+          btnNext2: "最終候補の3モデルを診断する",
+          btnRestart: "最初からやり直す",
+          resultTitle: "診断結果：おすすめの3モデル",
+          summaryHeading: "📋 前半診断：お客様に最適な基本仕様",
+          recTypeLabel: "推奨カテゴリー:",
+          recClassLabel: "注力グループ:",
+          recFeaturesLabel: "重視すべき仕様:",
+          summaryNote: "※次の5問でファインバブルの必要度、水流の使い分け、本体重量、ヘッド角度などの詳細条件を絞り込みます。",
+          salesPitchLabel: "💡 おすすめする理由:",
+          salesDiffLabel: "⚖️ 他の候補との違い:",
+          salesClosingLabel: "🗣️ お客様に確認する一言トーク:",
+          fitPointsLabel: "適合ポイント:",
+          currency: "¥",
+          taxInc: "（税込）",
+          weightLabel: "重量: 約",
+          stopYes: "手元ストップあり",
+          stopNo: "手元ストップなし",
+          bubbleYes: "ファインバブル対応",
+          bubbleNo: "標準水流",
+          undecided: "まだ検討中"
+        },
+        en: {
+          navTitle: "Shower Head",
+          title: "Shower Head Selector & Sales Consultant",
+          lead: "Find the top 3 shower head candidates tailored to water bill savings, water pressure, pore care, and scalp wellness.",
+          p1Indicator: "STEP 1 / 2 (Primary Goals & Basic Specs)",
+          p2Indicator: "STEP 2 / 2 (Detailed Features & Preferences)",
+          btnNext1: "Confirm Basic Direction & Specs",
+          btnNext2: "Diagnose Final 3 Best Models",
+          btnRestart: "Start Over",
+          resultTitle: "Diagnosis Results: Top 3 Recommended Models",
+          summaryHeading: "📋 Initial Assessment: Recommended Direction",
+          recTypeLabel: "Recommended Category:",
+          recClassLabel: "Target Group:",
+          recFeaturesLabel: "Key Specifications:",
+          summaryNote: "*The next 5 questions will refine fine bubble needs, spray modes, head weight, and angle adjustments.",
+          salesPitchLabel: "💡 Recommendation Reason:",
+          salesDiffLabel: "⚖️ Comparison with Others:",
+          salesClosingLabel: "🗣️ Customer Consultation Tip:",
+          fitPointsLabel: "Matching Strengths:",
+          currency: "¥",
+          taxInc: " (tax incl.)",
+          weightLabel: "Weight: approx. ",
+          stopYes: "With Stop Button",
+          stopNo: "No Stop Button",
+          bubbleYes: "Fine Bubble Supported",
+          bubbleNo: "Standard Stream",
+          undecided: "Undecided"
+        },
+        zh: {
+          navTitle: "淋浴花洒",
+          title: "淋浴花洒选购助手 & 销售导购工具",
+          lead: "根据节水省水费、水压改善、毛孔深层清洁及头皮护理需求，为您推荐最适合的3款花洒。",
+          p1Indicator: "STEP 1 / 2（购买目的与基本规格咨询）",
+          p2Indicator: "STEP 2 / 2（详细功能与使用偏好筛选）",
+          btnNext1: "确认大致方向与推荐规格",
+          btnNext2: "诊断并推荐最终3款候选产品",
+          btnRestart: "重新诊断",
+          resultTitle: "诊断结果：为您精选的3款花洒",
+          summaryHeading: "📋 前半部分诊断：适合您的基本方案",
+          recTypeLabel: "推荐类别:",
+          recClassLabel: "重点组别:",
+          recFeaturesLabel: "建议关注的规格:",
+          summaryNote: "※接下来的5个问题将进一步细化微气泡需求、出水模式、机身重量及角度调节等细节。",
+          salesPitchLabel: "💡 推荐理由:",
+          salesDiffLabel: "⚖️ 与其他候选的区别:",
+          salesClosingLabel: "🗣️ 门店导购确认话术:",
+          fitPointsLabel: "契合要点:",
+          currency: "¥",
+          taxInc: "（含税）",
+          weightLabel: "重量: 约",
+          stopYes: "带手元止水按键",
+          stopNo: "无手元止水按键",
+          bubbleYes: "支持超微细气泡",
+          bubbleNo: "标准水流",
+          undecided: "还在考虑中"
+        }
+      },
+      questionsPhase1: [
+        {
+          id: "p1_goal",
+          title: {
+            ja: "Q1. シャワーヘッドを交換する一番の目的は？",
+            en: "Q1. What is your primary purpose for replacing the shower head?",
+            zh: "Q1. 更换淋浴花洒的最主要目的是？"
+          },
+          options: [
+            { value: "save", label: { ja: "水道代・ガス代を安くしたい（節水・低価格重視）", en: "Reduce water & gas bills (Priority on water-saving & affordability)", zh: "降低水费和燃气费（注重节水与高性价比）" } },
+            { value: "pressure", label: { ja: "今のシャワーの水圧が弱いので、勢いを強くしたい", en: "Increase water pressure because the current shower is too weak", zh: "目前花洒水压太弱，希望能增强冲水冲劲" } },
+            { value: "beauty", label: { ja: "毛穴の黒ずみ・肌のざらつきを落としたい（美容・美肌ケア）", en: "Pore cleansing & skin care (Beauty & glowing skin)", zh: "改善毛孔黑头与肌肤粗糙（美容护肤）" } },
+            { value: "hair", label: { ja: "頭皮のベタつきやニオイ、髪の洗い上がりを良くしたい（ヘアケア重視）", en: "Scalp cleansing & hair care (Improve scalp sebum & hair texture)", zh: "改善头皮油腻异味与洗发体验（注重头发头皮护理）" } },
+            { value: "usable", label: { ja: "壁に固定したまま角度を自由に変えたい（浴びやすさ・使い勝手）", en: "Freely adjust angles while mounted on wall (Ease of use)", zh: "挂在墙上时能自由调节喷洒角度（洗浴便利性）" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p1_pressure_satisfaction",
+          title: {
+            ja: "Q2. 現在のご自宅のシャワーの水圧に不満はありますか？",
+            en: "Q2. Are you dissatisfied with your current shower water pressure?",
+            zh: "Q2. 对目前家里的花洒水压是否感到不满？"
+          },
+          options: [
+            { value: "weak", label: { ja: "不満がある（水圧が弱く、もっと勢いが欲しい）", en: "Yes, dissatisfied (Too weak, want stronger flow)", zh: "不满（水压偏弱，想要更强劲的冲劲）" } },
+            { value: "enough", label: { ja: "不満はない（標準的な水圧で出ている / 柔らかい肌当たりが好き）", en: "No, satisfied (Sufficient pressure / prefer soft flow)", zh: "没有不满（水压正常 / 喜欢柔和亲肤感）" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p1_mode",
+          title: {
+            ja: "Q3. 「ミスト」などの複数の水流切替機能は欲しいですか？",
+            en: "Q3. Do you want multiple spray modes such as gentle facial mist?",
+            zh: "Q3. 是否需要“喷雾”等多种出水模式切换功能？"
+          },
+          options: [
+            { value: "multi", label: { ja: "欲しい（洗顔用ミストやジェット水流など部位ごとに使い分けたい）", en: "Yes, want multi-modes (Facial mist, jet massage, etc.)", zh: "想要（希望针对脸部喷雾、头皮强劲水流分部位使用）" } },
+            { value: "single", label: { ja: "不要（通常の全身浴び用シャワーがしっかり出れば十分）", en: "No, regular steady shower stream is enough", zh: "不需要（只要全身淋浴的出水舒畅即可）" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p1_stop",
+          title: {
+            ja: "Q4. シャワーヘッド本体の「手元ストップ（止水ボタン）」は必要ですか？",
+            en: "Q4. Do you need a one-touch stop button directly on the handle?",
+            zh: "Q4. 花洒手柄上是否需要“一键止水（开停水按键）”？"
+          },
+          options: [
+            { value: "essential", label: { ja: "ぜひ欲しい（洗髪中や洗顔中に手元でこまめに止めて節水したい）", en: "Essential (Quickly stop flow during shampooing to save water)", zh: "非常想要（洗头或洗脸时可以在手上随手关水以节省水费）" } },
+            { value: "unneeded", label: { ja: "不要（蛇口で止めるので、本体が軽くシンプルな方がいい）", en: "Not needed (Use wall faucet; prefer lighter & simpler body)", zh: "不需要（习惯关水龙头；更希望花洒轻巧简单）" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p1_budget",
+          title: {
+            ja: "Q5. ご予算の目安はどれくらいですか？",
+            en: "Q5. What is your approximate budget?",
+            zh: "Q5. 您的选购预算大约是多少？"
+          },
+          options: [
+            { value: "under5", label: { ja: "〜5,000円（手頃な実用節水モデル）", en: "Under ¥5,000 (Affordable utility & water-saving)", zh: "5,000日元以下（平价实用节水款）" } },
+            { value: "5_10", label: { ja: "5,000〜10,000円（水圧強化・角度調整・上位節水）", en: "¥5,000 - ¥10,000 (Boost pressure, 3D angle, advanced save)", zh: "5,000〜10,000日元（增压、角度调节、高阶节水）" } },
+            { value: "10_25", label: { ja: "10,000〜25,000円（1〜2万円台で買えるファインバブル・ヘアケア）", en: "¥10,000 - ¥25,000 (Mid-range fine bubble & scalp care)", zh: "10,000〜25,000日元（入门微气泡美容与头部护理）" } },
+            { value: "over25", label: { ja: "25,000円〜（ReFa・ミラブルなど最高峰の美容シャワー）", en: "¥25,000+ (Flagship luxury beauty: ReFa / Mirable)", zh: "25,000日元以上（ReFa、Mirable等顶级美容花洒）" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        }
+      ],
+      questionsPhase2: [
+        {
+          id: "p2_bubble",
+          title: {
+            ja: "Q6. ウルトラファインバブル（微細気泡）機能へのこだわりは？",
+            en: "Q6. How important is the Ultra Fine Bubble (micro-nano bubble) feature?",
+            zh: "Q6. 您对超微细气泡（微纳米气泡美容）功能的重视程度是？"
+          },
+          options: [
+            { value: "high", label: { ja: "強く希望（毛穴の奥まで入り込んで皮脂や汚れを吸着洗浄したい）", en: "High priority (Deep pore cleaning & hydration)", zh: "非常看重（希望能深入毛穴吸附油脂污垢）" } },
+            { value: "mid", label: { ja: "あれば嬉しいが、高額すぎるなら不要", en: "Nice to have, but not if too expensive", zh: "有就更好，但如果价格太贵则不强求" } },
+            { value: "none", label: { ja: "不要（水道代の節約や水圧改善が最優先）", en: "Not needed (Priority strictly on savings or pressure)", zh: "不需要（主要解决节水和水压问题即可）" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p2_usage",
+          title: {
+            ja: "Q7. シャワーを浴びる部位ごとの使い分けに対する希望は？",
+            en: "Q7. Do you want customized stream types for different body parts?",
+            zh: "Q7. 是否希望根据身体不同部位定制出水？"
+          },
+          options: [
+            { value: "all_round", label: { ja: "顔は優しいミスト、頭皮はジェット、体はストレートと細かく分けたい", en: "Yes (Gentle facial mist, scalp point jet, body straight)", zh: "希望细分（脸部柔和喷雾、头皮强劲水力、身体宽幅直喷）" } },
+            { value: "simple", label: { ja: "1〜2種類の使いやすい水流があれば十分", en: "1 or 2 standard comfortable streams are enough", zh: "有1〜2种实用舒适的出水模式就足够" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p2_weight",
+          title: {
+            ja: "Q8. 本体の重さや持ちやすさ（取り回し）への希望は？",
+            en: "Q8. What are your preferences regarding shower head weight and handling?",
+            zh: "Q8. 对花洒手柄的重量和握持手感有何偏好？"
+          },
+          options: [
+            { value: "light", label: { ja: "軽さ重視（子供や高齢者でも腕が疲れない約160g〜220g前後）", en: "Prefer lightweight (Approx. 160g-220g; easy for kids & seniors)", zh: "注重轻巧（约160g〜220g左右，老人儿童长时间拿不手酸）" } },
+            { value: "normal", label: { ja: "機能が充実していれば多少の重み（300g以上）は気にならない", en: "Accept standard weight (300g+ is fine if full-featured)", zh: "只要功能全面，300g左右稍有分量也可以接受" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p2_angle",
+          title: {
+            ja: "Q9. フックにかけたままの「ヘッドの角度調整機能」は欲しいですか？",
+            en: "Q9. Do you want 3D angle adjustments while mounted on the wall hook?",
+            zh: "Q9. 是否需要挂在墙钩上直接“调节喷水角度”的功能？"
+          },
+          options: [
+            { value: "yes", label: { ja: "欲しい（上下左右にヘッドを振って、立ったまま・座ったまま浴びたい）", en: "Yes (Swivel head up/down/left/right for comfortable shower hands-free)", zh: "想要（花洒头可上下左右旋转，无论站坐都能对准淋浴）" } },
+            { value: "no", label: { ja: "不要（手で持って浴びることが多い / 固定角度で問題ない）", en: "No (Hold by hand or satisfied with fixed hook angle)", zh: "不需要（习惯手拿洗澡 / 固定挂钩角度即可）" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p2_design",
+          title: {
+            ja: "Q10. デザインや仕上げに対するお好みは？",
+            en: "Q10. What is your design and finish preference?",
+            zh: "Q10. 您对花洒外观及表面工艺的喜好是？"
+          },
+          options: [
+            { value: "luxury", label: { ja: "高級感あるシルバーメタリックや洗練された美容ガジェットデザイン", en: "Luxury metallic chrome or modern sleek beauty gadget look", zh: "高端金属镀铬质感，或科技感现代美容仪器造型" } },
+            { value: "clean", label: { ja: "浴室になじむシンプルなホワイト・清潔感のある定番デザイン", en: "Clean simple white that blends naturally into bathroom", zh: "百搭浴室的纯白、简约清洁感经典造型" } },
+            { value: "any", label: { ja: "見た目よりも機能・価格を最優先", en: "Function & price are more important than looks", zh: "比起外观，更看重实际功能与价格" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        }
+      ],
+      products: [
+        {
+          id: "sanei_31080", brand: "sanei", price: 2838, group: "節水・コスパ", weight: 180, stopButton: false, multiMode: false, fineBubble: false, strongPressure: false, angleAdjust: false, design: "clean",
+          name: { ja: "SANEI レイニー (PS310-80X-WA2)", en: "SANEI RAINY (PS310-80X-WA2)", zh: "SANEI 三荣 RAINY 节水花洒 (PS310-80X-WA2)" },
+          desc: { ja: "極細水流によるたっぷりした浴び心地と約50%の節水率を両立。2,000円台で手に入る超高コスパ機。", en: "Combines dense ultra-fine stream with ~50% water savings. High cost-performance under ¥3,000.", zh: "极细水流带来充盈沐浴感，同时达成约50%节水率。2,000多日元的超高性价比实用款。" },
+          point: { ja: "シャワーヘッドに高額を出さず、手軽に水道代を下げたい方に最適。", en: "Perfect for anyone wanting to lower water bills without spending a fortune.", zh: "不想在花洒上花大钱，纯粹希望轻松节省水费燃气费的最佳选择。" }
+        },
+        {
+          id: "sanei_31380", brand: "sanei", price: 3300, group: "節水・コスパ", weight: 195, stopButton: true, multiMode: false, fineBubble: false, strongPressure: false, angleAdjust: false, design: "clean",
+          name: { ja: "SANEI レイニー 手元ストップ (PS313-80X-WA2)", en: "SANEI RAINY with Stop Button (PS313-80X-WA2)", zh: "SANEI 三荣 RAINY 带止水按钮 (PS313-80X-WA2)" },
+          desc: { ja: "極細節水水流に便利な手元ストップボタンを追加。シャンプー中のこまめな止水でさらに節水効果アップ。", en: "Adds a handy one-touch stop button to the RAINY stream. Pause water effortlessly during shampooing.", zh: "在极细水流基础上增加了便捷的手柄一键止水按钮。洗头涂沐浴露时随手关水，省水更进一步。" },
+          point: { ja: "差額数百円で手元ストップが付く、節水実用シャワーの絶対的大本命。", en: "The undisputed champion of practical water-saving with a stop button for just a few hundred yen more.", zh: "仅需多付几百日元即可拥有手柄止水按键，实用节水型花洒的不二之选。" }
+        },
+        {
+          id: "sanei_31381", brand: "sanei", price: 6578, group: "節水・コスパ", weight: 210, stopButton: true, multiMode: false, fineBubble: false, strongPressure: false, angleAdjust: false, design: "luxury",
+          name: { ja: "SANEI レイニー メタリック (PS313-81XA-CD)", en: "SANEI RAINY Metallic (PS313-81XA-CD)", zh: "SANEI 三荣 RAINY 金属质感款 (PS313-81XA-CD)" },
+          desc: { ja: "レイニーの手元ストップ機能はそのままに、高級感あるメッキ調デザインを採用したスタイリッシュモデル。", en: "Retains the one-touch stop button while upgrading to a stylish premium metallic chrome finish.", zh: "保留RAINY备受好评的手柄止水功能，升级为高级镀铬金属质感，完美提升浴室格调。" },
+          point: { ja: "浴室の質感を落とさず、洗練された見た目と確かな節水を両立。", en: "Maintains bathroom aesthetics with a premium look while delivering solid water savings.", zh: "在保证浴室轻奢装潢质感的同时，享受出色的节水与舒适出水。" }
+        },
+        {
+          id: "aramic_sss06", brand: "aramic", price: 7898, group: "水圧・強い水流", weight: 220, stopButton: true, multiMode: false, fineBubble: false, strongPressure: true, angleAdjust: false, design: "clean",
+          name: { ja: "アラミック シルクシャワー06強水流 (SSS-06N)", en: "Aramic Silk Shower 06 High Pressure (SSS-06N)", zh: "Aramic 丝滑强力增压花洒 (SSS-06N)" },
+          desc: { ja: "精密散水板により、低水圧の住宅でも力強いジェット感覚のシャワーを実現。しっかりした浴び心地を好む方向け。", en: "Precision plate generates a strong, satisfying jet stream even in homes with low water pressure.", zh: "精密出水散水板设计，即使在水压偏低的住宅也能形成强劲畅快的水流，适合喜欢冲劲沐浴的人。" },
+          point: { ja: "水圧の弱さに悩んでいるお客様へ真っ先に提案できる強水流モデル。", en: "The primary recommendation for customers frustrated with weak, sluggish water pressure.", zh: "为饱受水压低、出水无力困扰的顾客量身打造的强力增压首选款。" }
+        },
+        {
+          id: "aramic_stx2b", brand: "aramic", price: 5478, group: "水圧・強い水流", weight: 200, stopButton: true, multiMode: false, fineBubble: false, strongPressure: true, angleAdjust: false, design: "clean",
+          name: { ja: "アラミック シルクタッチプレミアム (ST-X2B)", en: "Aramic Silk Touch Premium (ST-X2B)", zh: "Aramic 丝柔触感尊贵版 (ST-X2B)" },
+          desc: { ja: "しっかりとした水圧と、シルクのようになめらかな肌当たりを高度に両立。手元ストップ付きの万能型。", en: "Balances robust pressure with silk-like softness on the skin. A versatile all-rounder with stop button.", zh: "兼具充足的水压冲力与如丝绸般细腻柔和的触感，配备手元止水键的全能实用款。" },
+          point: { ja: "強すぎる刺激は苦手だが、今のシャワーより勢いをアップさせたい方に。", en: "Great for those who dislike harsh pressure but still want noticeably better flow than standard.", zh: "不喜欢过强刺激刺痛感，但又希望比现有普通花洒更有冲劲与舒适度的用户。" }
+        },
+        {
+          id: "aramic_3d", brand: "aramic", price: 6248, group: "角度調整・浴びやすさ", weight: 250, stopButton: true, multiMode: false, fineBubble: false, strongPressure: false, angleAdjust: true, design: "clean",
+          name: { ja: "アラミック 3Dアースシャワー スパ (3D-B1A)", en: "Aramic 3D Earth Shower Spa (3D-B1A)", zh: "Aramic 3D全方位旋转Spa花洒 (3D-B1A)" },
+          desc: { ja: "ヘッドが上下90°・左右360°回転。壁掛けフックに固定したまま、身長や姿勢に合わせてピンポイントで浴びられる。", en: "Head rotates 90° up/down and 360° left/right. Direct spray precisely while mounted on the wall.", zh: "花洒头支持上下90°俯仰、左右360°旋转。挂在墙上即可按身高姿势任意调准喷射方位。" },
+          point: { ja: "手に持たずに浴びたい方や、家族で身長差があるご家庭に大好評。", en: "Very popular for hands-free showering and households with varying heights.", zh: "习惯挂在墙上洗澡不用手拿、或全家老少身高差距较大的家庭必备好物。" }
+        },
+        {
+          id: "sanei_fb_rainy", brand: "sanei", price: 11880, group: "肌・美容", weight: 210, stopButton: true, multiMode: false, fineBubble: true, strongPressure: false, angleAdjust: false, design: "clean",
+          name: { ja: "SANEI ファインバブルRAINY (NS3136 / PS3063)", en: "SANEI Fine Bubble RAINY (NS3136 / PS3063)", zh: "SANEI 三荣 微气泡RAINY花洒 (NS3136 / PS3063)" },
+          desc: { ja: "レイニーの浴び心地にウルトラファインバブルを融合。1万円前後で本格的な毛穴洗浄バブルを導入できるエントリー機。", en: "Infuses RAINY's comfort with Ultra Fine Bubbles. An affordable gateway to pore-cleansing bubbles around ¥10,000.", zh: "将RAINY的丰富水感与超微细气泡相融合。约1万日元即可入手真正的深层毛孔清洁微气泡。" },
+          point: { ja: "3万円の高級品には手が出ないが、ファインバブルを試してみたい方に。", en: "Ideal for anyone eager to try fine bubbles without jumping to ¥30,000 luxury flagships.", zh: "不想花3万多日元买奢侈美容花洒，但又想体验微纳米气泡深层护肤清洁的明智之选。" }
+        },
+        {
+          id: "mods_hair", brand: "mods_hair", price: 17380, group: "頭皮・髪", weight: 230, stopButton: false, multiMode: true, fineBubble: true, strongPressure: false, angleAdjust: false, design: "luxury",
+          name: { ja: "mod's hair ウルトラファインバブル クレンジング (SHJM-01)", en: "mod's hair Ultra Fine Bubble Cleansing (SHJM-01)", zh: "mod's hair 沙龙级超微细气泡洁发花洒 (SHJM-01)" },
+          desc: { ja: "ヘアサロン発想。頭皮の余分な皮脂や毛穴詰まりを落とし、シャンプーの泡立ちと洗い上がりを高める頭皮・髪特化型。", en: "Salon-inspired design focused on purifying scalp sebum and improving shampoo lathering and hair softness.", zh: "美发沙龙专业构想。深层洗净头皮残留油脂与毛囊污垢，大幅提升洗发水起泡力与秀发光泽。" },
+          point: { ja: "お肌だけでなく「頭皮のニオイや髪のパサつき」を改善したい方にベスト。", en: "The standout match for addressing scalp odors, oily roots, and dull hair texture.", zh: "不仅护肤，更想重点解决头皮油腻异味、发质干枯毛躁用户的最佳专业款。" }
+        },
+        {
+          id: "koizumi_kbe2050", brand: "koizumi", price: 19800, group: "水流を使い分けたい", weight: 240, stopButton: false, multiMode: true, fineBubble: true, strongPressure: false, angleAdjust: false, design: "luxury",
+          name: { ja: "KOIZUMI ウルトラファインバブルシャワー (KBE-2050/S)", en: "KOIZUMI Ultra Fine Bubble Shower (KBE-2050/S)", zh: "KOIZUMI 小泉成器 超微细气泡花洒 (KBE-2050/S)" },
+          desc: { ja: "2万円以下でウルトラファインバブル＋「ミスト／ストレート」の切替に対応。顔への優しいミスト洗顔を手頃に実現。", en: "Offers Ultra Fine Bubbles plus Mist/Straight modes under ¥20,000. Affordable gentle facial mist cleansing.", zh: "2万日元以内兼具超微细气泡与“喷雾/直流水”切换。让面部柔雾洗脸变得亲民触手可及。" },
+          point: { ja: "ミスト水流とファインバブルを両方欲しい方へ、高コスパな中間価格帯の決定版。", en: "The definitive mid-range solution for anyone wanting both facial mist and fine bubble care.", zh: "同时想要细腻洗脸柔雾与微气泡清洁，预算控制在2万日元以内的超高性价比方案。" }
+        },
+        {
+          id: "mirable_plus", brand: "science", price: 21780, group: "肌・美容", weight: 162, stopButton: false, multiMode: true, fineBubble: true, strongPressure: false, angleAdjust: false, design: "clean",
+          name: { ja: "サイエンス ミラブルplus", en: "Science Mirable plus", zh: "Science 科技 Mirable plus 美容花洒" },
+          desc: { ja: "超微細なウルトラファインバブルで油性マジックを落とすCMでおなじみの元祖美容シャワー。小型・超軽量ボディ。", en: "The iconic beauty shower famous for washing away permanent marker with microbubbles. Ultra-compact & lightweight.", zh: "洗掉油性马克笔广告闻名全球的微气泡始祖。仅约162g超级轻盈小巧，呵护敏感娇嫩肌肤。" },
+          point: { ja: "約162gという軽さと、実績あるミラブルブランドを手頃に手に入れたい方に。", en: "Ideal for experiencing the genuine Mirable brand with exceptional featherlight handling.", zh: "兼顾极致轻量防手酸，以及用亲民预算入手知名Mirable正品美容体验。" }
+        },
+        {
+          id: "refa_pure", brand: "refa", price: 30000, group: "高級・総合型", weight: 250, stopButton: false, multiMode: true, fineBubble: true, strongPressure: false, angleAdjust: false, design: "luxury",
+          name: { ja: "ReFa FINE BUBBLE PURE", en: "ReFa FINE BUBBLE PURE", zh: "ReFa 黎珐 微细气泡净水花洒 PURE" },
+          desc: { ja: "ウルトラファインバブルとマイクロバブルを同時に発生。別売カートリッジで塩素低減も可能なReFaの定番モデル。", en: "Generates Ultra Fine & Micro Bubbles simultaneously. Compatible with optional chlorine-reduction cartridge.", zh: "双重微细气泡发生技术。可选配滤芯去除余氯，ReFa兼顾美肤与水质净化的经典之作。" },
+          point: { ja: "ReFaならではの洗練されたデザインと上質な肌当たりを味わえる一台。", en: "Experience ReFa's signature sophisticated design and velvety, luxurious water contact.", zh: "尽享ReFa独有的轻奢美感、高档质感与抚慰肌肤的温润水感。" }
+        },
+        {
+          id: "refa_u", brand: "refa", price: 30000, group: "高級・総合型", weight: 300, stopButton: false, multiMode: true, fineBubble: true, strongPressure: false, angleAdjust: false, design: "luxury",
+          name: { ja: "ReFa FINE BUBBLE U", en: "ReFa FINE BUBBLE U", zh: "ReFa 黎珐 微细气泡花洒 U" },
+          desc: { ja: "ミスト・ポイントジェット・ピュアストレート・ストレートの4水流を搭載。約300gとU+より軽量で扱いやすい設計。", en: "Features 4 dedicated streams: Mist, Point Jet, Pure Straight, and Straight. Lighter than U+ at ~300g.", zh: "搭载喷雾、点射喷射、纯直流水、标准直流4种出水模式。约300g比U+更轻巧易持。" },
+          point: { ja: "止水ボタンが不要で、軽さと4水流の使い分けを重視する方に。", en: "Best for users who prioritize 4 dynamic modes and lighter weight without needing a handle stop button.", zh: "不需要手柄止水按键，更看重整机轻盈手感与4种水流随心切换的高端玩家。" }
+        },
+        {
+          id: "refa_u_plus", brand: "refa", price: 38000, group: "高級・総合型", weight: 320, stopButton: true, multiMode: true, fineBubble: true, strongPressure: false, angleAdjust: false, design: "luxury",
+          name: { ja: "ReFa FINE BUBBLE U+", en: "ReFa FINE BUBBLE U+", zh: "ReFa 黎珐 微细气泡旗舰花洒 U+" },
+          desc: { ja: "ReFa最上位総合型。4つの水流切替に待望の「手元止水ボタン」を搭載。ミスト時最大約49%、止水併用で最大約65%節水。", en: "ReFa's top flagship adding a long-awaited stop button to 4 stream modes. Up to ~65% water saving with stop function.", zh: "ReFa全能旗舰。在4重水流基础上搭载手柄一键止水。柔雾时节水49%，配合止水可达约65%节水。" },
+          point: { ja: "美容効果・水流バリエーション・手元ストップのすべてを妥協したくない最高峰。", en: "The ultimate flagship for those refusing to compromise on beauty, spray variety, or convenience.", zh: "集极致护肤美容、4种多功能出水、便捷手柄止水于一身，毫不妥协的顶级之选。" }
+        },
+        {
+          id: "mirable_zero", brand: "science", price: 33000, group: "高級・総合型", weight: 350, stopButton: true, multiMode: true, fineBubble: true, strongPressure: true, angleAdjust: false, design: "luxury",
+          name: { ja: "サイエンス ミラブルzero", en: "Science Mirable zero", zh: "Science 科技 Mirable zero 新世代花洒" },
+          desc: { ja: "トルネードミスト・スプラッシュストレート・リングストレートの3水流＋止水スイッチ。隙間洗浄に圧倒的な洗浄力。", en: "Tornado Mist, Splash Straight, and Ring Straight plus stop switch. Incredible cleaning power for teeth & pores.", zh: "龙卷风柔雾、飞溅水柱、环形直流水3重模式加止水按键。连牙缝毛孔污垢都能冲净的超强科技洗净力。" },
+          point: { ja: "歯間や毛穴の汚れを徹底的に洗い流す本格派サイエンス美容シャワー。", en: "A scientific powerhouse shower designed to wash away debris in pores and teeth gaps thoroughly.", zh: "追求硬核科学洗净力，从毛孔到口腔牙缝都能享受微气泡冲击的终极美容款。" }
+        },
+        {
+          id: "mirable_tsuya", brand: "science", price: 38148, group: "高級・総合型", weight: 340, stopButton: true, multiMode: true, fineBubble: true, strongPressure: false, angleAdjust: false, design: "luxury",
+          name: { ja: "サイエンス ミラブル艶 (つや)", en: "Science Mirable Tsuya", zh: "Science 科技 Mirable 艳 (TSUYA) 润肤花洒" },
+          desc: { ja: "エイジング肌のために開発されたミラブル最高峰。高密度のうるおいと温まり感を追求した美容特化型モデル。", en: "Mirable's peak model crafted for aging skin, maximizing skin hydration, density, and thermal comfort.", zh: "专为抗初老与熟龄肌打造的Mirable高端机型。追求极高密度的水润包裹感与全身保温温感。" },
+          point: { ja: "シャワーを本格的なスキンケア・エイジングケア家電として導入したい方に。", en: "Designed for those treating their shower head as a serious anti-aging beauty appliance.", zh: "把日常淋浴提升为专业级护肤抗老享受，追求顶级丰盈水润感的爱美人士首选。" }
+        }
+      ]
+    },
+    vacuum: {
+      themeClass: 'theme-vacuum',
+      i18n: {
+        ja: {
+          navTitle: "掃除機",
+          title: "掃除機 最適モデル選定・接客診断",
+          lead: "掃除場所・スタイル・お手入れ方法に合わせて、最適な3台の候補をご提案します。",
+          p1Indicator: "STEP 1 / 2（用途・基本スタイルのヒアリング）",
+          p2Indicator: "STEP 2 / 2（詳細機能・こだわりの絞り込み）",
+          btnNext1: "方向性と推奨スペックを確認する",
+          btnNext2: "最終候補の3モデルを診断する",
+          btnRestart: "最初からやり直す",
+          resultTitle: "診断結果：おすすめの3モデル",
+          summaryHeading: "📋 前半診断：お客様に最適な基本仕様",
+          recStyleLabel: "推奨スタイル:",
+          recClassLabel: "おすすめカテゴリー:",
+          recFeaturesLabel: "注目ポイント:",
+          summaryNote: "※次の5問でゴミ捨て方式（紙パック/自動収集）、毛絡み対策、センサーなどの詳細仕様を確定します。",
+          salesPitchLabel: "💡 おすすめする理由:",
+          salesDiffLabel: "⚖️ 他の候補との違い:",
+          salesClosingLabel: "🗣️ お客様に確認する一言トーク:",
+          fitPointsLabel: "適合ポイント:",
+          currency: "¥",
+          taxInc: "（税込）",
+          weightLabel: "本体重量: 約",
+          robotType: "ロボット型",
+          groupLabel: "分類: ",
+          undecided: "まだ検討中"
+        },
+        en: {
+          navTitle: "Vacuum Cleaner",
+          title: "Vacuum Cleaner Selector & Sales Consultant",
+          lead: "Find the top 3 vacuum cleaner candidates matched to your cleaning areas, lifestyle, and maintenance habits.",
+          p1Indicator: "STEP 1 / 2 (Primary Needs & Cleaning Style)",
+          p2Indicator: "STEP 2 / 2 (Detailed Features & Preferences)",
+          btnNext1: "Confirm Direction & Basic Specs",
+          btnNext2: "Diagnose Final 3 Recommended Models",
+          btnRestart: "Start Over",
+          resultTitle: "Diagnosis Results: Top 3 Recommended Models",
+          summaryHeading: "📋 Initial Assessment: Recommended Direction",
+          recStyleLabel: "Recommended Style:",
+          recClassLabel: "Target Category:",
+          recFeaturesLabel: "Key Features:",
+          summaryNote: "*The next 5 questions evaluate dust disposal (bag/auto-dock), anti-tangle brush, and sensors.",
+          salesPitchLabel: "💡 Recommendation Reason:",
+          salesDiffLabel: "⚖️ Comparison with Others:",
+          salesClosingLabel: "🗣️ Customer Consultation Tip:",
+          fitPointsLabel: "Matching Criteria:",
+          currency: "¥",
+          taxInc: " (tax incl.)",
+          weightLabel: "Weight: approx. ",
+          robotType: "Robot Cleaner",
+          groupLabel: "Category: ",
+          undecided: "Undecided"
+        },
+        zh: {
+          navTitle: "吸尘器",
+          title: "吸尘器选购助手 & 销售导购工具",
+          lead: "根据清洁场景、使用习惯及维护偏好，为您量身精选最适合的3款吸尘器与导购话术。",
+          p1Indicator: "STEP 1 / 2（清洁场景与基本形态确认）",
+          p2Indicator: "STEP 2 / 2（详细功能与使用偏好筛选）",
+          btnNext1: "确认大致方向与推荐规格",
+          btnNext2: "诊断并推荐最终3款候选产品",
+          btnRestart: "重新诊断",
+          resultTitle: "诊断结果：为您精选的3款吸尘器",
+          summaryHeading: "📋 前半部分诊断：适合您的基本方案",
+          recStyleLabel: "推荐机型形态:",
+          recClassLabel: "建议重点组别:",
+          recFeaturesLabel: "建议关注特性:",
+          summaryNote: "※接下来的5个问题将进一步细化集尘方式（尘袋/集尘基站）、防缠毛刷头及微尘感应灯等细节。",
+          salesPitchLabel: "💡 推荐理由:",
+          salesDiffLabel: "⚖️ 与其他候选的区别:",
+          salesClosingLabel: "🗣️ 门店导购确认话术:",
+          fitPointsLabel: "契合要点:",
+          currency: "¥",
+          taxInc: "（含税）",
+          weightLabel: "机身重量: 约",
+          robotType: "扫地机器人",
+          groupLabel: "分类: ",
+          undecided: "还在考虑中"
+        }
+      },
+      questionsPhase1: [
+        {
+          id: "p1_target",
+          title: {
+            ja: "Q1. 主に掃除したい場所・用途はどこですか？",
+            en: "Q1. What is the primary area or purpose you want to clean?",
+            zh: "Q1. 您主要希望清扫的场所或用途是？"
+          },
+          options: [
+            { value: "floor", label: { ja: "家全体の床（リビング・フローリング・絨毯）", en: "Whole-home floors (Living room, hardwood, rugs)", zh: "全屋地面（客厅、木地板、地毯）" } },
+            { value: "futon", label: { ja: "布団・寝具のダニ・ホコリ対策（専用機希望）", en: "Futon & bedding mite/dust removal (Dedicated unit)", zh: "床褥被褥除螨吸尘（希望专用除螨机）" } },
+            { value: "stain", label: { ja: "ソファ・カーペット・車シートの「水拭き・シミ取り」", en: "Spot stain & wet wash on sofa, rugs, car seats (Rinser)", zh: "沙发、地毯及汽车座椅的“喷水抽吸去污渍”（洗地机/布艺清洗机）" } },
+            { value: "handy", label: { ja: "車内・卓上・階段などのちょっとしたスポット清掃", en: "Car interior, desks, stairs, small spot clean (Handheld)", zh: "车内、桌面、楼梯等局部缝隙快速除尘（手持专用）" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p1_style",
+          title: {
+            ja: "Q2. 掃除のスタイルは？",
+            en: "Q2. What is your preferred cleaning style?",
+            zh: "Q2. 您期望的清洁作业方式是？"
+          },
+          options: [
+            { value: "stick", label: { ja: "スティック掃除機で自分の手でサッと掃除したい", en: "Cordless stick vacuum (Quick manual cleanup)", zh: "手持无线推杆吸尘器（随手拿取自主清扫）" } },
+            { value: "robot", label: { ja: "ロボット掃除機に日々の掃除を自動で任せたい", en: "Robot vacuum (Automate daily cleaning completely)", zh: "全自动扫地机器人（全托管每日自动打扫）" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p1_weight",
+          title: {
+            ja: "Q3. 本体重量・取り回しへの希望は？",
+            en: "Q3. What are your preferences for weight and maneuverability?",
+            zh: "Q3. 对机身重量与握持灵活度的要求是？"
+          },
+          options: [
+            { value: "ultralight", label: { ja: "とにかく軽いほうが良い（1.1〜1.5kg前後・腕が疲れない）", en: "Ultra-lightweight (~1.1-1.5kg; zero arm fatigue)", zh: "极致轻盈（约1.1〜1.5kg左右，久举不累手）" } },
+            { value: "balanced", label: { ja: "軽さと運転時間・パワーのバランス重視（1.7〜2.0kg前後）", en: "Balanced weight, battery life & suction (~1.7-2.0kg)", zh: "兼顾轻巧、续航与吸力（约1.7〜2.0kg前后平衡款）" } },
+            { value: "power", label: { ja: "重さよりもしっかりした吸引力・頑丈さを最優先", en: "Maximum suction power over lightweight convenience", zh: "比起轻巧，更看重压倒性强劲吸力与扎实做工" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p1_wet",
+          title: {
+            ja: "Q4. 「水拭き機能」は必要ですか？",
+            en: "Q4. Do you need a wet mopping / washing function?",
+            zh: "Q4. 是否需要“湿擦/湿拖水洗功能”？"
+          },
+          options: [
+            { value: "no", label: { ja: "不要（乾いたホコリ・ゴミの吸引だけで十分）", en: "Not needed (Dry suction for dust & debris is enough)", zh: "不需要（仅干式吸尘吸除灰尘垃圾即可）" } },
+            { value: "yes", label: { ja: "ぜひ欲しい（皮脂汚れ・食べこぼしも1台で水拭きしたい）", en: "Essential (Mop grease, sticky grime & spills in one go)", zh: "非常需要（希望能一机同步擦净皮脂污垢与油腻污渍）" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p1_budget",
+          title: {
+            ja: "Q5. ご予算の目安はどれくらいですか？",
+            en: "Q5. What is your approximate target budget?",
+            zh: "Q5. 您的选购预算大致是多少？"
+          },
+          options: [
+            { value: "under30", label: { ja: "〜3万円（格安スティック・ロボット入門）", en: "Under ¥30,000 (Affordable stick / entry robot)", zh: "3万日元以下（平价无线推杆或入门级扫地机）" } },
+            { value: "30-50", label: { ja: "3〜5万円（軽量モデル・高コスパ実力機）", en: "¥30,000 - ¥50,000 (Lightweight & high-value performers)", zh: "3〜5万日元（超轻量实用款或高性价比实力机）" } },
+            { value: "50-70", label: { ja: "5〜7万円（高機能スティック・自動ゴミ収集・水拭き）", en: "¥50,000 - ¥70,000 (Auto-empty dock, wet mopping, Dyson)", zh: "5〜7万日元（全自动集尘基站、湿拖一体、戴森高阶）" } },
+            { value: "over70", label: { ja: "7万円〜（フラッグシップ・最新フルスペック）", en: "¥70,000+ (Flagship luxury & full-spec cleaning systems)", zh: "7万日元以上（旗舰奢华款、多合一全功能清洁系统）" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        }
+      ],
+      questionsPhase2: [
+        {
+          id: "p2_dust",
+          title: {
+            ja: "Q6. ゴミ捨ての方法はどうしたいですか？",
+            en: "Q6. How do you prefer to handle dust disposal?",
+            zh: "Q6. 您希望以何种方式倾倒灰尘垃圾？"
+          },
+          options: [
+            { value: "auto", label: { ja: "自動ゴミ収集ドック（掃除後に戻すだけで数ヶ月ゴミ捨て不要）", en: "Auto-empty dock (Return unit to base; empty once every 1-2 months)", zh: "全自动集尘基站（放回自动吸净垃圾，数月无需倒灰）" } },
+            { value: "pack", label: { ja: "紙パック式（ホコリが舞わず、ゴミに触れずに清潔に捨てたい）", en: "Disposable dust bag (Hygienic seal; zero flying dust)", zh: "一次性尘袋式（锁住微尘不飞扬，双手不沾灰）" } },
+            { value: "cyclone", label: { ja: "通常のサイクロン式（ランニングコスト不要・都度ワンタッチ廃棄）", en: "Standard bagless cyclone (Zero bag cost; one-touch bin release)", zh: "传统气旋尘盒式（无耗材成本，一键倾倒水洗即可）" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p2_floor",
+          title: {
+            ja: "Q7. お住まいの床材環境は？",
+            en: "Q7. What is the primary flooring material in your home?",
+            zh: "Q7. 家中的主要地面材质是？"
+          },
+          options: [
+            { value: "wood", label: { ja: "ほぼ全面フローリング・畳（フローリング特化ヘッド希望）", en: "Hardwood & tatami mats (Prefer soft roller floor heads)", zh: "几乎全屋木地板或榻榻米（偏好不伤地板的软绒滚刷）" } },
+            { value: "carpet", label: { ja: "絨毯・カーペット・ラグが各部屋にある（奥のゴミを掻き出したい）", en: "Rugs and carpets present (Need stiff motorized agitation)", zh: "各房间铺有地毯或地垫（需要强力拍打深层除尘）" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p2_hair",
+          title: {
+            ja: "Q8. 「髪の毛」や「ペットの毛」の絡みつきは気になりますか？",
+            en: "Q8. Are you concerned about long hair or pet hair tangling in the brush?",
+            zh: "Q8. 是否非常困扰头发或宠物毛发缠绕滚刷的问题？"
+          },
+          options: [
+            { value: "yes", label: { ja: "とても気になる（毛絡み防止ブラシ・からまない構造必須）", en: "Very concerned (Anti-tangle conical / rubber roller required)", zh: "非常困扰（必须配备防缠绕梳齿或抗缠发刷头）" } },
+            { value: "no", label: { ja: "そこまで気にならない（短髪中心・ペットなし）", en: "Not a major issue (Short hair / no shedding pets)", zh: "一般（主要为短发、无掉毛宠物，无需特殊防缠）" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p2_sensor",
+          title: {
+            ja: "Q9. ゴミの可視化・センサー機能は欲しいですか？",
+            en: "Q9. Do you want dust-revealing optical lights or piezo dirt sensors?",
+            zh: "Q9. 是否需要微尘显现绿光照明或红外微尘感应灯？"
+          },
+          options: [
+            { value: "yes", label: { ja: "欲しい（緑色LEDライトで見えないホコリを照らす / ゴミ検知センサー）", en: "Yes (Green optical LED revealing unseen dust / smart sensors)", zh: "想要（绿光照亮隐形微尘 / 智能红外感应提示）" } },
+            { value: "no", label: { ja: "特に不要（標準的な吸引力があれば十分）", en: "No (Standard suction power and basic nozzle are fine)", zh: "不需要（只要基础吸力充足即可）" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        },
+        {
+          id: "p2_maneuver",
+          title: {
+            ja: "Q10. 家具下の狭い隙間掃除やヘッドの操作性は？",
+            en: "Q10. What are your requirements for tight low-furniture clearance and agility?",
+            zh: "Q10. 对低矮家具底部狭窄缝隙的清扫与机动性要求是？"
+          },
+          options: [
+            { value: "slim", label: { ja: "ソファやベッド下などの低い隙間に奥まで届くスリムさ・全方向操作が欲しい", en: "Need ultra-slim body & omnidirectional pivot to reach deep under beds", zh: "需要超薄机身与多向灵活转向，能探入床底沙发底深处" } },
+            { value: "standard", label: { ja: "通常の可動域で十分（一般的な部屋の掃除が中心）", en: "Standard maneuverability is adequate for daily open spaces", zh: "常规机动性即可（以清扫开阔地面为主）" } },
+            { value: "undecided", label: { ja: "まだ検討中", en: "Undecided", zh: "还在考虑中" } }
+          ]
+        }
+      ],
+      products: [
+        {
+          id: "mc_sb35k", category: "stick", weight: 1.1, price: 39600, dustType: "cyclone", wet: false, autoEmpty: false, hairCare: true, sensor: true, slim: false, carpet: false, brand: "panasonic", group: "とにかく軽く・毎日サッと掃除",
+          name: { ja: "パナソニック MC-SB35K", en: "Panasonic MC-SB35K", zh: "松下 1.1kg超羽量无线吸尘器 MC-SB35K" },
+          desc: { ja: "パワーコードレス史上最軽量の1.1kg。からまないブラシPlusとクリーンセンサーを両立。", en: "Panasonic's lightest cordless stick at just 1.1kg. Features tangle-free brush Plus and clean sensor.", zh: "松下强劲无线推杆史上最轻1.1kg。兼备防缠绕滚刷Plus与微尘感应器。" },
+          point: { ja: "軽さと毛絡み防止を両立し、腕への負担を最小限に抑えたい毎日の掃除に。", en: "The dream match for daily effortless vacuuming with tangle-free convenience and zero arm fatigue.", zh: "将极致轻巧与滚刷不缠发完美结合，每天随手打扫毫不费力的轻盈之选。" }
+        },
+        {
+          id: "sv33_ff_pl", category: "stick", weight: 1.54, price: 59290, dustType: "cyclone", wet: false, autoEmpty: false, hairCare: false, sensor: true, slim: true, carpet: false, brand: "dyson", group: "とにかく軽く・毎日サッと掃除",
+          name: { ja: "Dyson Micro Plus (SV33 FF PL)", en: "Dyson Micro Plus (SV33 FF PL)", zh: "戴森 Dyson Micro Plus 轻量绿光款 (SV33 FF PL)" },
+          desc: { ja: "ダイソン最軽量クラスの1.54kg。微細なホコリを可視化するFluffy Opticヘッド搭載。", en: "Dyson's lightest class at 1.54kg. Equipped with Fluffy Optic head revealing invisible micro-dust.", zh: "戴森最轻量级1.54kg。配备光学显尘软绒刷头，让微米级隐形微尘纤毫毕现。" },
+          point: { ja: "ダイソンならではの吸引力と光によるホコリ可視化を、最軽量ボディで手に入れたい方に。", en: "Delivers iconic Dyson suction and optical dust revealing in their lightest ergonomic body.", zh: "既想要戴森标志性的强劲吸力与光学显尘，又希望机身极其轻便灵动的用户。" }
+        },
+        {
+          id: "sv50_fc", category: "stick", weight: 1.45, price: 65780, dustType: "cyclone", wet: false, autoEmpty: false, hairCare: true, sensor: true, slim: true, carpet: false, brand: "dyson", group: "とにかく軽く・毎日サッと掃除",
+          name: { ja: "Dyson PencilVac Fluffycones (SV50 FC)", en: "Dyson PencilVac Fluffycones (SV50 FC)", zh: "戴森 铅笔超纤细全向吸尘器 PencilVac (SV50 FC)" },
+          desc: { ja: "直径約3.8cmのスリムボディに全方向駆動ヘッド＋LED＋毛絡み防止を凝縮。", en: "Ultra-slim ~3.8cm body with omnidirectional head, optical illumination, and anti-tangle Fluffycones.", zh: "直径仅约3.8cm铅笔型超纤巧机身，搭载万向全向刷头、微尘照明与防缠毛锥型滚刷。" },
+          point: { ja: "家具の隙間やベッド下に奥まで届く圧倒的なスリムさと全方向操作を求める方に。", en: "Unbeatable agility for gliding deep under low-clearance furniture in any direction.", zh: "对桌腿缝隙、床底矮空间深度清洁有极致需求，享受滑行般多向操控感的顾客。" }
+        },
+        {
+          id: "pkv_bk50p", category: "stick", weight: 1.3, price: 59400, dustType: "pack", wet: false, autoEmpty: false, hairCare: true, sensor: true, slim: false, carpet: true, brand: "hitachi", group: "紙パックがいい",
+          name: { ja: "日立 かるパックスティック PKV-BK50P", en: "Hitachi Karu Pack Stick PKV-BK50P", zh: "日立 极轻纸袋尘袋式无线吸尘器 PKV-BK50P" },
+          desc: { ja: "1.3kg軽量紙パック式上位機。ゴミに触れず清潔廃棄、ごみくっきりライトと強力吸引。", en: "Premium 1.3kg bagged stick vacuum. Zero dust contact on disposal with bright LED illumination.", zh: "1.3kg轻量纸袋集尘高阶款。倒灰不扬尘绝不脏手，配备绿光显尘与强力吸尘。" },
+          point: { ja: "サイクロンのゴミ捨て時のホコリ舞いやフィルター洗いが絶対に嫌な方に最適な一台。", en: "The definitive solution for users who despise emptying dusty cyclone cups and washing filters.", zh: "厌恶传统气旋倒灰时尘土扑鼻飞扬、不想繁琐水洗滤网的洁癖派本命款。" }
+        },
+        {
+          id: "sv46_abl", category: "stick", weight: 2.2, price: 65780, dustType: "cyclone", wet: false, autoEmpty: false, hairCare: true, sensor: true, slim: false, carpet: true, brand: "dyson", group: "吸引力・ゴミの見える化を重視",
+          name: { ja: "Dyson V12 Detect Slim Absolute (SV46 ABL)", en: "Dyson V12 Detect Slim Absolute (SV46 ABL)", zh: "戴森 智能激光强效吸尘器 V12 Absolute (SV46 ABL)" },
+          desc: { ja: "フローリング用Fluffy Opticと絨毯用MotorbarのWヘッド付属。ゴミの量と大きさを自動検知。", en: "Includes Fluffy Optic for floors & Motorbar for carpets. Piezo sensor counts particles in real time.", zh: "标配地板光学显尘与地毯强效防缠高扭矩双吸头。压电传感器实时统计微尘颗粒。" },
+          point: { ja: "フローリングも絨毯も徹底的に吸い尽くしたい、ゴミの完全除去を重視する本命機。", en: "The premier all-floor workhorse for thoroughly eradicating dust from both tiles and thick rugs.", zh: "家中既有硬木地板又有厚地毯，追求极致深层清扫与智能微尘统计的王牌旗舰。" }
+        },
+        {
+          id: "sv49_su", category: "stick", weight: 2.2, price: 53820, dustType: "cyclone", wet: true, autoEmpty: false, hairCare: true, sensor: true, slim: false, carpet: false, brand: "dyson", group: "水拭きもしたい",
+          name: { ja: "Dyson V12s Origin Submarine (SV49 SU)", en: "Dyson V12s Origin Submarine (SV49 SU)", zh: "戴森 洗地吸尘一体机 V12s Submarine (SV49 SU)" },
+          desc: { ja: "Submarineウェットローラーヘッド搭載。乾いたゴミの吸引と水拭きを同時にこなす多機能機。", en: "Armed with Submarine wet roller head. Vacuums dry debris and washes wet spills simultaneously.", zh: "配备Submarine洗地防滑滚刷。实现前段吸净干颗粒、后段清水湿擦地面的洗吸双效合一。" },
+          point: { ja: "キッチンの油ハネ、食べこぼし、皮脂汚れを掃除機とモップ1台で完結させたい方に。", en: "Perfect for cleaning kitchen oil splatters, sticky stains, and pet footprints in single passes.", zh: "厨房地面油污、宠物脚印及粘腻污渍，渴望吸尘与拖地一机同时搞定的家庭。" }
+        },
+        {
+          id: "iw5271j", category: "stick", weight: 2.2, price: 79750, dustType: "auto", wet: false, autoEmpty: true, hairCare: true, sensor: true, slim: false, carpet: true, brand: "shark", group: "ゴミ捨てを楽にしたい",
+          name: { ja: "Shark PowerClean 360 PRO (IW5271J)", en: "Shark PowerClean 360 PRO (IW5271J)", zh: "鲨客 Shark 360度全能集尘基站吸尘器 (IW5271J)" },
+          desc: { ja: "約60日分を溜められる自動ゴミ収集ドック＋毛絡みゼロヘッド＋壁際エッジセンサー搭載。", en: "60-day auto-empty dock, zero-hair-wrap roller, and smart edge-sensing suction boost.", zh: "可储存约60天垃圾的全自动集尘基站，搭载抗缠绕自清洁滚刷与贴边增压感应。" },
+          point: { ja: "掃除後のゴミ捨てを数ヶ月放置したい方、ペットの抜け毛や髪の毛に悩む方に最高の一台。", en: "Ultimate hands-off cleaning bundle for pet owners annoyed by tangled hair and daily bin emptying.", zh: "家中掉发较多或有宠物毛发，渴望数月无需手动清空尘盒的完全减负方案。" }
+        },
+        {
+          id: "mc_nx810km", category: "stick", weight: 1.9, price: 69300, dustType: "auto", wet: true, autoEmpty: true, hairCare: true, sensor: true, slim: false, carpet: true, brand: "panasonic", group: "ゴミ捨てを楽にしたい",
+          name: { ja: "パナソニック クリーンドック MC-NX810KM", en: "Panasonic Clean Dock Mist MC-NX810KM", zh: "松下 自动集尘微雾净地洗地吸尘器 MC-NX810KM" },
+          desc: { ja: "クリーンドック自動ゴミ収集に加え、微細なベタつきを拭き取る「マイクロミスト」を搭載。", en: "Features Clean Dock auto dust collection plus micro-mist spray to lift sticky floor grime.", zh: "自动集尘基站底座结合专利微雾除菌净地喷射，彻底除尘并带走微小黏腻感。" },
+          point: { ja: "ゴミ捨てを完全に自動化しつつ、フローリングの素足でのサラサラ感を極めたい方に。", en: "Automates dust disposal while achieving barefoot-smooth pristine floors via micro-mist.", zh: "免除手动倒灰烦恼，同时追求赤足行走在地板上的极佳清爽丝滑脚感。" }
+        },
+        {
+          id: "f115060", category: "robot", weight: 2.0, price: 34800, dustType: "cyclone", wet: true, autoEmpty: false, hairCare: true, sensor: true, slim: true, carpet: false, brand: "irobot", group: "ロボットに掃除を任せたい",
+          name: { ja: "iRobot Roomba Mini Slim (F115060)", en: "iRobot Roomba Mini Slim (F115060)", zh: "iRobot 艾罗伯特 超紧凑型扫拖机器人 Mini Slim (F115060)" },
+          desc: { ja: "約24.5cm四方の超コンパクト設計。LiDARマッピング搭載で狭い家具下を吸引＋水拭き。", en: "Ultra-compact ~24.5cm square body. LiDAR mapping navigates narrow furniture legs for vacuum + mop.", zh: "仅约24.5cm见方超紧凑小巧机身。搭载LiDAR雷达建图导航，灵活穿梭于狭小家具腿之间扫拖一体。" },
+          point: { ja: "部屋が狭く椅子の脚が多い間取りでも、スムーズに奥まで入り込める小型ロボット。", en: "The definitive robot for compact urban apartments dense with table legs and narrow clearances.", zh: "户型紧凑、桌椅腿密集，普通大型扫地机容易卡住的家庭专属小巧救星。" }
+        },
+        {
+          id: "n285060", category: "robot", weight: 3.5, price: 99800, dustType: "auto", wet: true, autoEmpty: true, hairCare: true, sensor: true, slim: false, carpet: true, brand: "irobot", group: "ロボットに掃除を任せたい",
+          name: { ja: "iRobot Roomba 自動収集フラッグシップ N285060", en: "iRobot Roomba Flagship Auto-Empty N285060", zh: "iRobot 全能集尘基站扫拖旗舰 N285060" },
+          desc: { ja: "クリーンベース自動ゴミ収集＋高精度AIナビ＋吸引＆水拭き。毎日の床掃除を完全自動化。", en: "Clean Base auto-empty dock, precision AI obstacle avoidance, and simultaneous vacuum/mop.", zh: "配备自动集尘充电底座，结合AI高精避障与扫拖同步，真正实现全屋地面清扫完全托管。" },
+          point: { ja: "床掃除を完全にロボットへ任せきりにし、日々の家事時間をゼロにしたい方に。", en: "The premier hands-off solution for eliminating manual floor cleaning completely from your life.", zh: "希望将地面打扫工作100%全托管给机器，彻底释放日常家务时间的现代品质家庭。" }
+        },
+        {
+          id: "fcab2hw", category: "futon", weight: 2.2, price: 14800, dustType: "cyclone", wet: false, autoEmpty: false, hairCare: false, sensor: true, slim: false, carpet: false, brand: "iris", group: "特殊掃除",
+          name: { ja: "アイリスオーヤマ 布団クリーナー FCAB2HW", en: "Iris Ohyama Futon Cleaner FCAB2HW", zh: "爱丽思 IRIS 超高频拍打温风除螨仪 FCAB2HW" },
+          desc: { ja: "高速たたきパッドで繊維の奥のダニや花粉を浮かせ、温風機能で布団をふっくら乾燥。", en: "High-speed vibrating pads dislodge deep mites and allergens while warm air dries futons fluffy.", zh: "超高频强力拍打垫震出床褥深层螨虫与过敏原，搭配温风除湿还原被褥蓬松干燥。" },
+          point: { ja: "床用掃除機とは別に、天日干しできない寝具のダニやアレルゲンを徹底対策したい方に。", en: "Essential hygienic dedicated cleaner for families battling pollen, dust mites, and damp bedding.", zh: "不能频繁晒被子的梅雨季或过敏体质人群，专用于床褥深度杀螨除尘的卫生专用机。" }
+        },
+        {
+          id: "krnsp500", category: "stain", weight: 3.2, price: 21700, dustType: "water", wet: true, autoEmpty: false, hairCare: false, sensor: false, slim: false, carpet: false, brand: "iris", group: "特殊掃除",
+          name: { ja: "アイリスオーヤマ リンサークリーナー KRNSP500", en: "Iris Ohyama Spot Rinser Cleaner KRNSP500", zh: "爱丽思 IRIS 喷水抽吸布艺清洗机 KRNSP500" },
+          desc: { ja: "水を吹き付けて汚れを浮かせ、汚水ごと強力吸引。ソファや車の布シートのシミを丸洗い感覚で除去。", en: "Sprays clean water to loosen grime, then vacuums dirty wastewater out of sofas and car seats.", zh: "喷水强力瓦解顽固污垢，强效抽吸污浊水液。让布艺沙发、地毯及汽车座椅免拆水洗净如新。" },
+          point: { ja: "洗濯機で丸洗いできない布製家具のジュースやコーヒーのシミ、ペットの粗相を落としたい方に。", en: "The lifesaver for washing unremovable fabric upholstery stained by coffee, wine, or pet messes.", zh: "家里有小孩宠物，急需清洗打翻的咖啡饮料顽固污渍或布艺沙发异味的急救必备款。" }
+        },
+        {
+          id: "wv515j", category: "handy", weight: 0.68, price: 23980, dustType: "cyclone", wet: false, autoEmpty: false, hairCare: true, sensor: false, slim: true, carpet: false, brand: "shark", group: "特殊掃除",
+          name: { ja: "Shark EVOPOWER DX (WV515J)", en: "Shark EVOPOWER DX (WV515J)", zh: "鲨客 Shark 旗舰无线手持随手吸 EVOPOWER DX (WV515J)" },
+          desc: { ja: "本体わずか約680g。圧倒的ハイパワー吸引力で車内や卓上、階段の食べこぼしを瞬時に清掃。", en: "Featherlight ~680g body with formidable suction. Effortlessly cleans car seats, desks, and crumbs.", zh: "机身仅约680g极为轻盈。凭借惊人高转速大吸力，瞬间吸净车内细缝、桌面碎屑与楼梯灰尘。" },
+          point: { ja: "大型掃除機を出すのが面倒な日常のちょっとしたゴミ、車内の掃除に機動力を発揮。", en: "Top-tier grab-and-go portability for quick table crumb cleanups and car interior detailing.", zh: "懒得搬出大型吸尘器，渴望单手随时随地秒吸茶几碎屑与爱车座椅的高机动性神器。" }
+        }
+      ]
+    }
+  };
+
+  function switchCategory(cat) {
+    currentCategory = cat;
+    p1Answers = {};
+    p2Answers = {};
+
+    document.body.className = APP_CONFIG[cat].themeClass;
+    document.getElementById('btn_mode_shower').classList.toggle('active', cat === 'shower');
+    document.getElementById('btn_mode_vacuum').classList.toggle('active', cat === 'vacuum');
+
+    restart();
+  }
+
+  function setLanguage(lang) {
+    currentLang = lang;
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.textContent.toLowerCase().includes(lang === 'ja' ? '日本' : lang === 'en' ? 'eng' : '中'));
+    });
+
+    const cfg = APP_CONFIG[currentCategory];
+    const t = cfg.i18n[lang];
+
+    document.getElementById('btn_mode_shower').textContent = APP_CONFIG.shower.i18n[lang].navTitle;
+    document.getElementById('btn_mode_vacuum').textContent = APP_CONFIG.vacuum.i18n[lang].navTitle;
+
+    document.getElementById('ui_title').textContent = t.title;
+    document.getElementById('ui_lead').textContent = t.lead;
+    document.getElementById('ui_p1_indicator').textContent = t.p1Indicator;
+    document.getElementById('ui_p2_indicator').textContent = t.p2Indicator;
+    document.getElementById('ui_btn_next1').textContent = t.btnNext1;
+    document.getElementById('ui_btn_next2').textContent = t.btnNext2;
+    document.getElementById('ui_btn_restart').textContent = t.btnRestart;
+    document.getElementById('ui_result_title').textContent = t.resultTitle;
+
+    renderQuestionsPhase1();
+    renderQuestionsPhase2();
+
+    if (!document.getElementById('phase2').classList.contains('hidden') && document.getElementById('finalResult').classList.contains('hidden')) {
+      renderPhase1Summary();
+    }
+    if (!document.getElementById('finalResult').classList.contains('hidden')) {
+      renderFinalResults();
+    }
+  }
+
+  function renderQuestionsPhase1() {
+    const qList = APP_CONFIG[currentCategory].questionsPhase1;
+    const container = document.getElementById('p1_questions_container');
+    container.innerHTML = qList.map(q => {
+      const selectedVal = p1Answers[q.id] || q.options[0].value;
+      return `
+        <div class="question-block">
+          <div class="question-title">${q.title[currentLang]}</div>
+          <div class="options-grid">
+            ${q.options.map(opt => `
+              <label class="option-label">
+                <input type="radio" name="${q.id}" value="${opt.value}" ${selectedVal === opt.value ? 'checked' : ''} onchange="p1Answers['${q.id}'] = this.value">
+                <span>${opt.label[currentLang]}</span>
+              </label>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function renderQuestionsPhase2() {
+    const qList = APP_CONFIG[currentCategory].questionsPhase2;
+    const container = document.getElementById('p2_questions_container');
+    container.innerHTML = qList.map(q => {
+      const selectedVal = p2Answers[q.id] || q.options[0].value;
+      return `
+        <div class="question-block">
+          <div class="question-title">${q.title[currentLang]}</div>
+          <div class="options-grid">
+            ${q.options.map(opt => `
+              <label class="option-label">
+                <input type="radio" name="${q.id}" value="${opt.value}" ${selectedVal === opt.value ? 'checked' : ''} onchange="p2Answers['${q.id}'] = this.value">
+                <span>${opt.label[currentLang]}</span>
+              </label>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function submitPhase1() {
+    const qList = APP_CONFIG[currentCategory].questionsPhase1;
+    qList.forEach(q => {
+      const checked = document.querySelector(`input[name="${q.id}"]:checked`);
+      p1Answers[q.id] = checked ? checked.value : 'undecided';
+    });
+
+    renderPhase1Summary();
+    document.getElementById('phase1').classList.add('hidden');
+    document.getElementById('phase2').classList.remove('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function renderPhase1Summary() {
+    const t = APP_CONFIG[currentCategory].i18n[currentLang];
+    let typeOrStyle = {}, recClass = {}, features = [];
+
+    if (currentCategory === 'shower') {
+      typeOrStyle = { ja: "実用節水シャワーヘッド", en: "Practical Water-Saving Shower", zh: "实用节水型花洒" };
+      recClass = { ja: "節水・コスパグループ", en: "Water-Saving & Value Group", zh: "节水高性价比组" };
+
+      if (p1Answers.p1_goal === "pressure" || p1Answers.p1_pressure_satisfaction === "weak") {
+        typeOrStyle = { ja: "低水圧対応・増圧シャワーヘッド", en: "Pressure-Boosting Shower", zh: "低水压增压型花洒" };
+        recClass = { ja: "水圧・強い水流グループ", en: "Strong Water Pressure Group", zh: "强劲水压冲力组" };
+        features.push({ ja: "精密散水板・勢いのある強水流", en: "Precision Plate & Jet Flow", zh: "精密散水孔与强劲冲流" });
+      } else if (p1Answers.p1_goal === "usable") {
+        typeOrStyle = { ja: "多次元可動・3Dヘッド", en: "Multi-Angle 3D Swivel Head", zh: "多角度可旋转3D花洒" };
+        recClass = { ja: "角度調整・浴びやすさグループ", en: "Adjustable Angles & Comfort Group", zh: "角度可调沐浴舒适组" };
+        features.push({ ja: "上下90°左右360°回転", en: "90° Vertical & 360° Horizontal Rotation", zh: "上下90°俯仰与左右360°旋转" });
+      } else if (p1Answers.p1_goal === "hair") {
+        typeOrStyle = { ja: "ウルトラファインバブル 頭皮クレンジングシャワー", en: "Scalp Cleansing Fine Bubble Shower", zh: "超微细气泡头皮深层洁净花洒" };
+        recClass = { ja: "頭皮・髪・ヘアケアグループ", en: "Scalp & Hair Care Group", zh: "头皮毛发深层养护组" };
+        features.push({ ja: "毛穴皮脂洗浄・シャンプー泡立ち向上", en: "Deep Sebum Removal & Better Lather", zh: "头皮皮脂清洁与洗发丰盈起泡" });
+      } else if (p1Answers.p1_goal === "beauty" || p1Answers.p1_budget === "over25") {
+        typeOrStyle = { ja: "ウルトラファインバブル 多機能美容シャワー", en: "Multi-Mode Luxury Beauty Shower", zh: "超微细气泡多功能美容花洒" };
+        recClass = { ja: "高級・総合美容グループ（ReFa / ミラブル）", en: "Flagship Luxury Beauty (ReFa / Mirable)", zh: "顶级全能美容组（ReFa / Mirable）" };
+        features.push({ ja: "微細気泡（UFB）・洗顔ミスト・水流切替", en: "Ultra Fine Bubbles, Facial Mist, Multi-Modes", zh: "超微细气泡、洗脸柔雾与多模式切换" });
+      } else if (p1Answers.p1_budget === "10_25") {
+        typeOrStyle = { ja: "ファインバブル搭載 スタンダードモデル", en: "Standard Fine Bubble Model", zh: "轻奢微气泡标准款" };
+        recClass = { ja: "中間価格帯・高コスパ美容グループ", en: "Mid-Range High-Value Beauty Group", zh: "中等价位高性价比美容组" };
+        features.push({ ja: "1〜2万円台・ファインバブル＋節水", en: "¥10,000-¥20,000s Fine Bubble & Savings", zh: "1〜2万日元档微细气泡兼顾节水" });
+      } else {
+        features.push({ ja: "極細水流・約50%節水・軽量設計", en: "Ultra-fine Stream, ~50% Water Savings, Lightweight", zh: "极细水流、约50%节水率、轻量化设计" });
+      }
+
+      if (p1Answers.p1_stop === "essential") {
+        features.push({ ja: "手元止水（ストップ）ボタン付き", en: "Handle One-Touch Stop Button", zh: "手柄一键止水按键" });
+      }
+      if (p1Answers.p1_mode === "multi") {
+        features.push({ ja: "洗顔ミスト等の複数水流切替", en: "Multiple Spray Modes with Facial Mist", zh: "含面部柔雾的多重水流切换" });
+      }
+    } else {
+      typeOrStyle = { ja: "コードレススティック掃除機", en: "Cordless Stick Vacuum", zh: "手持无线推杆吸尘器" };
+      recClass = { ja: "軽量・日常使いグループ", en: "Lightweight Daily Group", zh: "轻量日常主力组" };
+
+      if (p1Answers.p1_target === "futon") {
+        typeOrStyle = { ja: "布団専用クリーナー", en: "Dedicated Futon Cleaner", zh: "床褥被褥专用除螨机" };
+        recClass = { ja: "寝具・ダニ対策特化グループ", en: "Bedding & Allergen Specialist", zh: "寝具深层除螨杀菌专研组" };
+        features.push({ ja: "高速たたきパッド・温風機能", en: "High-speed vibrating pads & warm air drying", zh: "超高频强力拍打垫与温风干燥" });
+      } else if (p1Answers.p1_target === "stain") {
+        typeOrStyle = { ja: "リンサークリーナー（水洗い掃除機）", en: "Spot Rinser Cleaner", zh: "喷水抽吸布艺清洗机" };
+        recClass = { ja: "布製品・シミ取り特化グループ", en: "Upholstery & Fabric Stain Specialist", zh: "布艺家具污渍深层抽洗组" };
+        features.push({ ja: "水噴射＋強力汚水吸引", en: "Water spray & dirty water extraction", zh: "清水喷射溶解与强力污水抽吸" });
+      } else if (p1Answers.p1_target === "handy") {
+        typeOrStyle = { ja: "高機能コードレスハンディクリーナー", en: "High-Performance Cordless Handheld", zh: "高能强效无线手持吸尘器" };
+        recClass = { ja: "車内・スポット清掃特化グループ", en: "Car & Desktop Spot Cleaning Specialist", zh: "车内与桌面细缝随手吸组" };
+        features.push({ ja: "超軽量・ハイパワー吸引", en: "Ultra-lightweight build with high power suction", zh: "羽量化超轻机身与强劲瞬吸动力" });
+      } else if (p1Answers.p1_style === "robot") {
+        typeOrStyle = { ja: "全自動ロボット掃除機", en: "Automated Robot Vacuum", zh: "全自动扫拖机器人" };
+        recClass = p1Answers.p1_wet === "yes" 
+          ? { ja: "吸引＋水拭き 2in1ロボット", en: "2in1 Vacuum & Mop Robot", zh: "扫拖一体智能机器人" }
+          : { ja: "吸引特化ロボット", en: "Dedicated Suction Robot", zh: "纯吸尘特化型机器人" };
+        features.push({ ja: "自動マッピング・隙間清掃", en: "Smart mapping & narrow furniture clearance", zh: "智能建图导航与低矮空间自如穿梭" });
+      } else {
+        if (p1Answers.p1_weight === "ultralight") {
+          recClass = { ja: "1.1〜1.5kg 超軽量スティック", en: "1.1-1.5kg Ultra-Light Stick", zh: "1.1〜1.5kg 极致轻量无线款" };
+          features.push({ ja: "片手操作・スリムヘッド", en: "Effortless one-handed handling & slim head", zh: "单手轻松握持与纤巧灵动刷头" });
+        } else if (p1Answers.p1_weight === "power") {
+          recClass = { ja: "高吸引力・カーペット対応スティック", en: "Heavy-Duty Carpet Capable Stick", zh: "强劲大吸力与深层清扫地毯款" };
+          features.push({ ja: "強力モーター・高集じん性能", en: "High-torque motor & deep dust extraction", zh: "强劲高转速数码马达与深层积尘捕获" });
+        }
+        if (p1Answers.p1_wet === "yes") {
+          features.push({ ja: "吸引＋水拭き対応（Submarine/ミスト）", en: "Wet mopping action (Submarine / micro-mist)", zh: "吸洗水拖一体（如Submarine滚刷或微雾洁地）" });
+        }
+      }
+    }
+
+    if (features.length === 0 || (p1Answers.p1_goal === "undecided" && p1Answers.p1_target === "undecided")) {
+      features.push({ ja: "お客様のお悩みに合わせた柔軟な機能提案", en: "Flexible customization based on preferences", zh: "根据需求灵活调整功能配置" });
+    }
+
+    const featureText = features.map(f => f[currentLang]).join("、");
+    const labelTitle = currentCategory === 'shower' ? t.recTypeLabel : t.recStyleLabel;
+
+    document.getElementById('phase1Summary').innerHTML = `
+      <h2>${t.summaryHeading}</h2>
+      <p><strong>${labelTitle}</strong> ${typeOrStyle[currentLang]}</p>
+      <p><strong>${t.recClassLabel}</strong> ${recClass[currentLang]}</p>
+      <p><strong>${t.recFeaturesLabel}</strong> ${featureText}</p>
+      <p style="margin-top: 8px; font-size: 0.85rem; color: var(--box-text);">${t.summaryNote}</p>
+    `;
+  }
+
+  function submitPhase2() {
+    const qList = APP_CONFIG[currentCategory].questionsPhase2;
+    qList.forEach(q => {
+      const checked = document.querySelector(`input[name="${q.id}"]:checked`);
+      p2Answers[q.id] = checked ? checked.value : 'undecided';
+    });
+
+    renderFinalResults();
+    document.getElementById('phase2').classList.add('hidden');
+    document.getElementById('finalResult').classList.remove('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function renderFinalResults() {
+    const t = APP_CONFIG[currentCategory].i18n[currentLang];
+    const products = APP_CONFIG[currentCategory].products;
+    let scoredProducts = [];
+
+    if (currentCategory === 'shower') {
+      scoredProducts = products.map(product => {
+        let score = 50;
+        let reasons = [];
+
+        if (p1Answers.p1_goal === "save") {
+          if (product.group === "節水・コスパ") {
+            score += 40;
+            reasons.push({ ja: "手頃な価格で確実な水道代・ガス代節約効果を発揮", en: "Proven water & gas bill reduction at an affordable price", zh: "价格实惠且节能节水效果显著" });
+          } else if (product.price > 20000) {
+            score -= 25;
+          }
+        } else if (p1Answers.p1_goal === "pressure" || p1Answers.p1_pressure_satisfaction === "weak") {
+          if (product.strongPressure) {
+            score += 40;
+            reasons.push({ ja: "水圧の弱い住宅でも勢いのある心地よい強水流を実現", en: "Generates powerful, invigorating stream even in low-pressure homes", zh: "在低水压住宅也能实现有力畅快的出水冲力" });
+          } else if (product.fineBubble && !product.strongPressure) {
+            score -= 15;
+          }
+        } else if (p1Answers.p1_goal === "usable") {
+          if (product.angleAdjust) {
+            score += 45;
+            reasons.push({ ja: "上下左右に角度を自由自在に変えて快適な位置で浴びられる", en: "Swivels up/down/left/right for comfortable spray positioning", zh: "上下左右自由调角，挂壁淋浴随心所欲" });
+          }
+        } else if (p1Answers.p1_goal === "hair") {
+          if (product.id === "mods_hair") {
+            score += 45;
+            reasons.push({ ja: "頭皮の毛穴汚れと髪のクレンジングに特化した専用設計", en: "Dedicated design specializing in scalp sebum & hair cleansing", zh: "专注头皮毛孔污垢清洁与发质护理的专业设计" });
+          } else if (product.fineBubble) {
+            score += 25;
+            reasons.push({ ja: "微細気泡で頭皮の余分な皮脂汚れを吸着", en: "Adsorbs excess scalp sebum with fine microbubbles", zh: "利用超细微气泡温和吸附头皮多余油脂" });
+          }
+        } else if (p1Answers.p1_goal === "beauty") {
+          if (product.fineBubble) {
+            score += 35;
+            reasons.push({ ja: "ウルトラファインバブルが毛穴の奥まで入り込み肌を清潔に保つ", en: "Ultra fine bubbles penetrate pores to cleanse & hydrate skin", zh: "超微细气泡直达毛孔深处彻底吸净污垢" });
+          } else {
+            score -= 30;
+          }
+        }
+
+        if (p1Answers.p1_mode === "multi" || p2Answers.p2_usage === "all_round") {
+          if (product.multiMode) {
+            score += 30;
+            reasons.push({ ja: "顔用ミストから頭皮用ジェットまで部位に合わせて水流を切替可能", en: "Switch seamlessly from facial mist to scalp jet stream", zh: "可按脸部柔雾或头皮喷射任意切换出水模式" });
+          } else {
+            score -= 20;
+          }
+        } else if (p1Answers.p1_mode === "single") {
+          if (!product.multiMode) score += 15;
+        }
+
+        if (p1Answers.p1_stop === "essential") {
+          if (product.stopButton) {
+            score += 30;
+            reasons.push({ ja: "手元のボタンでワンタッチ止水でき、無駄な流しっぱなしを防止", en: "One-touch handle button prevents unnecessary water running", zh: "手柄一键随心止水，有效避免无意识水流浪费" });
+          } else {
+            score -= 25;
+          }
+        } else if (p1Answers.p1_stop === "unneeded") {
+          if (!product.stopButton) score += 10;
+        }
+
+        if (p2Answers.p2_bubble === "high") {
+          if (product.fineBubble) {
+            score += 25;
+            reasons.push({ ja: "超微細気泡による高い洗浄力と肌のうるおい保持", en: "Superior cleansing power & skin hydration via microbubbles", zh: "纳米超微细气泡带来卓越清洁力与水润触感" });
+          } else {
+            score -= 30;
+          }
+        } else if (p2Answers.p2_bubble === "none") {
+          if (!product.fineBubble) score += 20;
+        }
+
+        if (p2Answers.p2_weight === "light") {
+          if (product.weight <= 220) {
+            score += 25;
+            reasons.push({ ja: `わずか約${product.weight}gの超軽量設計で腕が疲れない`, en: `Ultra-light at only ~${product.weight}g prevents arm fatigue`, zh: `仅约${product.weight}g超轻机身，长时间握持不手酸` });
+          } else if (product.weight >= 320) {
+            score -= 20;
+          }
+        }
+
+        if (p2Answers.p2_angle === "yes") {
+          if (product.angleAdjust) {
+            score += 35;
+            reasons.push({ ja: "フックにかけたまま浴びる位置を微調整できる3D可動ヘッド", en: "3D swivel head easily directs water while hook-mounted", zh: "挂壁淋浴时可3D随心微调喷淋方位的可动头" });
+          }
+        }
+
+        if (p2Answers.p2_design === "luxury" && product.design === "luxury") {
+          score += 15;
+          reasons.push({ ja: "浴室を格調高く演出する上質なメタリック・ラグジュアリーデザイン", en: "Refined luxury metallic finish elevating your bathroom", zh: "高档奢华金属质感，显著提升浴室视觉格调" });
+        }
+
+        let minB = 0, maxB = 100000;
+        if (p1Answers.p1_budget === "under5") { maxB = 5500; }
+        else if (p1Answers.p1_budget === "5_10") { minB = 4500; maxB = 11000; }
+        else if (p1Answers.p1_budget === "10_25") { minB = 10000; maxB = 26000; }
+        else if (p1Answers.p1_budget === "over25") { minB = 25000; }
+
+        if (product.price >= minB && product.price <= maxB) {
+          score += 25;
+          reasons.push({ ja: "ご希望の予算範囲内にぴったり合致", en: "Fits perfectly within your target budget range", zh: "精准契合您预设的预算区间" });
+        } else if (product.price > maxB) {
+          score -= 25;
+        }
+
+        return { ...product, finalScore: score, reasons: reasons };
+      });
+    } else {
+      let pool = products;
+      if (p1Answers.p1_target === "futon") {
+        pool = products.filter(p => p.category === "futon");
+      } else if (p1Answers.p1_target === "stain") {
+        pool = products.filter(p => p.category === "stain");
+      } else if (p1Answers.p1_target === "handy") {
+        pool = products.filter(p => p.category === "handy");
+      } else if (p1Answers.p1_style === "robot") {
+        pool = products.filter(p => p.category === "robot");
+      } else if (p1Answers.p1_style === "stick") {
+        pool = products.filter(p => p.category === "stick");
+      } else {
+        pool = products.filter(p => p.category === "stick" || p.category === "robot");
+      }
+
+      scoredProducts = pool.map(product => {
+        let score = 50;
+        let reasons = [];
+
+        if (p1Answers.p1_wet === "yes") {
+          if (product.wet) {
+            score += 35;
+            reasons.push({ ja: "吸引と水拭きを同時に行えるウェット対応設計", en: "Simultaneous dry vacuuming and wet mopping action", zh: "支持干吸与湿擦同时进行的一体化多功能设计" });
+          } else {
+            score -= 25;
+          }
+        }
+
+        if (p1Answers.p1_weight === "ultralight") {
+          if (product.weight <= 1.5) {
+            score += 30;
+            reasons.push({ ja: `わずか約${product.weight}kgの超軽量ボディで腕が疲れない`, en: `Ultra-lightweight at only ~${product.weight}kg prevents arm strain`, zh: `机身重量仅约${product.weight}kg，久用不累手` });
+          } else if (product.weight > 2.0) {
+            score -= 25;
+          }
+        } else if (p1Answers.p1_weight === "power") {
+          if (product.weight >= 1.7) {
+            score += 20;
+            reasons.push({ ja: "しっかりした本体剛性と強力な清掃パワー", en: "Robust build delivering authoritative deep-cleaning suction", zh: "扎实坚固机身配合深度清洁强效动力" });
+          }
+        }
+
+        if (p2Answers.p2_dust === "auto") {
+          if (product.autoEmpty) {
+            score += 35;
+            reasons.push({ ja: "ドックに戻すだけで自動ゴミ収集（手動ゴミ捨てを大幅軽減）", en: "Auto-empty dock collects debris hands-free for months", zh: "放回基站底座自动抽净灰尘，数月无需手动倾倒" });
+          } else {
+            score -= 20;
+          }
+        } else if (p2Answers.p2_dust === "pack") {
+          if (product.dustType === "pack") {
+            score += 40;
+            reasons.push({ ja: "ゴミに触れずホコリも舞わない清潔な紙パック式", en: "Hygienic sealed dust bag with zero flying dust particles", zh: "全密闭卫生纸袋尘袋，倒灰不漏尘不沾手" });
+          } else {
+            score -= 30;
+          }
+        } else if (p2Answers.p2_dust === "cyclone") {
+          if (product.dustType === "cyclone" && !product.autoEmpty) {
+            score += 15;
+            reasons.push({ ja: "ランニングコストがかからないシンプルサイクロン", en: "Bagless cyclone design with zero recurring consumable costs", zh: "无需购买耗材尘袋、一键倒灰经济环保的气旋式" });
+          }
+        }
+
+        if (p2Answers.p2_floor === "carpet") {
+          if (product.carpet) {
+            score += 25;
+            reasons.push({ ja: "絨毯・カーペットの奥の毛や砂ゴミを掻き出す専用ヘッド", en: "Motorized brush head agitating deep dust trapped in thick rugs", zh: "高扭矩电机滚刷强力拍打吸净地毯深层杂质毛发" });
+          }
+        }
+
+        if (p2Answers.p2_hair === "yes") {
+          if (product.hairCare) {
+            score += 25;
+            reasons.push({ ja: "髪の毛やペットの毛がブラシに絡みにくい構造を採用", en: "Anti-tangle conical / rubber roller design resisting hair wraps", zh: "搭载防毛发缠绕锥形刷条或梳齿自清洁结构" });
+          }
+        }
+
+        if (p2Answers.p2_sensor === "yes") {
+          if (product.sensor) {
+            score += 20;
+            reasons.push({ ja: "見えない微細なホコリを照らす光/微塵検知センサー", en: "Optical illumination or sensor revealing unseen micro-particles", zh: "光学微尘显色照明或红外感应灯让隐藏微尘无所遁形" });
+          }
+        }
+
+        if (p2Answers.p2_maneuver === "slim") {
+          if (product.slim) {
+            score += 25;
+            reasons.push({ ja: "家具下の低い隙間にも奥までフラットに入り込むスリム設計", en: "Ultra-slim profile easily reaching deep under low beds & sofas", zh: "超薄纤巧机身可平躺探入低矮床底沙发底深处清扫" });
+          }
+        }
+
+        let minB = 0, maxB = 100000;
+        if (p1Answers.p1_budget === "under30") { maxB = 35000; }
+        else if (p1Answers.p1_budget === "30-50") { minB = 28000; maxB = 55000; }
+        else if (p1Answers.p1_budget === "50-70") { minB = 45000; maxB = 75000; }
+        else if (p1Answers.p1_budget === "over70") { minB = 60000; }
+
+        if (p1Answers.p1_budget !== "undecided") {
+          if (product.price >= minB && product.price <= maxB) {
+            score += 20;
+            reasons.push({ ja: "ご希望の予算範囲内にジャストフィット", en: "Fits comfortably within your target budget range", zh: "精准契合您预期的购买预算区间" });
+          } else if (product.price > maxB) {
+            score -= 25;
+          }
+        }
+
+        return { ...product, finalScore: score, reasons: reasons };
+      });
+    }
+
+    scoredProducts.sort((a, b) => b.finalScore - a.finalScore);
+
+    const firstChoice = scoredProducts[0];
+    let secondChoice, thirdChoice;
+
+    if (currentCategory === 'shower') {
+      const altBrand = scoredProducts.filter(p => p.brand !== firstChoice.brand && p.id !== firstChoice.id);
+      secondChoice = altBrand.length > 0 ? altBrand[0] : (scoredProducts[1] || scoredProducts[0]);
+      const priceDiff = scoredProducts.filter(p => p.id !== firstChoice.id && p.id !== secondChoice.id && Math.abs(p.price - firstChoice.price) > 3000);
+      thirdChoice = priceDiff.length > 0 ? priceDiff[0] : (scoredProducts[2] || scoredProducts[1]);
+    } else {
+      const altBrand = scoredProducts.filter(p => p.brand !== firstChoice.brand && p.id !== firstChoice.id);
+      secondChoice = altBrand.length > 0 ? altBrand[0] : (scoredProducts[1] || scoredProducts[0]);
+      const priceDiff = scoredProducts.filter(p => p.id !== firstChoice.id && p.id !== secondChoice.id && Math.abs(p.price - firstChoice.price) > 8000);
+      thirdChoice = priceDiff.length > 0 ? priceDiff[0] : (scoredProducts[2] || scoredProducts[1]);
+    }
+
+    const displayProducts = [
+      {
+        item: firstChoice,
+        role: { ja: "🥇 第一候補（本命・お客様の条件に最も適合）", en: "🥇 1st Choice (Best Match for Your Needs)", zh: "🥇 第一候选（最佳契合您的核心诉求）" },
+        badgeClass: "", rankType: "first"
+      },
+      {
+        item: secondChoice,
+        role: { ja: "🥈 第二候補（別アプローチ・有力対抗案）", en: "🥈 2nd Choice (Alternative Brand & Approach)", zh: "🥈 第二候选（不同品牌技术的有力对标）" },
+        badgeClass: "badge-silver", rankType: "second"
+      },
+      {
+        item: thirdChoice,
+        role: { ja: "🥉 第三候補（価格・機能グレード違いの比較案）", en: "🥉 3rd Choice (Budget or Feature Comparison)", zh: "🥉 第三候选（价格档次与功能对比参考）" },
+        badgeClass: "badge-bronze", rankType: "third"
+      }
+    ];
+
+    const uniqueDisplay = [];
+    const usedIds = new Set();
+    for (const d of displayProducts) {
+      if (d.item && !usedIds.has(d.item.id)) {
+        uniqueDisplay.push(d);
+        usedIds.add(d.item.id);
+      }
+    }
+
+    function generatePitch(p, rankType, firstItem) {
+      if (currentCategory === 'shower') {
+        if (currentLang === 'en') {
+          if (rankType === "first") return { pitch: `${p.point.en} Perfectly fulfills your primary requirement.`, diff: `Achieves the highest balance of comfort, durability, and practical features in this class.`, closing: `Ask: "What frustrates you most about your current shower—water bills, pressure, or skin dryness?"` };
+          if (rankType === "second") return { pitch: `A strong alternative offering a different philosophy from the 1st choice.`, diff: `Compared to ${firstItem.name.en}, it offers distinctive advantages in ${p.price > firstItem.price ? 'luxurious multi-modes & fine bubble beauty' : 'lightweight body & cost-efficiency'}.`, closing: `Ask: "Would you prefer to prioritize dedicated beauty care, or start with straightforward savings and ease of use?"` };
+          const isHigher = p.price > firstItem.price;
+          return { pitch: isHigher ? `A premium comparison choice if you wish to invest in top-tier features.` : `A high-value option to minimize upfront cost while securing essential improvements.`, diff: `Price difference with 1st choice is ¥${Math.abs(p.price - firstItem.price).toLocaleString()}.`, closing: isHigher ? `Ask: "Would you like to step up to top-tier beauty and luxury for long-term daily enjoyment?"` : `Ask: "Would you prefer saving the budget for other daily lifestyle items?"` };
+        } else if (currentLang === 'zh') {
+          if (rankType === "first") return { pitch: `${p.point.zh} 与您的淋浴核心诉求高度契合的最佳之选。`, diff: `在当前价位段中，出水舒适度与实用功能达到了最为卓越的平衡。`, closing: `导购询问：“您目前洗澡时最困扰的是水压低、水费高还是洗后皮肤紧绷？”` };
+          if (rankType === "second") return { pitch: `不同于第一候选品牌理念的有力对标方案。`, diff: `相比第一候选 ${firstItem.name.zh}，在${p.price > firstItem.price ? '多模式出水及微细气泡护肤' : '整机轻量化与性价比'}上展现出独特优势。`, closing: `导购询问：“您更倾向于把花洒当作专业美容仪器选购，还是优先追求轻松节水与轻巧操作？”` };
+          const isHigher = p.price > firstItem.price;
+          return { pitch: isHigher ? `适当提升预算、体验顶尖奢华功能与材质的高阶方案。` : `精简不必要功能、用超低初期成本享受舒适淋浴的高性价比方案。`, diff: `与第一候选差价为 ¥${Math.abs(p.price - firstItem.price).toLocaleString()}。`, closing: isHigher ? `导购询问：“既然每天都要沐浴，是否考虑一步到位选用高阶奢华美容款？”` : `导购询问：“是否希望把省下来的预算用在其他卫浴日用品上？”` };
+        } else {
+          if (rankType === "first") return { pitch: `${p.point.ja} お客様のご要望に最も合致する本命モデルです。`, diff: `この価格帯において、浴び心地と実用機能のバランスが最も優れています。`, closing: `「普段シャワーを浴びていて、一番ストレスを感じる点はどこですか？」とお伺いし、この商品で解消できる点をお伝えください。` };
+          if (rankType === "second") return { pitch: `第一候補とは異なる強みを持つ有力な対抗モデルです。`, diff: `第一候補の${firstItem.name.ja}に比べ、${p.price > firstItem.price ? '水流バリエーションやファインバブルの美容効果' : '本体の軽さやコストパフォーマンス'}に違いがあります。`, closing: `「シャワーヘッドは${p.fineBubble ? '美容ケアを重視して選びたいですか？' : 'まずは使い勝手と水道代の節約を重視しますか？'}」と価値観を比較案内してください。` };
+          const isHigher = p.price > firstItem.price;
+          return { pitch: isHigher ? `ご予算を少し上げて、より上質な機能を手に入れたい場合の比較選択肢です。` : `機能をシンプルに絞り込み、手頃なご予算で手軽にスタートできる高コスパ候補です。`, diff: `第一候補との差額は¥${Math.abs(p.price - firstItem.price).toLocaleString()}です。`, closing: isHigher ? `「せっかく毎日使うものなので、美容や浴び心地にこだわって上位機にしますか？」とお伺いしてください。` : `「浮いたご予算で、他のバスグッズや日用品に充てますか？」と選択肢を広げてください。` };
+        }
+      } else {
+        if (currentLang === 'en') {
+          if (rankType === "first") return { pitch: `${p.point.en} Outstanding match for your primary cleaning habits and environment.`, diff: `Achieves the highest balance of weight, suction power, and dust disposal ease in this class.`, closing: `Ask: "Do you struggle more with machine weight or the hassle of emptying dust cups?"` };
+          if (rankType === "second") return { pitch: `A strong alternative adopting a distinct philosophy from ${firstItem.name.en}.`, diff: `Compared to the 1st choice, it offers unique advantages in ${p.autoEmpty ? 'hands-free dock maintenance' : p.dustType === 'pack' ? 'sealed hygienic bag disposal' : p.wet ? 'simultaneous wet washing' : 'anti-tangle agility'}.`, closing: `Ask: "Would you prioritize ${p.autoEmpty ? 'zero-maintenance auto docks' : p.dustType === 'pack' ? 'clean bag disposal' : 'ultra-lightweight handling'} as your daily must-have?"` };
+          const isHigher = p.price > firstItem.price;
+          return { pitch: isHigher ? `A premium comparison choice if you wish to invest in automated docks or advanced multi-floor nozzles.` : `A high-value alternative that secures all essentials while keeping costs low.`, diff: `Price difference with 1st choice is ¥${Math.abs(p.price - firstItem.price).toLocaleString()}.`, closing: isHigher ? `Ask: "Would you like to step up to fully automated clean docks to eliminate all daily chores?"` : `Ask: "Would you prefer saving budget for other home lifestyle items?"` };
+        } else if (currentLang === 'zh') {
+          if (rankType === "first") return { pitch: `${p.point.zh} 与您的清扫习惯及核心诉求最为契合的本命之选。`, diff: `在当前同级机型中，机身配重手感、吸尘动力与日常倾倒便捷性达到了卓越平衡。`, closing: `导购询问：“您平时最感吃力的是机器太重手腕酸，还是每次倒灰尘弄脏双手？”` };
+          if (rankType === "second") return { pitch: `采用截然不同设计理念的有力对标方案。`, diff: `相比第一候选 ${firstItem.name.zh}，在${p.autoEmpty ? '自动集尘基站免倒灰' : p.dustType === 'pack' ? '密封纸袋不扬尘' : p.wet ? '吸洗湿拖一体' : '超轻量防缠毛'}上展现出专属特长。`, closing: `导购询问：“您更倾向于选购带有${p.autoEmpty ? '自动集尘底座' : p.dustType === 'pack' ? '卫生纸袋尘袋' : '极致轻巧机身'}的型号吗？”` };
+          const isHigher = p.price > firstItem.price;
+          return { pitch: isHigher ? `适当提高预算、获取更高阶全能享受的进阶参考。` : `精简次要功能、在亲民实惠预算内扎实满足日常吸尘的高性价比备选。`, diff: `与第一候选差价为 ¥${Math.abs(p.price - firstItem.price).toLocaleString()}。`, closing: isHigher ? `导购询问：“是否希望每天清扫彻底省去倾倒尘盒与水洗滤网的麻烦？”` : `导购询问：“是否希望将节省下来的预算用于添置其他高品质生活家电？”` };
+        } else {
+          if (rankType === "first") return { pitch: `${p.point.ja} お客様のご要望に最も合致する本命モデルです。`, diff: `この価格帯において、軽さ・吸引力・ゴミ捨ての手間のバランスが最も優れています。`, closing: `「普段の掃除で一番ストレスを感じる点（重さ、ゴミ捨ての手間、髪の毛の絡みなど）はどこですか？」とお伺いし、この商品の強みをお伝えください。` };
+          if (rankType === "second") return { pitch: `第一候補とは異なるアプローチを持つ有力な対抗モデルです。`, diff: `第一候補の${firstItem.name.ja}に比べ、${p.price > firstItem.price ? '付加機能の充実度や自動化' : '本体の軽さやコストパフォーマンス'}に特徴があります。`, closing: `「掃除機は${p.autoEmpty ? 'ゴミ捨てを自動化したいですか？' : p.dustType === 'pack' ? 'ホコリに触れず捨てたいですか？' : 'まずは軽さを重視しますか？'}」と価値観を比較案内してください。` };
+          const isHigher = p.price > firstItem.price;
+          return { pitch: isHigher ? `ご予算を少し上げて、より上位の機能を手に入れたい場合の比較選択肢です。` : `機能をシンプルに絞り込み、手頃なご予算で手軽にスタートできる高コスパ候補です。`, diff: `第一候補との価格差は¥${Math.abs(p.price - firstItem.price).toLocaleString()}です。`, closing: isHigher ? `「せっかく買い替えるなら、ゴミ捨ての手間が数ヶ月不要になるステーション付きにしますか？」とお伺いしてください。` : `「浮いたご予算で、他の日用品や交換用フィルターを揃えませんか？」と選択肢を広げてください。` };
+        }
+      }
+    }
+
+    const container = document.getElementById('productRankings');
+    container.innerHTML = uniqueDisplay.map(({ item, role, badgeClass, rankType }) => {
+      const talk = generatePitch(item, rankType, firstChoice);
+      const uniqueReasons = item.reasons.length > 0 
+        ? [...new Set(item.reasons.map(r => r[currentLang]))].slice(0, 3) 
+        : [t.fitPointsLabel];
+
+      let metaDetails = "";
+      if (currentCategory === 'shower') {
+        const stopText = item.stopButton ? t.stopYes : t.stopNo;
+        const bubbleText = item.fineBubble ? t.bubbleYes : t.bubbleNo;
+        metaDetails = `${t.weightLabel}${item.weight}g ｜ ${stopText} ｜ ${bubbleText}`;
+      } else {
+        const weightInfo = item.category === "robot" ? t.robotType : `${t.weightLabel}${item.weight}kg`;
+        metaDetails = `${weightInfo} ｜ ${t.groupLabel}${item.group}`;
+      }
+
+      return `
+        <div class="product-card">
+          <span class="product-badge ${badgeClass}">${role[currentLang]}</span>
+          <div class="product-title">${item.name[currentLang]}</div>
+          <div class="product-meta">${t.currency}${item.price.toLocaleString()}${t.taxInc} ｜ ${metaDetails}</div>
+          <div class="product-desc">${item.desc[currentLang]}</div>
+          <div class="sales-box">
+            <div class="sales-item"><strong>${t.salesPitchLabel}</strong> ${talk.pitch}</div>
+            <div class="sales-item"><strong>${t.salesDiffLabel}</strong> ${talk.diff}</div>
+            <div class="sales-item"><strong>${t.salesClosingLabel}</strong> ${talk.closing}</div>
+            <div style="font-size: 0.75rem; color: #64748b; margin-top: 4px;">
+              <strong>${t.fitPointsLabel}</strong> ${uniqueReasons.join(" ／ ")}
+            </div>
+          </div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  function restart() {
+    p1Answers = {};
+    p2Answers = {};
+    document.getElementById('finalResult').classList.add('hidden');
+    document.getElementById('phase2').classList.add('hidden');
+    document.getElementById('phase1').classList.remove('hidden');
+    setLanguage(currentLang);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    switchCategory('shower');
+  });
+</script>
+
+</body>
+</html>
+
+
+
+
+
